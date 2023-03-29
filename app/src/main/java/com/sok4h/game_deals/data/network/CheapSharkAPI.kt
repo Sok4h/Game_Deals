@@ -13,24 +13,27 @@ interface CheapSharkAPI {
     //https://www.cheapshark.com/api/1.0/games?title=batman&steamAppID=35140&limit=60&exact=0
 
     @GET("games")
-    suspend fun searchGameDeal(@Query("title") title: String):Response<List<GameDto>>
+    suspend fun searchGameDeal(@Query("title") title: String): Response<List<GameDto>>
 
     @GET("deals")
     suspend fun getListOfDeals(
         @Query("storeID") storeID: String?,
-        @Query("pageNumber") pageNumber:Int?,
-        @Query("sortBy") sortBy:String?,
-        @Query("desc") desc:Boolean?,
-        @Query("lowerPrice") lowerPrice:Int?,
-        @Query("upperPrice") upperPrice:Int?,
-    ):Response<List<DealDetailDto>>
+        @Query("pageNumber") pageNumber: Int?,
+        @Query("sortBy") sortBy: String?,
+        @Query("desc") desc: Boolean?,
+        @Query("lowerPrice") lowerPrice: Int?,
+        @Query("upperPrice") upperPrice: Int?,
+    ): Response<List<DealDetailDto>>
 
     @GET("games")
-    suspend fun getGameById(@Query("id") id:Int):Response<GameDetailDto>
+    suspend fun getGameById(@Query("id") id: Int): Response<GameDetailDto>
 
     @GET("stores")
-    suspend fun getStoreInfo():Response<List<StoresDto>>
+    suspend fun getStoreInfo(): Response<List<StoresDto>>
 
+    @GET("games")
+    suspend fun getMultipleGames(@Query("ids") ids: String,
+    @Query("format") format :String = "array"): Response<List<GameDetailDto>>
 
 
 }

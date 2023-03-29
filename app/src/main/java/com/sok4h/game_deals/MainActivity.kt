@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
 import com.sok4h.game_deals.data.repositories.DealsRepository
 import com.sok4h.game_deals.data.repositories.GamesRepository
 import com.sok4h.game_deals.ui.theme.Game_DealsTheme
@@ -27,15 +28,17 @@ class MainActivity : ComponentActivity() {
         val repositoryDeals = DealsRepository()
         lifecycleScope.launch {
 
-            val result = repository.searchGameByName("prince of persia")
+            val result = repository.getGameDeals("prince of persia")
 
             val deals = repositoryDeals.getListOfDeals().collect{
 
-                Log.e("TAG", it.toString())
+               // Log.e("TAG", it.toString())
 
             }
 
-            //Log.e("TAG", result.toString())
+            val gson = Gson()
+            val xd =gson.toJson(result.getOrNull()!!.take(2))
+            Log.e("TAG", xd)
 
         }
 

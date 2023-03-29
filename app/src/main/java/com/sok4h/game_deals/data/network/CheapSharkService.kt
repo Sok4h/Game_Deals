@@ -26,7 +26,7 @@ class CheapSharkService() {
         upperPrice: Int?
     ) = flow {
 
-        var result = api.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
+        val result = api.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
         emit(result)
 
     }
@@ -39,6 +39,11 @@ class CheapSharkService() {
     suspend fun getStoreInfo(): Response<List<StoresDto>> {
 
         return api.getStoreInfo()
+    }
+
+    suspend fun getMultipleGames(ids:String):Response<List<GameDetailDto>>{
+
+        return api.getMultipleGames(ids)
     }
 
 

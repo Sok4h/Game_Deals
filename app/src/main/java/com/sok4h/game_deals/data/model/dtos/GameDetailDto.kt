@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName
 
 data class GameDetailDto(
     @SerializedName("cheapestPriceEver")
-    val cheapestPriceEver: CheapestPriceEver,
+    val cheapestPriceEver: CheapestPriceEverDto,
     @SerializedName("deals")
     val deals: List<DealDto>,
     @SerializedName("info")
-    val info: Info
+    val info: InfoDto
 )
 
-data class Info(
+data class InfoDto(
     @SerializedName("steamAppID")
     val steamAppID: String,
     @SerializedName("thumb")
@@ -21,7 +21,7 @@ data class Info(
     val title: String?
 )
 
-data class CheapestPriceEver(
+data class CheapestPriceEverDto(
     @SerializedName("date")
     val date: Int,
     @SerializedName("price")

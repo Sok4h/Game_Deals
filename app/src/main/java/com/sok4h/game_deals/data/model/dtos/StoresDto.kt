@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class StoresDto(
     @SerializedName("images")
-    val images: Images,
+    val images: StoreImagesDto,
     @SerializedName("isActive")
     val isActive: Int,
     @SerializedName("storeID")
@@ -13,7 +13,7 @@ data class StoresDto(
     val storeName: String
 )
 
-data class Images(
+data class StoreImagesDto(
     @SerializedName("banner")
     val banner: String,
     @SerializedName("icon")

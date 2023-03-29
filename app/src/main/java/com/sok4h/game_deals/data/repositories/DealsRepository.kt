@@ -22,7 +22,7 @@ class DealsRepository : IDealsRepository {
         return flow {
             service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
                 .catch {
-                    Result.failure<Exception>(it)
+                    emit(Result.failure(it))
                 }
                 .collect { response ->
 
