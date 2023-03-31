@@ -32,14 +32,15 @@ class MainActivity : ComponentActivity() {
 
             val deals = repositoryDeals.getListOfDeals().collect{
 
-               // Log.e("TAG", it.toString())
 
             }
 
-            val gson = Gson()
-            val xd =gson.toJson(result.getOrNull()!!.take(2))
-            Log.e("TAG", xd)
+            //*Log.e("TAG", xd)*/
 
+            val gson = Gson()
+            val xd =gson.toJson(result)
+
+            Log.e("TAG", xd )
         }
 
         setContent {

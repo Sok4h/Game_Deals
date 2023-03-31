@@ -1,11 +1,11 @@
 package com.sok4h.game_deals.data.repositories
 
-import android.util.Log
-import com.sok4h.game_deals.data.model.dtos.DealDetailDto
 import com.sok4h.game_deals.data.network.CheapSharkService
+import com.sok4h.game_deals.ui.ui_model.DealDetailModel
+import com.sok4h.game_deals.ui.ui_model.mappers.toDealDetailModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 class DealsRepository : IDealsRepository {
 
@@ -16,23 +16,32 @@ class DealsRepository : IDealsRepository {
         sortBy: String?,
         desc: Boolean,
         lowerPrice: Int?,
-        upperPrice: Int?
-    ): Flow<Result<List<DealDetailDto>>> {
+        upperPrice: Int?,
+    ): Flow<Result<List<DealDetailModel>>> {
 
-        return flow {
-            service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
-                .catch {
-                    emit(Result.failure(it))
-                }
-                .collect { response ->
 
-                    if (response.isSuccessful) emit(Result.success(response.body()!!))
-                    else {
-                        emit(Result.failure(Exception(response.errorBody().toString())))
+        return service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
+            .map { response ->
+                if (response.isSuccessful) {
+
+                    if (response.body() != null) {
+
+                        val deals = response.body()!!.map { it.toDealDetailModel() }
+
+                        Result.success(deals)
+                    } else {
+
+                        Result.failure(Exception("Cuerpo Vacio"))
                     }
+                } else {
+                    Result.failure(Exception(response.raw().code().toString()))
                 }
 
-        }
+            }.catch {
+                Result.failure<Exception>(it)
+            }
+
+
     }
 
 }

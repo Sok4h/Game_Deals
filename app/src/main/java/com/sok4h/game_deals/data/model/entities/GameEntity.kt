@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class GameEntity(
     @PrimaryKey
     val name: String,
-    //val gameId: String,
+    val gameId: String,
     val bestDealId: String,
     val bestPrice : String,
     val image :String

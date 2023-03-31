@@ -7,7 +7,7 @@ import com.sok4h.game_deals.data.model.entities.GameEntity
 interface GameDao {
 
     @Query("Select * from games")
-    suspend fun  getAllGames():List<GameEntity>
+    suspend fun getAllGames():List<GameEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGame(gameEntity: GameEntity)
@@ -16,7 +16,7 @@ interface GameDao {
     fun deleteGame(game:GameEntity)
 
 
-    @Query("SELECT EXISTS(SELECT * FROM games WHERE id = :id)")
-    fun gameIsFavorite(): Boolean
+    @Query("SELECT EXISTS(SELECT * FROM games WHERE gameId = :id)")
+    fun gameIsFavorite( id:String): Boolean
 
 }

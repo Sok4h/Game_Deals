@@ -3,7 +3,6 @@ package com.sok4h.game_deals.data.network
 import com.sok4h.game_deals.data.model.dtos.GameDetailDto
 import com.sok4h.game_deals.data.model.dtos.GameDto
 import com.sok4h.game_deals.data.model.dtos.StoresDto
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 
@@ -23,11 +22,13 @@ class CheapSharkService() {
         sortBy: String?,
         desc: Boolean?,
         lowerPrice: Int?,
-        upperPrice: Int?
+        upperPrice: Int?,
     ) = flow {
+
 
         val result = api.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
         emit(result)
+        //Log.e("TAG", result.toString() )
 
     }
 
@@ -41,7 +42,7 @@ class CheapSharkService() {
         return api.getStoreInfo()
     }
 
-    suspend fun getMultipleGames(ids:String):Response<List<GameDetailDto>>{
+    suspend fun getMultipleGames(ids: String): Response<List<GameDetailDto>> {
 
         return api.getMultipleGames(ids)
     }

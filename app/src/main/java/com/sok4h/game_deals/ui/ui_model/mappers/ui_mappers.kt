@@ -1,13 +1,7 @@
 package com.sok4h.game_deals.ui.ui_model.mappers
 
-import com.sok4h.game_deals.data.model.dtos.CheapestPriceEverDto
-import com.sok4h.game_deals.data.model.dtos.DealDto
-import com.sok4h.game_deals.data.model.dtos.GameDetailDto
-import com.sok4h.game_deals.data.model.dtos.InfoDto
-import com.sok4h.game_deals.ui.ui_model.CheapestPriceEverModel
-import com.sok4h.game_deals.ui.ui_model.DealModel
-import com.sok4h.game_deals.ui.ui_model.GameDetailModel
-import com.sok4h.game_deals.ui.ui_model.InfoModel
+import com.sok4h.game_deals.data.model.dtos.*
+import com.sok4h.game_deals.ui.ui_model.*
 
 fun DealDto.toDealModel(): DealModel {
 
@@ -24,12 +18,14 @@ fun DealDto.toDealModel(): DealModel {
 }
 
 
-fun GameDetailDto.toGameDetailModel(id:String): GameDetailModel {
+fun GameDetailDto.toGameDetailModel(id: String): GameDetailModel {
 
     return GameDetailModel(
         cheapestPriceEver.toCheapestPriceEverModel(),
         deals.map { it.toDealModel() },
-        info.toInfoModel(id)
+        info.toInfoModel(id),
+        deals[0].price
+
     )
 }
 
@@ -38,10 +34,31 @@ fun CheapestPriceEverDto.toCheapestPriceEverModel(): CheapestPriceEverModel {
     return CheapestPriceEverModel(date, price)
 }
 
-fun InfoDto.toInfoModel(id:String): InfoModel {
+fun InfoDto.toInfoModel(id: String): InfoModel {
 
     return InfoModel(
         thumb, title, gameId = id
     )
 }
 
+
+fun DealDetailDto.toDealDetailModel(): DealDetailModel {
+    val idImage = storeID.toInt() - 1
+    return DealDetailModel(
+        dealID,
+        dealRating,
+        gameID,
+        isOnSale,
+        lastChange,
+        normalPrice,
+        salePrice,
+        savings,
+        steamRatingCount,
+        steamRatingPercent,
+        steamRatingText,
+        storeID,
+        thumb,
+        title,
+        storeLogo = "https://www.cheapshark.com/img/stores/icons/$idImage.png"
+    )
+}

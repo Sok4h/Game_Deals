@@ -13,9 +13,9 @@ interface CheapSharkAPI {
     //https://www.cheapshark.com/api/1.0/games?title=batman&steamAppID=35140&limit=60&exact=0
 
     @GET("games")
-    suspend fun searchGameDeal(@Query("title") title: String): Response<List<GameDto>>
+    suspend fun searchGameDeal(@Query("title") title: String,@Query("exact") exact:Int =0 ): Response<List<GameDto>>
 
-    @GET("deals")
+    @GET("deal")
     suspend fun getListOfDeals(
         @Query("storeID") storeID: String?,
         @Query("pageNumber") pageNumber: Int?,

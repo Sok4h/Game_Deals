@@ -25,9 +25,9 @@ data class DealDetailDto(
     @SerializedName("steamRatingCount")
     val steamRatingCount: String,
     @SerializedName("steamRatingPercent")
-    val steamRatingPercent: String,
+    val steamRatingPercent: String?,
     @SerializedName("steamRatingText")
-    val steamRatingText: String,
+    val steamRatingText: String?,
     @SerializedName("storeID")
     val storeID: String,
     @SerializedName("thumb")

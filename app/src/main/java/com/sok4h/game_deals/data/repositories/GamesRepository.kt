@@ -1,11 +1,14 @@
 package com.sok4h.game_deals.data.repositories
 
 import android.util.Log
+import com.sok4h.game_deals.data.model.data_mappers.toGameEntity
 import com.sok4h.game_deals.data.model.dtos.GameDetailDto
 import com.sok4h.game_deals.data.model.dtos.GameDto
 import com.sok4h.game_deals.data.network.CheapSharkService
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class GamesRepository(/*private val service: CheapSharkService*/) : IGamesRepository {
 
@@ -77,13 +80,12 @@ class GamesRepository(/*private val service: CheapSharkService*/) : IGamesReposi
 
                 }
 
-
                 Result.success(result)
 
 
             } else {
 
-                Result.failure(Exception(response.errorBody().toString()))
+                Result.failure(Exception("Something went Wrong ${response.raw().code()}"))
             }
         } catch (e: Exception) {
 
@@ -93,54 +95,68 @@ class GamesRepository(/*private val service: CheapSharkService*/) : IGamesReposi
 
     suspend fun getGameDeals(name: String): Result<List<GameDetailModel>> {
 
-        val resultName = searchGameByName(name)
 
-        var ids = ""
-        if (resultName.isSuccess) {
+        return withContext(Dispatchers.IO) {
 
-            val gameList = resultName.getOrDefault(emptyList())
-            if (gameList.isEmpty()) return Result.failure(Exception("no se encontró ningun juego"))
+            try {
+                val resultName = searchGameByName(name)
+                var ids = ""
+
+                return@withContext if (resultName.isSuccess) {
+
+                    val gameList = resultName.getOrDefault(emptyList())
+                    if (gameList.isEmpty()) Result.failure<Exception>(Exception("no se encontró ningun juego"))
+
+                    gameList.forEachIndexed { index, game ->
+                        ids += if (index == gameList.size - 1) game.gameID
+                        else {
+
+                            game.gameID + ","
+                        }
+                    }
+
+                    val gamesModel = getMultipleGames(ids)
+
+                    if (gamesModel.isSuccess) {
+                        val result = gamesModel.getOrDefault(emptyList())
 
 
-            gameList.forEachIndexed { index, game ->
+                        Result.success(result.map {
+                            val gameId = gameList.find { gameWithId ->
+                                gameWithId.title.contentEquals(it.info.title)
+                            }
+                            it.toGameDetailModel(gameId!!.gameID)
+                        })
 
-                ids += if (index == gameList.size - 1) game.gameID
-                else {
+                    } else {
 
-                    game.gameID + ","
+                        Result.failure(gamesModel.exceptionOrNull()!!)
+                    }
+                } else {
+
+                    Result.failure(resultName.exceptionOrNull()!!)
                 }
+            } catch (e: Exception) {
 
+                return@withContext Result.failure(e)
             }
 
-            val gamesModel = getMultipleGames(ids)
-
-            return if (gamesModel.isSuccess) {
-                val result = gamesModel.getOrDefault(emptyList())
-                
-                
-                Result.success(result.map {
-                    val gameId = gameList.find { gameWithId->
-                        gameWithId.title.contentEquals(it.info.title) }
-                    it.toGameDetailModel(gameId!!.gameID)
-
-                })
-
-            } else {
-
-                return Result.failure(gamesModel.exceptionOrNull()!!)
-            }
-        } else {
-
-            return Result.failure(resultName.exceptionOrNull()!!)
         }
 
 
     }
-    
-    suspend fun checkIfGameIsFavorite(id: String):Boolean{
+
+    override suspend fun checkIfGameIsFavorite(id: String): Boolean {
 
         // TODO: Añadir dao y buscar si existe
         return true
-        
+
     }
+
+    override suspend fun saveGametoFavorites(game: GameDetailModel) {
+
+        game.toGameEntity()
+    }
+
+
 }
