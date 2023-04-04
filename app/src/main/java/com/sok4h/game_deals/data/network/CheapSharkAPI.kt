@@ -15,7 +15,7 @@ interface CheapSharkAPI {
     @GET("games")
     suspend fun searchGameDeal(@Query("title") title: String,@Query("exact") exact:Int =0 ): Response<List<GameDto>>
 
-    @GET("deal")
+    @GET("deals")
     suspend fun getListOfDeals(
         @Query("storeID") storeID: String?,
         @Query("pageNumber") pageNumber: Int?,

@@ -18,7 +18,7 @@ fun DealDto.toDealModel(): DealModel {
 }
 
 
-fun GameDetailDto.toGameDetailModel(id: String): GameDetailModel {
+fun GameDetailDto.toGameDetailModel(id: String,): GameDetailModel {
 
     return GameDetailModel(
         cheapestPriceEver.toCheapestPriceEverModel(),
@@ -37,7 +37,7 @@ fun CheapestPriceEverDto.toCheapestPriceEverModel(): CheapestPriceEverModel {
 fun InfoDto.toInfoModel(id: String): InfoModel {
 
     return InfoModel(
-        thumb, title, gameId = id
+        thumb, title, gameId = id,
     )
 }
 

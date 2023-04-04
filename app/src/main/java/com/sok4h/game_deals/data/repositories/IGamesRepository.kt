@@ -8,14 +8,22 @@ import kotlinx.coroutines.flow.Flow
 
 interface IGamesRepository {
 
-    suspend  fun getGameById(id:Int) : Result<GameDetailDto>
+    suspend fun getGameById(id:Int) : Result<GameDetailDto>
     suspend fun searchGameByName(name:String) : Result<List<GameDto>>
 
     suspend fun getMultipleGames(ids:String):Result<List<GameDetailDto>>
 
     suspend fun checkIfGameIsFavorite(id: String):Boolean
 
-    suspend fun saveGametoFavorites(game:GameDetailModel)
+    suspend fun addGametoWatchList(game:GameDetailModel)
+
+    suspend fun getGameDeals (name:String):Result<List<GameDetailModel>>
+
+    suspend fun getGamesfromDatabase(): Flow<List<GameEntity>>
+
+    suspend fun removeGamefromWatchlist(id:String)
+
+
 
 
 }

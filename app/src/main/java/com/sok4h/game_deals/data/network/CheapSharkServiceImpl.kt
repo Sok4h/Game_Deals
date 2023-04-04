@@ -7,13 +7,14 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 
 
-class CheapSharkService() {
+class CheapSharkServiceImpl(private val api:CheapSharkAPI) {
 
-    private val api = RetrofitHelper.getRetrofit()
+
 
     suspend fun searchGame(title: String): Response<List<GameDto>> {
 
         return api.searchGameDeal(title)
+
     }
 
     fun getListOfDeals(

@@ -1,18 +1,19 @@
 package com.sok4h.game_deals.data.repositories
 
 import android.util.Log
+import com.sok4h.game_deals.data.database.daos.GameDao
 import com.sok4h.game_deals.data.model.data_mappers.toGameEntity
 import com.sok4h.game_deals.data.model.dtos.GameDetailDto
 import com.sok4h.game_deals.data.model.dtos.GameDto
-import com.sok4h.game_deals.data.network.CheapSharkService
+import com.sok4h.game_deals.data.model.entities.GameEntity
+import com.sok4h.game_deals.data.network.CheapSharkServiceImpl
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class GamesRepository(/*private val service: CheapSharkService*/) : IGamesRepository {
-
-    private val service = CheapSharkService()
+class GamesRepository(private val service: CheapSharkServiceImpl,private val gameDao: GameDao) : IGamesRepository {
 
 
     //maybe no es necesario, todo esto lo trae get gamedeals
@@ -85,7 +86,7 @@ class GamesRepository(/*private val service: CheapSharkService*/) : IGamesReposi
 
             } else {
 
-                Result.failure(Exception("Something went Wrong ${response.raw().code()}"))
+                Result.failure(Exception("Something went Wrong ${response.raw().code}"))
             }
         } catch (e: Exception) {
 
@@ -93,12 +94,12 @@ class GamesRepository(/*private val service: CheapSharkService*/) : IGamesReposi
         }
     }
 
-    suspend fun getGameDeals(name: String): Result<List<GameDetailModel>> {
-
+    override suspend fun getGameDeals(name: String): Result<List<GameDetailModel>> {
 
         return withContext(Dispatchers.IO) {
 
             try {
+
                 val resultName = searchGameByName(name)
                 var ids = ""
 
@@ -121,11 +122,11 @@ class GamesRepository(/*private val service: CheapSharkService*/) : IGamesReposi
                         val result = gamesModel.getOrDefault(emptyList())
 
 
-                        Result.success(result.map {
+                        Result.success(result.map {gameDto ->
                             val gameId = gameList.find { gameWithId ->
-                                gameWithId.title.contentEquals(it.info.title)
+                                gameWithId.title.contentEquals(gameDto.info.title)
                             }
-                            it.toGameDetailModel(gameId!!.gameID)
+                            gameDto.toGameDetailModel(gameId!!.gameID)
                         })
 
                     } else {
@@ -146,17 +147,28 @@ class GamesRepository(/*private val service: CheapSharkService*/) : IGamesReposi
 
     }
 
+    override suspend fun getGamesfromDatabase(): Flow<List<GameEntity>> {
+
+        return  gameDao.getAllGames()
+    }
+
+    override suspend fun removeGamefromWatchlist(id: String) {
+
+        gameDao.deleteGame(id)
+    }
+
+
     override suspend fun checkIfGameIsFavorite(id: String): Boolean {
 
-        // TODO: Añadir dao y buscar si existe
-        return true
+
+        return gameDao.gameIsFavorite(id)
 
     }
 
-    override suspend fun saveGametoFavorites(game: GameDetailModel) {
+    override suspend fun addGametoWatchList(game: GameDetailModel) {
 
-        game.toGameEntity()
+        gameDao.insertGame(game.toGameEntity())
+
     }
-
 
 }
