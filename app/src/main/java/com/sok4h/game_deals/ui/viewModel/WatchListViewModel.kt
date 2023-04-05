@@ -3,8 +3,10 @@ package com.sok4h.game_deals.ui.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IGamesRepository
+import com.sok4h.game_deals.events.WatchListScreenEvent
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
 import com.sok4h.game_deals.utils.GameState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -66,6 +68,21 @@ class WatchListViewModel(var gamesRepository: IGamesRepository) : ViewModel() {
 
                     _state.value = GameState.Error(result.exceptionOrNull() as Exception)
                 }
+            }
+        }
+    }
+
+    fun setEvent(event:WatchListScreenEvent){
+
+        when(event){
+            WatchListScreenEvent.DealClicked -> {}
+            is WatchListScreenEvent.RemoveFromWatchList -> {
+
+                viewModelScope.launch(Dispatchers.IO) {
+
+                    gamesRepository.removeGamefromWatchlist(event.id)
+                }
+
             }
         }
     }

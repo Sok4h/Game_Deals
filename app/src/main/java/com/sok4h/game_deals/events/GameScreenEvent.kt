@@ -1,10 +1,12 @@
 package com.sok4h.game_deals.events
 
-sealed class GameScreenEvent{
+import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 
-    object SearchGameEvent: GameScreenEvent()
-    data class AddToWatchListClicked(val id:String): GameScreenEvent()
-    object DealClicked: GameScreenEvent()
-    data class SearchQueryUpdated(val query:String):GameScreenEvent()
+sealed interface MainScreenEvents {
 
+    object SearchGames : MainScreenEvents
+
+    class AddGametoWatchList(val game: GameDetailModel) : MainScreenEvents
+
+    class RemoveFromWatchList(val id: String) : MainScreenEvents
 }

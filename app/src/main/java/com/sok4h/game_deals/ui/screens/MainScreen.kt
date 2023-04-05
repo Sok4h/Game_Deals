@@ -1,5 +1,6 @@
 package com.sok4h.game_deals.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,9 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.sok4h.game_deals.events.MainScreenEvents
 import com.sok4h.game_deals.ui.components.GameDealCard
 import com.sok4h.game_deals.ui.components.SearchBar
-import com.sok4h.game_deals.ui.viewModel.MainScreenEvents
 import com.sok4h.game_deals.ui.viewModel.MainViewModel
 import com.sok4h.game_deals.utils.DealState
 import com.sok4h.game_deals.utils.GameState
@@ -60,7 +61,7 @@ fun MainScreen(
             }
             is GameState.Success -> {
 
-
+                Log.e("TAG", "MainScreen: " )
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxHeight(0.8f)
@@ -74,6 +75,8 @@ fun MainScreen(
                                 viewModel.setStateEvent(MainScreenEvents.AddGametoWatchList(it))
                             },
                             onRemoveFromWatchList = {
+
+                                Log.e("TAG", "Eliminado" )
                                 viewModel.setStateEvent(
                                     MainScreenEvents.RemoveFromWatchList(
                                         it
@@ -92,6 +95,7 @@ fun MainScreen(
                 }
 
             }
+
         }
 
         when (uiState.dealListState) {

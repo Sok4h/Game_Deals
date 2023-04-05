@@ -3,15 +3,16 @@ package com.sok4h.game_deals.ui.screens
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import com.sok4h.game_deals.events.WatchListScreenEvent
 import com.sok4h.game_deals.ui.components.GameDealCard
 import com.sok4h.game_deals.utils.GameState
 
 
 @Composable
-fun WatchListScreen(gameState: GameState) {
+fun WatchListScreen(gameState: GameState,onEvent:(WatchListScreenEvent)->Unit) {
 
     when(gameState){
-        is GameState.Error -> TODO()
+        is GameState.Error -> {}
         is GameState.Loading -> {
 
         }
@@ -19,18 +20,19 @@ fun WatchListScreen(gameState: GameState) {
 
             LazyColumn{
 
-                items(items = gameState.data){
+                items(items = gameState.data){game->
 
                     GameDealCard(
-                        game = it,
+                        game = game,
                         onAddToWatchList = {},
-                        onRemoveFromWatchList ={} ,
+                        onRemoveFromWatchList ={onEvent(WatchListScreenEvent.RemoveFromWatchList(it))} ,
                         onDealPressed ={}
                     )
                 }
 
             }
         }
+
     }
 
 

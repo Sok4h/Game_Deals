@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IDealsRepository
 import com.sok4h.game_deals.data.repositories.IGamesRepository
-import com.sok4h.game_deals.ui.ui_model.GameDetailModel
+import com.sok4h.game_deals.events.MainScreenEvents
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 import com.sok4h.game_deals.utils.DealState
 import com.sok4h.game_deals.utils.GameState
@@ -43,8 +43,9 @@ class MainViewModel(
 
 
                     gamesRepository.getGamesfromDatabase().collect {
-                        Log.e("TAG", "collected")
+
                         val result = gamesRepository.getGameDeals(state.value.searchQuery)
+                        Log.e("TAG", result.toString())
 
                         if (result.isSuccess) {
 
@@ -54,18 +55,21 @@ class MainViewModel(
                                 val favorite = it.any { it.gameId == networkGame.info.gameId }
                                 networkGame.info.isFavorite = favorite
 
-
                             }
 
 
                             _state.update {
 
-                                Log.e("TAG", "setStateEvent: ")
+                                Log.e("TAG", gamesFromNetwork[0].info.isFavorite.toString())
+
                                 it.copy(
+
                                     gameListState = GameState.Success(
                                         gamesFromNetwork
-                                    )
+                                     )
                                 )
+
+
                             }
 
 
@@ -135,11 +139,3 @@ class MainViewModel(
 
 }
 
-sealed interface MainScreenEvents {
-
-    object SearchGames : MainScreenEvents
-
-    class AddGametoWatchList(val game: GameDetailModel) : MainScreenEvents
-
-    class RemoveFromWatchList(val id: String) : MainScreenEvents
-}

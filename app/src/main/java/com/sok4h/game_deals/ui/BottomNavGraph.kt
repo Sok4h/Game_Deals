@@ -19,7 +19,7 @@ fun BottomNavgraph (navHostController: NavHostController) {
 
     val mainViewModel = getViewModel<MainViewModel>()
 
-    val state by mainViewModel.state.collectAsState()
+   // val state by mainViewModel.state.collectAsState()
 
     val watchListViewModel = getViewModel<WatchListViewModel>()
 
@@ -35,7 +35,7 @@ fun BottomNavgraph (navHostController: NavHostController) {
 
         composable(route = BottomBarScreens.WatchList.route){
             
-            WatchListScreen(watchListState)
+            WatchListScreen(watchListState, onEvent ={watchListViewModel.setEvent(it)})
         }
     }
     

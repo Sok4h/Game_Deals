@@ -11,7 +11,6 @@ sealed class BottomBarScreens(
     val icon:ImageVector
 
 ){
-
     object Home:BottomBarScreens(route = "home","Home",Icons.Default.Home)
     object WatchList:BottomBarScreens(route = "watchlist","WatchList",Icons.Default.Bookmark)
 }
