@@ -18,12 +18,12 @@ fun DealDto.toDealModel(): DealModel {
 }
 
 
-fun GameDetailDto.toGameDetailModel(id: String,): GameDetailModel {
+fun GameDetailDto.toGameDetailModel(id: String,isFavorite:Boolean=false): GameDetailModel {
 
     return GameDetailModel(
         cheapestPriceEver.toCheapestPriceEverModel(),
         deals.map { it.toDealModel() },
-        info.toInfoModel(id),
+        info.toInfoModel(id,isFavorite),
         deals[0].price
 
     )
@@ -34,10 +34,10 @@ fun CheapestPriceEverDto.toCheapestPriceEverModel(): CheapestPriceEverModel {
     return CheapestPriceEverModel(date, price)
 }
 
-fun InfoDto.toInfoModel(id: String): InfoModel {
+fun InfoDto.toInfoModel(id: String,isFavorite: Boolean): InfoModel {
 
     return InfoModel(
-        thumb, title, gameId = id,
+        thumb, title, gameId = id, isFavorite = isFavorite
     )
 }
 

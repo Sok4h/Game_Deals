@@ -1,6 +1,5 @@
 package com.sok4h.game_deals.data.model.data_mappers
 
-import com.sok4h.game_deals.data.model.dtos.GameDetailDto
 import com.sok4h.game_deals.data.model.dtos.StoreImagesDto
 import com.sok4h.game_deals.data.model.dtos.StoresDto
 import com.sok4h.game_deals.data.model.entities.GameEntity
@@ -19,6 +18,7 @@ fun GameDetailModel.toGameEntity(): GameEntity {
 
     )
 }
+
 
 fun StoresDto.toStoreEntity(): StoreEntity {
 

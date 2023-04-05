@@ -10,5 +10,5 @@ data class GameEntity(
     val gameId: String,
     val bestDealId: String,
     val bestPrice : String,
-    val image :String
+    val image :String,
 )
