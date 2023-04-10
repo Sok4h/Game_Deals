@@ -23,17 +23,13 @@ fun GameDealCard(
 ) {
 
     var expanded by remember { mutableStateOf(false) }
-    Column(
+    Card(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
-            .padding(8.dp)
             .fillMaxWidth()
 
 
     ) {
-
-
-
         Row(
             Modifier
                 .clickable {

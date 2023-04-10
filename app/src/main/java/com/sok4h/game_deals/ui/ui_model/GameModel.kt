@@ -10,7 +10,7 @@ data class GameDetailModel(
 data class InfoModel(
     val image: String,
     val title: String?,
-    var isFavorite:Boolean=false,
+    val isFavorite:Boolean=false,
     val gameId:String
 )
 

@@ -1,13 +1,9 @@
 package com.sok4h.game_deals.ui.viewStates
 
-import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 
-data class MainScreenState(
+data class WatchListScreenState(
     val gameListState: List<GameDetailModel> = emptyList(),
-    val dealListState: MutableList<DealDetailModel> = mutableListOf(),
-    val isGameLoading:Boolean=false,
     val gameListErrorMessage:String="",
     val isLoading:Boolean=false,
-    val searchQuery:String=""
 )

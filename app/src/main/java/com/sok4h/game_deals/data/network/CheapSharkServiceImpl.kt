@@ -1,5 +1,6 @@
 package com.sok4h.game_deals.data.network
 
+import android.util.Log
 import com.sok4h.game_deals.data.model.dtos.GameDetailDto
 import com.sok4h.game_deals.data.model.dtos.GameDto
 import com.sok4h.game_deals.data.model.dtos.StoresDto
@@ -29,7 +30,7 @@ class CheapSharkServiceImpl(private val api:CheapSharkAPI) {
 
         val result = api.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
         emit(result)
-        //Log.e("TAG", result.toString() )
+        Log.e("TAG", result.toString() )
 
     }
 

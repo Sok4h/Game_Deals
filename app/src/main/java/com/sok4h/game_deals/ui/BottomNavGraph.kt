@@ -19,13 +19,11 @@ fun BottomNavgraph (navHostController: NavHostController) {
 
     val mainViewModel = getViewModel<MainViewModel>()
 
-   // val state by mainViewModel.state.collectAsState()
-
     val watchListViewModel = getViewModel<WatchListViewModel>()
 
     val watchListState by watchListViewModel.state.collectAsState()
 
-    NavHost(navController = navHostController, startDestination = "home") {
+    NavHost(navController = navHostController, startDestination = "home",) {
 
         composable(route = BottomBarScreens.Home.route){
 

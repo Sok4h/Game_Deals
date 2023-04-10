@@ -1,86 +1,85 @@
 package com.sok4h.game_deals.ui.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IGamesRepository
 import com.sok4h.game_deals.events.WatchListScreenEvent
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
-import com.sok4h.game_deals.utils.GameState
+import com.sok4h.game_deals.ui.viewStates.WatchListScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class WatchListViewModel(var gamesRepository: IGamesRepository) : ViewModel() {
 
-    private val _state = MutableStateFlow<GameState>(GameState.Loading)
+    private val _state = MutableStateFlow(WatchListScreenState())
     val state get() = _state.asStateFlow()
 
     init {
         getGamesFromDataBase()
     }
 
-    fun getGamesFromDataBase() {
+    private fun getGamesFromDataBase() {
 
         viewModelScope.launch {
 
             gamesRepository.getGamesfromDatabase().collect { games ->
 
-                var ids= ""
-                games.forEachIndexed{index,item->
+                Log.e("WatchList", (_state.value.gameListState.size - 1).toString())
+                Log.e("WatchList", "actualizado")
+                var ids = ""
+                games.forEachIndexed { index, item ->
 
-                    ids += if(index==games.size-1){
+                    ids += (if (index == games.size - 1) {
 
                         item.gameId
 
-                    }else{
-
-                        "${item.gameId},"
-                    }
+                    } else "${item.gameId},")
                 }
-                val result =gamesRepository.getMultipleGames(ids)
+                val result = gamesRepository.getMultipleGames(ids)
 
-              if(result.isSuccess) {
+                if (result.isSuccess) {
 
-                  val data = result.getOrDefault(emptyList())
+                    val data = result.getOrDefault(emptyList())
 
-                  if(data.isNotEmpty()){
+                    val resultData = data.map { gameNetwork ->
+                        val gameWithId =
+                            games.find { it.name.contentEquals(gameNetwork.info.title) }
 
-                      val result= data.map {gameNetwork->
+                        gameNetwork.toGameDetailModel(gameWithId!!.gameId, isFavorite = true)
+                    }
 
+                    _state.update {
+                        it.copy(gameListState = resultData.toMutableList())
+                    }
 
-                          val gameWithId = games.find { it.name.contentEquals(gameNetwork.info.title) }
+                } else {
 
-                          gameNetwork.toGameDetailModel(gameWithId!!.gameId,true)
-                      }
-
-                      _state.value = GameState.Success(result)
-                  }
-
-                  else{
-
-                      _state.value = GameState.Success(emptyList())
-                  }
-
-              }
-
-                else{
-
-                    _state.value = GameState.Error(result.exceptionOrNull() as Exception)
+                    _state.update {
+                        it.copy(
+                            gameListErrorMessage = result.exceptionOrNull()?.message
+                                ?: "No error available"
+                        )
+                    }
                 }
             }
         }
     }
 
-    fun setEvent(event:WatchListScreenEvent){
+    fun setEvent(event: WatchListScreenEvent) {
 
-        when(event){
+        when (event) {
             WatchListScreenEvent.DealClicked -> {}
             is WatchListScreenEvent.RemoveFromWatchList -> {
 
+                Log.e("TAG", "Eliminar")
                 viewModelScope.launch(Dispatchers.IO) {
 
                     gamesRepository.removeGamefromWatchlist(event.id)
+
                 }
 
             }

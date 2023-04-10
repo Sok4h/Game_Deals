@@ -89,7 +89,12 @@ class MainActivity : ComponentActivity() {
 
 
                     ) {
-                        BottomNavgraph(navHostController = navController)
+
+                        Box(modifier = Modifier.padding(it)) {
+
+                            BottomNavgraph(navHostController = navController)
+
+                        }
                     }
 
                 }

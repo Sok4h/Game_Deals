@@ -19,7 +19,6 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
         upperPrice: Int?,
     ): Flow<Result<List<DealDetailModel>>> {
 
-
         return service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
             .map { response ->
                 if (response.isSuccessful) {
