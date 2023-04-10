@@ -1,5 +1,6 @@
 package com.sok4h.game_deals.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
@@ -19,7 +21,7 @@ fun GameDealCard(
     game: GameDetailModel,
     onAddToWatchList: (GameDetailModel) -> Unit,
     onRemoveFromWatchList: (String) -> Unit,
-    onDealPressed:(String)->Unit
+    onDealPressed: (String) -> Unit,
 ) {
 
     var expanded by remember { mutableStateOf(false) }
@@ -43,7 +45,8 @@ fun GameDealCard(
             AsyncImage(
                 model = game.info.image,
                 contentDescription = "image of ${game.info.title}",
-                modifier = Modifier.size(100.dp)
+                modifier = Modifier.size(100.dp),
+                contentScale = ContentScale.Fit
             )
             Column(
                 modifier = Modifier
@@ -92,13 +95,14 @@ fun GameDealCard(
             }
         }
 
-        if (expanded) {
+        AnimatedVisibility(visible = expanded) {
+
 
             for (deal in game.deals) {
                 Row(
-                    Modifier.fillMaxWidth(),
+                    Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceAround
                 ) {
 
                     AsyncImage(
@@ -119,6 +123,7 @@ fun GameDealCard(
             }
         }
     }
-
-
 }
+
+
+

@@ -15,7 +15,7 @@ import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomNavgraph (navHostController: NavHostController) {
+fun BottomNavGraph (navHostController: NavHostController) {
 
     val mainViewModel = getViewModel<MainViewModel>()
 

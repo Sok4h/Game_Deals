@@ -24,45 +24,48 @@ class WatchListViewModel(var gamesRepository: IGamesRepository) : ViewModel() {
 
     private fun getGamesFromDataBase() {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             gamesRepository.getGamesfromDatabase().collect { games ->
 
-                Log.e("WatchList", (_state.value.gameListState.size - 1).toString())
-                Log.e("WatchList", "actualizado")
-                var ids = ""
-                games.forEachIndexed { index, item ->
+                if (games.isEmpty()) {
 
-                    ids += (if (index == games.size - 1) {
-
-                        item.gameId
-
-                    } else "${item.gameId},")
-                }
-                val result = gamesRepository.getMultipleGames(ids)
-
-                if (result.isSuccess) {
-
-                    val data = result.getOrDefault(emptyList())
-
-                    val resultData = data.map { gameNetwork ->
-                        val gameWithId =
-                            games.find { it.name.contentEquals(gameNetwork.info.title) }
-
-                        gameNetwork.toGameDetailModel(gameWithId!!.gameId, isFavorite = true)
-                    }
-
-                    _state.update {
-                        it.copy(gameListState = resultData.toMutableList())
-                    }
-
+                    _state.update { it.copy(gameListState = emptyList()) }
                 } else {
+                    var ids = ""
+                    games.forEachIndexed { index, item ->
 
-                    _state.update {
-                        it.copy(
-                            gameListErrorMessage = result.exceptionOrNull()?.message
-                                ?: "No error available"
-                        )
+                        ids += (if (index == games.size - 1) {
+
+                            item.gameId
+
+                        } else "${item.gameId},")
+                    }
+                    val result = gamesRepository.getMultipleGames(ids)
+
+                    if (result.isSuccess) {
+
+                        val data = result.getOrDefault(emptyList())
+
+                        val resultData = data.map { gameNetwork ->
+                            val gameWithId =
+                                games.find { it.name.contentEquals(gameNetwork.info.title) }
+
+                            gameNetwork.toGameDetailModel(gameWithId!!.gameId, isFavorite = true)
+                        }
+
+                        _state.update {
+                            it.copy(gameListState = resultData)
+                        }
+
+                    } else {
+
+                        _state.update {
+                            it.copy(
+                                gameListErrorMessage = result.exceptionOrNull()?.message
+                                    ?: "No error available"
+                            )
+                        }
                     }
                 }
             }
@@ -79,6 +82,9 @@ class WatchListViewModel(var gamesRepository: IGamesRepository) : ViewModel() {
                 viewModelScope.launch(Dispatchers.IO) {
 
                     gamesRepository.removeGamefromWatchlist(event.id)
+
+                    Log.e("TAG", state.value.gameListState.size.toString())
+
 
                 }
 

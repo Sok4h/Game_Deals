@@ -27,7 +27,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sok4h.game_deals.ui.BottomBarScreens
-import com.sok4h.game_deals.ui.BottomNavgraph
+import com.sok4h.game_deals.ui.BottomNavGraph
 import com.sok4h.game_deals.ui.theme.Game_DealsTheme
 import com.sok4h.game_deals.ui.viewModel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -92,7 +92,7 @@ class MainActivity : ComponentActivity() {
 
                         Box(modifier = Modifier.padding(it)) {
 
-                            BottomNavgraph(navHostController = navController)
+                            BottomNavGraph(navHostController = navController)
 
                         }
                     }
