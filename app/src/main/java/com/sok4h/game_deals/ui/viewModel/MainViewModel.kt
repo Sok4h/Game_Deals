@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IDealsRepository
 import com.sok4h.game_deals.data.repositories.IGamesRepository
-import com.sok4h.game_deals.events.MainScreenEvents
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
+import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,119 +29,110 @@ class MainViewModel(
         //getDeals()
     }
 
-    fun setStateEvent(event: MainScreenEvents) {
 
-        when (event) {
+    fun searchGame() {
 
-            is MainScreenEvents.SearchGames -> {
+        _state.update {
+            it.copy(isLoading = true)
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val result = gamesRepository.getGameDeals(state.value.searchQuery)
+            val gamesFromNetwork = result.getOrDefault(emptyList())
+
+            // TODO: solucionar esta madre, si lo hago con collect sale una lista fantasma
+
+            _state.update {
+                it.copy(isLoading = false)
+            }
+
+            if (result.isSuccess) {
+
+                val mappedList = gamesFromNetwork.map { networkGame ->
+
+                    val isFavorite =
+                        gamesRepository.checkIfGameIsFavorite(networkGame.info.gameId)
+                    networkGame.copy(info = networkGame.info.copy(isFavorite = isFavorite))
+                }
 
                 _state.update {
-                    it.copy(isLoading = true)
-                }
-                viewModelScope.launch(Dispatchers.IO) {
 
-                    val result = gamesRepository.getGameDeals(state.value.searchQuery)
-                    val gamesFromNetwork = result.getOrDefault(emptyList())
-
-                    // TODO: solucionar esta madre, si lo hago con collect sale una lista fantasma
-
-                    _state.update {
-                        it.copy(isLoading = false)
-                    }
-
-                    if (result.isSuccess) {
-
-                        val mappedList = gamesFromNetwork.map { networkGame ->
-
-                            val isFavorite =
-                                gamesRepository.checkIfGameIsFavorite(networkGame.info.gameId)
-                            networkGame.copy(info = networkGame.info.copy(isFavorite = isFavorite))
-                        }
-
-                        _state.update {
-
-                            it.copy(
-                                gameListState = mappedList,
-                                gameListErrorMessage = ""
-                            )
-
-                        }
-
-                    } else {
-
-                        _state.update {
-                            it.copy(
-                                gameListErrorMessage = result.exceptionOrNull()?.message
-                                    ?: "No error available",
-                                gameListState = emptyList()
-                            )
-                        }
-                    }
+                    it.copy(
+                        gameListState = mappedList,
+                        gameListErrorMessage = ""
+                    )
 
                 }
 
+            } else {
+
+                _state.update {
+                    it.copy(
+                        gameListErrorMessage = result.exceptionOrNull()?.message
+                            ?: "No error available",
+                        gameListState = emptyList()
+                    )
+                }
             }
 
+        }
 
-            is MainScreenEvents.AddGametoWatchList -> {
+    }
 
-                Log.e("TAG", _state.value.dealListState.size.toString())
-                viewModelScope.launch(Dispatchers.IO) {
+    fun addGameToWatchList(game: GameDetailModel) {
 
-                    gamesRepository.addGametoWatchList(event.game)
+        Log.e("TAG", _state.value.dealListState.size.toString())
+        viewModelScope.launch(Dispatchers.IO) {
 
-                }.invokeOnCompletion {
+            gamesRepository.addGametoWatchList(game)
 
-                    val oldState = _state.value.gameListState
+        }.invokeOnCompletion {
 
-                    val newList = oldState.map {
+            val oldState = _state.value.gameListState
 
-                        if (it.info.gameId.contentEquals(event.game.info.gameId)) {
+            val newList = oldState.map {
 
-                            it.copy(info = it.info.copy(isFavorite = true))
-                        } else {
+                if (it.info.gameId.contentEquals(game.info.gameId)) {
 
-                            it
-                        }
-                    }
+                    it.copy(info = it.info.copy(isFavorite = true))
+                } else {
 
-                    _state.update {
-                        it.copy(gameListState = newList)
-                    }
-
+                    it
                 }
-
-
             }
 
-            is MainScreenEvents.RemoveFromWatchList -> {
+            _state.update {
+                it.copy(gameListState = newList)
+            }
 
-                viewModelScope.launch(Dispatchers.IO) {
-                    gamesRepository.removeGamefromWatchlist(event.id)
-                }.invokeOnCompletion {
+        }
+    }
 
-                    val oldState = _state.value.gameListState
+    fun removeGameFromWatchlist(id:String){
 
-                    val newList = oldState.map {
+        viewModelScope.launch(Dispatchers.IO) {
+            gamesRepository.removeGamefromWatchlist(id)
+        }.invokeOnCompletion {
 
-                        if (it.info.gameId.contentEquals(event.id)) {
+            val oldState = _state.value.gameListState
 
-                            it.copy(info = it.info.copy(isFavorite = false))
-                        } else {
+            val newList = oldState.map {
 
-                            it
-                        }
-                    }
+                if (it.info.gameId.contentEquals(id)) {
 
-                    _state.update {
-                        it.copy(gameListState = newList)
-                    }
+                    it.copy(info = it.info.copy(isFavorite = false))
+                } else {
+
+                    it
                 }
+            }
 
-
+            _state.update {
+                it.copy(gameListState = newList)
             }
         }
     }
+
 
     fun getDeals() {
 

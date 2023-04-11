@@ -1,6 +1,5 @@
 package com.sok4h.game_deals.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,24 +10,26 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.sok4h.game_deals.events.MainScreenEvents
 import com.sok4h.game_deals.ui.components.DealCard
 import com.sok4h.game_deals.ui.components.GameDealCard
 import com.sok4h.game_deals.ui.components.SearchBar
-import com.sok4h.game_deals.ui.viewModel.MainViewModel
+import com.sok4h.game_deals.ui.ui_model.GameDetailModel
+import com.sok4h.game_deals.ui.viewStates.MainScreenState
 
 @ExperimentalMaterial3Api
 @Composable
 fun MainScreen(
-    viewModel: MainViewModel,
+    state: MainScreenState,
+    onQueryChanged: (String) -> Unit,
+    onGameSearch: () -> Unit,
+    onGameAddedToWatchList: (game: GameDetailModel) -> Unit,
+    onGameRemovedWatchList: (id: String) -> Unit,
+    onDealPressed: (link: String) -> Unit,
 ) {
-    val uiState by viewModel.state.collectAsState()
 
     Column(
         Modifier
@@ -37,16 +38,16 @@ fun MainScreen(
     ) {
 
         SearchBar(
-            textValue = uiState.searchQuery,
-            onQueryChanged = { viewModel.updateQuery(it) },
-            onSearch = { viewModel.setStateEvent(MainScreenEvents.SearchGames) },
+            textValue = state.searchQuery,
+            onQueryChanged = { onQueryChanged(it) },
+            onSearch = { onGameSearch() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
 
 
-        if (uiState.isLoading) {
+        if (state.isLoading) {
 
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
 
@@ -59,37 +60,30 @@ fun MainScreen(
 
         }
 
-        if (uiState.gameListState.isNotEmpty()) {
+        if (state.gameListState.isNotEmpty()) {
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxHeight(0.8f)
             ) {
 
-                items(items = uiState.gameListState,) { gameItem ->
+                items(items = state.gameListState) { gameItem ->
 
                     GameDealCard(
                         game = gameItem,
                         onAddToWatchList = {
-                            viewModel.setStateEvent(MainScreenEvents.AddGametoWatchList(it))
-
-                            Log.e("TAG", "Añadido")
+                            onGameAddedToWatchList(it)
                         },
                         onRemoveFromWatchList = {
-
-
-                            viewModel.setStateEvent(
-                                MainScreenEvents.RemoveFromWatchList(
-                                    it
-                                )
+                            onGameRemovedWatchList(
+                                it
                             )
                         },
                         onDealPressed = {
 
-
+                            onDealPressed(it)
                         }
                     )
-
 
 
                 }
@@ -97,11 +91,11 @@ fun MainScreen(
 
         }
 
-        if(uiState.gameListErrorMessage.isNotEmpty()){
+        if (state.gameListErrorMessage.isNotEmpty()) {
 
-            Text(text = uiState.gameListErrorMessage)
+            Text(text = state.gameListErrorMessage)
         }
-        if (uiState.dealListState.isNotEmpty()) {
+        if (state.dealListState.isNotEmpty()) {
 
             LazyVerticalGrid(
 
@@ -110,7 +104,7 @@ fun MainScreen(
                 columns = GridCells.Fixed(2),
                 content = {
 
-                    items(items = uiState.dealListState) {
+                    items(items = state.dealListState) {
                         DealCard(deal = it)
 
                     }
@@ -119,8 +113,8 @@ fun MainScreen(
                 )
 
         }
-        
-      
+
+
     }
 
 

@@ -24,6 +24,7 @@ fun GameDealCard(
     onDealPressed: (String) -> Unit,
 ) {
 
+    // TODO: añadir el precio normal a las ofertas?  
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -98,12 +99,12 @@ fun GameDealCard(
         AnimatedVisibility(visible = expanded) {
             Column() {
 
-                for (deal in game.deals) {
+                for ((index, deal) in game.deals.withIndex()) {
                     Row(
                         Modifier
                             .fillMaxWidth()
-                            .padding(4.dp)
-                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
+                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
+                            .padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
@@ -122,6 +123,12 @@ fun GameDealCard(
                             Text(text = "Comprar")
                         }
 
+
+
+                    }
+                    if(index!=game.deals.size-1){
+
+                        Divider(thickness = 1.dp)
                     }
                 }
             }

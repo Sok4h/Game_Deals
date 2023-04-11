@@ -2,8 +2,9 @@ package com.sok4h.game_deals.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,26 +16,39 @@ import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomNavGraph (navHostController: NavHostController) {
+fun BottomNavGraph(navHostController: NavHostController) {
+    val uriHandler = LocalUriHandler.current
 
     val mainViewModel = getViewModel<MainViewModel>()
 
     val watchListViewModel = getViewModel<WatchListViewModel>()
 
-    val watchListState by watchListViewModel.state.collectAsState()
+    val watchListState by watchListViewModel.state.collectAsStateWithLifecycle()
 
-    NavHost(navController = navHostController, startDestination = "home",) {
+    val mainViewmodelState by mainViewModel.state.collectAsStateWithLifecycle()
 
-        composable(route = BottomBarScreens.Home.route){
+    NavHost(navController = navHostController, startDestination = "home") {
 
-            MainScreen(viewModel = mainViewModel)
+        composable(route = BottomBarScreens.Home.route) {
+
+            MainScreen(
+                state = mainViewmodelState,
+                onQueryChanged = { mainViewModel.updateQuery(query = it) },
+                onGameSearch = {mainViewModel.searchGame()}
+            , onGameAddedToWatchList = {mainViewModel.addGameToWatchList(it)},
+                onGameRemovedWatchList = {mainViewModel.removeGameFromWatchlist(it)},
+                onDealPressed = {
+                    uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${it}")
+
+                }
+            )
 
         }
 
-        composable(route = BottomBarScreens.WatchList.route){
-            
-            WatchListScreen(watchListState, onEvent ={watchListViewModel.setEvent(it)})
+        composable(route = BottomBarScreens.WatchList.route) {
+
+            WatchListScreen(watchListState, onEvent = { watchListViewModel.setEvent(it) })
         }
     }
-    
+
 }
