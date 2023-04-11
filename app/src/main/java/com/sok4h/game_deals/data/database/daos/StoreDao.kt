@@ -10,7 +10,7 @@ interface StoreDao {
     @Query("SELECT * from stores")
     suspend fun getAllStores(): List<StoreEntity>
 
-    @Query("SELECT * from stores where storeID =:storeID")
+    @Query("SELECT * from stores WHERE storeID =:storeID")
     suspend fun getStoreById(storeID: String):StoreEntity
 
 }

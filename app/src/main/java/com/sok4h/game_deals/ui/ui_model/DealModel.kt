@@ -7,5 +7,6 @@ data class DealModel(
     val savings: String,
     val storeID: String,
     val storeImage:String,
+    val storeName:String?="Paila"
 
 )

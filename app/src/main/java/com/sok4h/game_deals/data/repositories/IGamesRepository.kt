@@ -3,6 +3,7 @@ package com.sok4h.game_deals.data.repositories
 import com.sok4h.game_deals.data.model.dtos.GameDetailDto
 import com.sok4h.game_deals.data.model.dtos.GameDto
 import com.sok4h.game_deals.data.model.entities.GameEntity
+import com.sok4h.game_deals.data.model.entities.StoreEntity
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 import kotlinx.coroutines.flow.Flow
 
@@ -22,6 +23,8 @@ interface IGamesRepository {
     suspend fun getGamesfromDatabase(): Flow<List<GameEntity>>
 
     suspend fun removeGamefromWatchlist(id:String)
+
+    suspend fun getStorefromDatabase(id:String):StoreEntity
 
 
 

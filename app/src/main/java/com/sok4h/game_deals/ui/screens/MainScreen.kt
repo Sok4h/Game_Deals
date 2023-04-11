@@ -8,8 +8,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,7 +44,6 @@ fun MainScreen(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
-
 
 
         if (uiState.isLoading) {
@@ -90,7 +89,7 @@ fun MainScreen(
 
                         }
                     )
-                    Divider(thickness = 1.dp)
+
 
 
                 }
@@ -98,27 +97,32 @@ fun MainScreen(
 
         }
 
+        if(uiState.gameListErrorMessage.isNotEmpty()){
 
+            Text(text = uiState.gameListErrorMessage)
+        }
+        if (uiState.dealListState.isNotEmpty()) {
+
+            LazyVerticalGrid(
+
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                columns = GridCells.Fixed(2),
+                content = {
+
+                    items(items = uiState.dealListState) {
+                        DealCard(deal = it)
+
+                    }
+                },
+
+                )
+
+        }
+        
+      
     }
 
-    if (uiState.dealListState.isNotEmpty()) {
-
-        LazyVerticalGrid(
-
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            columns = GridCells.Fixed(2),
-            content = {
-
-                items(items = uiState.dealListState) {
-                    DealCard(deal = it)
-
-                }
-            },
-
-            )
-
-    }
 
 }
 

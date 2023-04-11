@@ -42,42 +42,41 @@ class MainViewModel(
 
                     val result = gamesRepository.getGameDeals(state.value.searchQuery)
                     val gamesFromNetwork = result.getOrDefault(emptyList())
+
+                    // TODO: solucionar esta madre, si lo hago con collect sale una lista fantasma
+
                     _state.update {
                         it.copy(isLoading = false)
                     }
 
-
                     if (result.isSuccess) {
 
-                        gamesRepository.getGamesfromDatabase().collect {_->
+                        val mappedList = gamesFromNetwork.map { networkGame ->
 
-                            val mappedList = gamesFromNetwork.map { networkGame ->
+                            val isFavorite =
+                                gamesRepository.checkIfGameIsFavorite(networkGame.info.gameId)
+                            networkGame.copy(info = networkGame.info.copy(isFavorite = isFavorite))
+                        }
 
-                                val isFavorite =
-                                    gamesRepository.checkIfGameIsFavorite(networkGame.info.gameId)
-                                networkGame.copy(info = networkGame.info.copy(isFavorite = isFavorite))
-                            }
+                        _state.update {
 
-                            _state.update {
-
-                                it.copy(
-                                    gameListState = mappedList
-                                )
-
-                            }
-
+                            it.copy(
+                                gameListState = mappedList,
+                                gameListErrorMessage = ""
+                            )
 
                         }
+
                     } else {
 
                         _state.update {
                             it.copy(
                                 gameListErrorMessage = result.exceptionOrNull()?.message
-                                    ?: "No error available"
+                                    ?: "No error available",
+                                gameListState = emptyList()
                             )
                         }
                     }
-
 
                 }
 
@@ -86,12 +85,32 @@ class MainViewModel(
 
             is MainScreenEvents.AddGametoWatchList -> {
 
-                Log.e("TAG",  _state.value.dealListState.size.toString() )
-                viewModelScope.launch {
+                Log.e("TAG", _state.value.dealListState.size.toString())
+                viewModelScope.launch(Dispatchers.IO) {
 
                     gamesRepository.addGametoWatchList(event.game)
 
+                }.invokeOnCompletion {
+
+                    val oldState = _state.value.gameListState
+
+                    val newList = oldState.map {
+
+                        if (it.info.gameId.contentEquals(event.game.info.gameId)) {
+
+                            it.copy(info = it.info.copy(isFavorite = true))
+                        } else {
+
+                            it
+                        }
+                    }
+
+                    _state.update {
+                        it.copy(gameListState = newList)
+                    }
+
                 }
+
 
             }
 
@@ -99,7 +118,27 @@ class MainViewModel(
 
                 viewModelScope.launch(Dispatchers.IO) {
                     gamesRepository.removeGamefromWatchlist(event.id)
+                }.invokeOnCompletion {
+
+                    val oldState = _state.value.gameListState
+
+                    val newList = oldState.map {
+
+                        if (it.info.gameId.contentEquals(event.id)) {
+
+                            it.copy(info = it.info.copy(isFavorite = false))
+                        } else {
+
+                            it
+                        }
+                    }
+
+                    _state.update {
+                        it.copy(gameListState = newList)
+                    }
                 }
+
+
             }
         }
     }

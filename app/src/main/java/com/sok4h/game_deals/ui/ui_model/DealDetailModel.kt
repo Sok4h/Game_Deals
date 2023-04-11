@@ -17,4 +17,5 @@ data class DealDetailModel(
     val gameImage: String,
     val title: String,
     val storeLogo: String,
+
 )

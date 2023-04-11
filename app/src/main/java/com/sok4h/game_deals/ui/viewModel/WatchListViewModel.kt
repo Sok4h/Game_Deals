@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IGamesRepository
 import com.sok4h.game_deals.events.WatchListScreenEvent
+import com.sok4h.game_deals.ui.ui_model.mappers.toDealModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
 import com.sok4h.game_deals.ui.viewStates.WatchListScreenState
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +52,17 @@ class WatchListViewModel(var gamesRepository: IGamesRepository) : ViewModel() {
                             val gameWithId =
                                 games.find { it.name.contentEquals(gameNetwork.info.title) }
 
-                            gameNetwork.toGameDetailModel(gameWithId!!.gameId, isFavorite = true)
+
+                            val deals = gameNetwork.deals.map { dealDto ->
+                                val store = gamesRepository.getStorefromDatabase(dealDto.storeID)
+
+                                dealDto.toDealModel(storeName = store.StoreName)
+                            }
+
+                            gameNetwork.toGameDetailModel(
+                                gameWithId!!.gameId, isFavorite = true,
+                                deals
+                            )
                         }
 
                         _state.update {
@@ -78,7 +89,6 @@ class WatchListViewModel(var gamesRepository: IGamesRepository) : ViewModel() {
             WatchListScreenEvent.DealClicked -> {}
             is WatchListScreenEvent.RemoveFromWatchList -> {
 
-                Log.e("TAG", "Eliminar")
                 viewModelScope.launch(Dispatchers.IO) {
 
                     gamesRepository.removeGamefromWatchlist(event.id)

@@ -32,13 +32,16 @@ val appModule = module {
         Room.databaseBuilder(
             androidContext(),
             GameDealsDatabase::class.java, "GameDealDatabase"
-        ).build()
+        ).createFromAsset("database/store.db").build()
     }
 
     single {
 
         get<GameDealsDatabase>().gameDao()
 
+    }
+    single {
+        get <GameDealsDatabase>().storeDao()
     }
 
     single {
@@ -48,7 +51,7 @@ val appModule = module {
 
 val repositoryModules = module {
 
-    single<IGamesRepository> { GamesRepository(get(), get()) }
+    single<IGamesRepository> { GamesRepository(get(), get(),get()) }
 
     single<IDealsRepository> { DealsRepository(get()) }
 

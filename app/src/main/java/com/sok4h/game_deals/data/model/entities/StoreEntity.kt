@@ -10,13 +10,5 @@ data class StoreEntity(
     val storeID: String,
     val StoreName:String,
     val isActive :Int,
-    val images : StoreImagesEntity
 
-)
-
-data class StoreImagesEntity(
-
-    val banner:String,
-    val logo:String,
-    val icon:String
 )

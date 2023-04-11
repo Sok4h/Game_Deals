@@ -69,7 +69,7 @@ fun GameDealCard(
 
             }
 
-            Text(text = "$ ${game.bestPrice}", modifier = Modifier)
+            Text(text = "$ ${game.bestPrice}", modifier = Modifier,style = MaterialTheme.typography.titleMedium)
 
             IconButton(onClick = {
                 if (game.info.isFavorite) {
@@ -96,31 +96,36 @@ fun GameDealCard(
         }
 
         AnimatedVisibility(visible = expanded) {
+            Column() {
 
+                for (deal in game.deals) {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
 
-            for (deal in game.deals) {
-                Row(
-                    Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
+                        AsyncImage(
+                            model = deal.storeImage,
+                            contentDescription = "",
+                            modifier = Modifier.size(30.dp)
+                        )
 
-                    AsyncImage(
-                        model = deal.storeImage,
-                        contentDescription = "",
-                        modifier = Modifier.size(30.dp)
-                    )
+                        Text(text = deal.storeName!!,Modifier.weight(1.5f))
+                        Text(text = "$" + deal.price,Modifier.weight(1f))
 
-                    Text(text = "Epic Store")
-                    Text(text = "$" + deal.price)
+                        TextButton(onClick = { onDealPressed(deal.dealID) }) {
 
-                    TextButton(onClick = { onDealPressed(deal.dealID) }) {
+                            Text(text = "Comprar")
+                        }
 
-                        Text(text = "Comprar")
                     }
-
                 }
             }
+
         }
     }
 }

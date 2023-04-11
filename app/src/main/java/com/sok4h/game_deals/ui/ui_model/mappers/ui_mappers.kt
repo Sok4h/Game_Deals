@@ -3,7 +3,7 @@ package com.sok4h.game_deals.ui.ui_model.mappers
 import com.sok4h.game_deals.data.model.dtos.*
 import com.sok4h.game_deals.ui.ui_model.*
 
-fun DealDto.toDealModel(): DealModel {
+fun DealDto.toDealModel(storeName:String): DealModel {
 
     val imageUrl = storeID.toInt() - 1
     return DealModel(
@@ -12,18 +12,19 @@ fun DealDto.toDealModel(): DealModel {
         retailPrice,
         savings,
         storeID,
-        storeImage = "https://www.cheapshark.com/img/stores/logos/$imageUrl.png"
+        storeImage = "https://www.cheapshark.com/img/stores/logos/$imageUrl.png",
+        storeName=storeName
     )
 
 }
 
 
-fun GameDetailDto.toGameDetailModel(id: String,isFavorite:Boolean=false): GameDetailModel {
+fun GameDetailDto.toGameDetailModel(id: String, isFavorite: Boolean = false,deals:List<DealModel>): GameDetailModel {
 
     return GameDetailModel(
         cheapestPriceEver.toCheapestPriceEverModel(),
-        deals.map { it.toDealModel() },
-        info.toInfoModel(id,isFavorite),
+        deals,
+        info.toInfoModel(id, isFavorite),
         deals[0].price
 
     )
@@ -34,7 +35,7 @@ fun CheapestPriceEverDto.toCheapestPriceEverModel(): CheapestPriceEverModel {
     return CheapestPriceEverModel(date, price)
 }
 
-fun InfoDto.toInfoModel(id: String,isFavorite: Boolean): InfoModel {
+fun InfoDto.toInfoModel(id: String, isFavorite: Boolean): InfoModel {
 
     return InfoModel(
         thumb, title, gameId = id, isFavorite = isFavorite

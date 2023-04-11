@@ -2,18 +2,25 @@ package com.sok4h.game_deals.data.repositories
 
 import android.util.Log
 import com.sok4h.game_deals.data.database.daos.GameDao
+import com.sok4h.game_deals.data.database.daos.StoreDao
 import com.sok4h.game_deals.data.model.data_mappers.toGameEntity
 import com.sok4h.game_deals.data.model.dtos.GameDetailDto
 import com.sok4h.game_deals.data.model.dtos.GameDto
 import com.sok4h.game_deals.data.model.entities.GameEntity
+import com.sok4h.game_deals.data.model.entities.StoreEntity
 import com.sok4h.game_deals.data.network.CheapSharkServiceImpl
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
+import com.sok4h.game_deals.ui.ui_model.mappers.toDealModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class GamesRepository(private val service: CheapSharkServiceImpl,private val gameDao: GameDao) : IGamesRepository {
+class GamesRepository(
+    private val service: CheapSharkServiceImpl,
+    private val gameDao: GameDao,
+    private val storeDao: StoreDao,
+) : IGamesRepository {
 
 
     //maybe no es necesario, todo esto lo trae get gamedeals
@@ -76,7 +83,7 @@ class GamesRepository(private val service: CheapSharkServiceImpl,private val gam
             return if (response.isSuccessful) {
 
                 val result = response.body()
-                if (result!!.isEmpty()) {
+                if (result.isNullOrEmpty()) {
                     return Result.failure(Exception("Lista vacia"))
 
                 }
@@ -122,12 +129,24 @@ class GamesRepository(private val service: CheapSharkServiceImpl,private val gam
                         val result = gamesModel.getOrDefault(emptyList())
 
 
-                        Result.success(result.map {gameDto ->
-                            val gameId = gameList.find { gameWithId ->
+                        val finalList = result.map { gameDto ->
+
+                            val gameWithId = gameList.find { gameWithId ->
                                 gameWithId.title.contentEquals(gameDto.info.title)
                             }
-                            gameDto.toGameDetailModel(gameId!!.gameID)
-                        })
+
+                            val deals= gameDto.deals.map { dealDto ->
+                                val store = storeDao.getStoreById(dealDto.storeID)
+
+                                dealDto.toDealModel(storeName = store.StoreName)
+                            }
+
+                            gameDto.toGameDetailModel(gameWithId!!.gameID, deals = deals)
+                        }
+
+
+
+                        Result.success(finalList)
 
                     } else {
 
@@ -149,12 +168,17 @@ class GamesRepository(private val service: CheapSharkServiceImpl,private val gam
 
     override suspend fun getGamesfromDatabase(): Flow<List<GameEntity>> {
 
-        return  gameDao.getAllGames()
+        return gameDao.getAllGames()
     }
 
     override suspend fun removeGamefromWatchlist(id: String) {
 
         gameDao.deleteGame(id)
+    }
+
+    override suspend fun getStorefromDatabase(id: String): StoreEntity {
+
+       return  storeDao.getStoreById(id)
     }
 
 
@@ -170,5 +194,7 @@ class GamesRepository(private val service: CheapSharkServiceImpl,private val gam
         gameDao.insertGame(game.toGameEntity())
 
     }
+
+
 
 }

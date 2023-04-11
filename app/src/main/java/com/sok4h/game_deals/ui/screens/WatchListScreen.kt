@@ -22,54 +22,73 @@ import com.sok4h.game_deals.ui.viewStates.WatchListScreenState
 fun WatchListScreen(state: WatchListScreenState, onEvent: (WatchListScreenEvent) -> Unit) {
 
 
-    if (state.isLoading) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp), verticalArrangement = Arrangement.Center) {
 
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+
+        if (state.isLoading) {
+
 
             CircularProgressIndicator(
                 modifier = Modifier
                     .size(25.dp),
                 strokeWidth = 2.dp, color = Color.Red
             )
+
         }
-    }
 
-    if (state.gameListState.isNotEmpty()) {
+        if (state.gameListState.isNotEmpty()) {
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxHeight(0.8f)
-        ) {
+            Text(text = "Lista de favoritos", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(8.dp))
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxHeight()
+            ) {
 
-            items(items = state.gameListState) { game ->
+                items(items = state.gameListState) { game ->
 
-                GameDealCard(
-                    game = game,
-                    onAddToWatchList = {},
-                    onRemoveFromWatchList = {
-                        Log.e("TAG", "Eliminado desde card")
-                        onEvent(WatchListScreenEvent.RemoveFromWatchList(it))
-                    },
-                    onDealPressed = {}
+                    GameDealCard(
+                        game = game,
+                        onAddToWatchList = {},
+                        onRemoveFromWatchList = {
+                            Log.e("TAG", "Eliminado desde card")
+                            onEvent(WatchListScreenEvent.RemoveFromWatchList(it))
+                        },
+                        onDealPressed = {}
+                    )
+                }
+
+            }
+
+        } else {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "No tienes juegos en favoritos",
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                Text(
+                    text = "Añade juegos para recibir notificaciones cada vez que surja una oferta 😁",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
                 )
             }
 
         }
 
-    } else {
-
-        Column(
-            modifier = Modifier.fillMaxSize().padding(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = "No tienes juegos en favoritos", style = MaterialTheme.typography.headlineMedium,textAlign = TextAlign.Center, modifier = Modifier.padding(bottom =16.dp))
-            Text(text = "Añade juegos para recibir notificaciones cada vez que surja una oferta 😁", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
-        }
-
     }
 
-    // TODO: add error case 
+
+    // TODO: add error case
 
 
 }
