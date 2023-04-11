@@ -34,9 +34,9 @@ fun BottomNavGraph(navHostController: NavHostController) {
             MainScreen(
                 state = mainViewmodelState,
                 onQueryChanged = { mainViewModel.updateQuery(query = it) },
-                onGameSearch = {mainViewModel.searchGame()}
-            , onGameAddedToWatchList = {mainViewModel.addGameToWatchList(it)},
-                onGameRemovedWatchList = {mainViewModel.removeGameFromWatchlist(it)},
+                onGameSearch = { mainViewModel.searchGame() },
+                onGameAddedToWatchList = { mainViewModel.addGameToWatchList(it) },
+                onGameRemovedWatchList = { mainViewModel.removeGameFromWatchlist(it) },
                 onDealPressed = {
                     uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${it}")
 
@@ -47,7 +47,12 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
         composable(route = BottomBarScreens.WatchList.route) {
 
-            WatchListScreen(watchListState, onEvent = { watchListViewModel.setEvent(it) })
+            WatchListScreen(
+                watchListState,
+                onRemoveFromWatchList = { mainViewModel.removeGameFromWatchlist(it) },
+                onDealPressed = {
+                    uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${it}")
+                })
         }
     }
 

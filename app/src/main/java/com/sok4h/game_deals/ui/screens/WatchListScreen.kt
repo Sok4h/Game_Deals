@@ -1,6 +1,5 @@
 package com.sok4h.game_deals.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,23 +12,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.sok4h.game_deals.events.WatchListScreenEvent
 import com.sok4h.game_deals.ui.components.GameDealCard
 import com.sok4h.game_deals.ui.viewStates.WatchListScreenState
 
 
 @Composable
-fun WatchListScreen(state: WatchListScreenState, onEvent: (WatchListScreenEvent) -> Unit) {
+fun WatchListScreen(
+    state: WatchListScreenState,
+    onRemoveFromWatchList: (String) -> Unit,
+    onDealPressed: (String) -> Unit,
+) {
 
-
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp), verticalArrangement = Arrangement.Center) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp), verticalArrangement = Arrangement.Center
+    ) {
 
 
         if (state.isLoading) {
-
-
             CircularProgressIndicator(
                 modifier = Modifier
                     .size(25.dp),
@@ -40,7 +41,11 @@ fun WatchListScreen(state: WatchListScreenState, onEvent: (WatchListScreenEvent)
 
         if (state.gameListState.isNotEmpty()) {
 
-            Text(text = "Lista de favoritos", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(8.dp))
+            Text(
+                text = "Lista de favoritos",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(8.dp)
+            )
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxHeight()
@@ -52,10 +57,9 @@ fun WatchListScreen(state: WatchListScreenState, onEvent: (WatchListScreenEvent)
                         game = game,
                         onAddToWatchList = {},
                         onRemoveFromWatchList = {
-                            Log.e("TAG", "Eliminado desde card")
-                            onEvent(WatchListScreenEvent.RemoveFromWatchList(it))
+                            onRemoveFromWatchList(it)
                         },
-                        onDealPressed = {}
+                        onDealPressed = { onDealPressed(it)}
                     )
                 }
 

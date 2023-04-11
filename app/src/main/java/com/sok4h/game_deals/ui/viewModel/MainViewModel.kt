@@ -26,7 +26,7 @@ class MainViewModel(
 
 
     init {
-        //getDeals()
+        getDeals()
     }
 
 
@@ -140,6 +140,10 @@ class MainViewModel(
             it.copy(isLoading = true)
         }
         viewModelScope.launch {
+
+            _state.update {
+                it.copy(isLoading = false)
+            }
 
             dealsRepository.getListOfDeals().collect { result ->
 

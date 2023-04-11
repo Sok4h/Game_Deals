@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -31,10 +32,12 @@ fun MainScreen(
     onDealPressed: (link: String) -> Unit,
 ) {
 
+    val scrollState = rememberScrollState()
     Column(
         Modifier
             .fillMaxWidth()
             .padding(8.dp)
+           /* .verticalScroll(state = scrollState)*/
     ) {
 
         SearchBar(
@@ -98,7 +101,7 @@ fun MainScreen(
         if (state.dealListState.isNotEmpty()) {
 
             LazyVerticalGrid(
-
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 columns = GridCells.Fixed(2),

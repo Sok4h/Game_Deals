@@ -74,6 +74,7 @@ class GamesRepository(
         }
     }
 
+    // TODO: Añadir manejo de errores pro 
     override suspend fun getMultipleGames(ids: String): Result<List<GameDetailDto>> {
 
         try {

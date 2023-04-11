@@ -30,7 +30,7 @@ class CheapSharkServiceImpl(private val api:CheapSharkAPI) {
 
         val result = api.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
         emit(result)
-        Log.e("TAG", result.toString() )
+        Log.e("Deals", result.toString() )
 
     }
 
