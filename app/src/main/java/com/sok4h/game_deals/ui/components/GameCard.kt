@@ -70,7 +70,11 @@ fun GameDealCard(
 
             }
 
-            Text(text = "$ ${game.bestPrice}", modifier = Modifier,style = MaterialTheme.typography.titleMedium)
+            Text(
+                text = "$ ${game.bestPrice}",
+                modifier = Modifier,
+                style = MaterialTheme.typography.titleMedium
+            )
 
             IconButton(onClick = {
                 if (game.info.isFavorite) {
@@ -97,36 +101,13 @@ fun GameDealCard(
         }
 
         AnimatedVisibility(visible = expanded) {
-            Column() {
+            Column {
 
                 for ((index, deal) in game.deals.withIndex()) {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-                            .padding(4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
 
-                        AsyncImage(
-                            model = deal.storeImage,
-                            contentDescription = "",
-                            modifier = Modifier.size(30.dp)
-                        )
+                    DealRow(deal = deal, onDealPressed = onDealPressed)
 
-                        Text(text = deal.storeName!!,Modifier.weight(1.5f))
-                        Text(text = "$" + deal.price,Modifier.weight(1f))
-
-                        TextButton(onClick = { onDealPressed(deal.dealID) }) {
-
-                            Text(text = "Comprar")
-                        }
-
-
-
-                    }
-                    if(index!=game.deals.size-1){
+                    if (index != game.deals.size - 1) {
 
                         Divider(thickness = 1.dp)
                     }
