@@ -19,8 +19,9 @@ fun FilterDealsBottomSheet() {
 
     Column(
         modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+            .padding(8.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
 
 
     ) {
@@ -72,7 +73,7 @@ fun FilterDealsBottomSheet() {
 
         // TODO: Preguntar a la nasa como carajos le pongo el label
 /*
-                    Text(text = "Price range", style = MaterialTheme.typography.titleMedium)
+
 
                     var sliderState by remember { mutableStateOf(0f..50f) }
 
@@ -84,7 +85,14 @@ fun FilterDealsBottomSheet() {
                         steps = 0,
                       )*/
 
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        Text(text = "Price range", style = MaterialTheme.typography.titleMedium)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                ,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+
+            ) {
             OutlinedTextField(modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = "Min") },
@@ -102,12 +110,16 @@ fun FilterDealsBottomSheet() {
                 prefix = { Text(text = "$") })
         }
 
-        Divider(thickness = 1.dp)
+        Divider(modifier = Modifier.padding(top=5.dp), thickness = 1.dp)
 
 
-        Row(Modifier.fillMaxWidth().padding(top = 16.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Row(
+            Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
 
-            Button(onClick = { /*TODO*/ },) {
+            Button(onClick = { /*TODO*/ }) {
                 Text(text = "Save Preferences")
             }
             OutlinedButton(onClick = { /*TODO*/ }) {
@@ -122,7 +134,7 @@ fun FilterDealsBottomSheet() {
 
 }
 
-@Preview( )
+@Preview()
 @Composable
 fun Test() {
 
@@ -131,10 +143,8 @@ fun Test() {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
-        ){
-
-        FilterDealsBottomSheet()
-
+        ) {
+            FilterDealsBottomSheet()
         }
     }
 }

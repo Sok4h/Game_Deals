@@ -29,12 +29,9 @@ import androidx.navigation.compose.rememberNavController
 import com.sok4h.game_deals.ui.BottomBarScreens
 import com.sok4h.game_deals.ui.BottomNavGraph
 import com.sok4h.game_deals.ui.theme.Game_DealsTheme
-import com.sok4h.game_deals.ui.viewModel.MainViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val mainViewModel: MainViewModel by viewModel()
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,12 +40,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             Game_DealsTheme {
 
+                val bottomSheetState = rememberBottomSheetScaffoldState()
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+
+
                     Scaffold(
                         bottomBar = {
 
@@ -85,10 +85,13 @@ class MainActivity : ComponentActivity() {
                                 }
 
                             }
-                        }
+                        },
+
 
 
                     ) {
+
+
 
                         Box(modifier = Modifier.padding(it)) {
 

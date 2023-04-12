@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.sok4h.game_deals.ui.components.FilterDealsBottomSheet
 import com.sok4h.game_deals.ui.components.GameDealCard
 import com.sok4h.game_deals.ui.components.SearchBar
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
@@ -117,28 +118,7 @@ fun MainScreen(
 
                   )*/
 
-            Column() {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                )
-                {
 
-
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.Tune, contentDescription = "")
-                    }
-
-                    /*  Text(text = "Filter")*/
-
-
-                }
-
-
-            }
 
             DealScreen()
 
@@ -168,21 +148,9 @@ fun DealScreen() {
 
     Column() {
 
-        Button(onClick = { openBottomSheet = !openBottomSheet }) {
-
-
-            Text(
-                text = if (openBottomSheet) {
-                    "Cerrar"
-                } else {
-                    "Abrir"
-                },
-
-                )
-
+        IconButton(onClick = { openBottomSheet = !openBottomSheet }, modifier = Modifier.align(Alignment.End) ) {
+            Icon(imageVector = Icons.Default.Tune, contentDescription = "")
         }
-
-
 
         if (openBottomSheet) {
 
@@ -192,79 +160,12 @@ fun DealScreen() {
                 modifier = Modifier.wrapContentHeight()
             ) {
 
-
+                FilterDealsBottomSheet()
             }
         }
     }
 }
 
-/*
-    var openBottomSheet by rememberSaveable { mutableStateOf(false) }
-    var skipPartiallyExpanded by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-    val bottomSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = skipPartiallyExpanded
-    )
-
-// App content
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Row(
-            Modifier.toggleable(
-                value = skipPartiallyExpanded,
-                role = Role.Checkbox,
-                onValueChange = { checked -> skipPartiallyExpanded = checked }
-            )
-        ) {
-            Checkbox(checked = skipPartiallyExpanded, onCheckedChange = null)
-            Spacer(Modifier.width(16.dp))
-            Text("Skip partially expanded State")
-        }
-        Button(onClick = { openBottomSheet = !openBottomSheet }) {
-            Text(text = "Show Bottom Sheet")
-        }
-    }
-
-// Sheet content
-    if (openBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { openBottomSheet = false },
-            sheetState = bottomSheetState,
-        ) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Button(
-                    // Note: If you provide logic outside of onDismissRequest to remove the sheet,
-                    // you must additionally handle intended state cleanup, if any.
-                    onClick = {
-                        scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
-                            if (!bottomSheetState.isVisible) {
-                                openBottomSheet = false
-                            }
-                        }
-                    }
-                ) {
-                    Text("Hide Bottom Sheet")
-                }
-            }
-            LazyColumn {
-                items(50) {
-                    ListItem(
-                        headlineContent = { Text("Item $it") },
-                        leadingContent = {
-                            Icon(
-                                Icons.Default.Favorite,
-                                contentDescription = "Localized description"
-                            )
-                        }
-                    )
-                }
-            }
-        }
-    }*/
-   
 
 
 
