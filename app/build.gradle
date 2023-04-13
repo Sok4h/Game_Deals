@@ -71,6 +71,8 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling"
     debugImplementation "androidx.compose.ui:ui-test-manifest"
 
+    implementation "androidx.compose.material:material:1.4.1"
+
 
     //Retrofit
 
@@ -103,6 +105,13 @@ dependencies {
     implementation "io.insert-koin:koin-android:$koin_android_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_android_compose_version"
     implementation("androidx.compose.material:material-icons-extended")
+
+    //workmanager
+
+    def versionswork = "2.8.1"
+
+    implementation "androidx.work:work-runtime-ktx:$versionswork"
+
 
 }
 

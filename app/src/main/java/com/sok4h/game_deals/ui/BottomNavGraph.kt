@@ -41,6 +41,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
                     uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${it}")
 
                 }
+            , onSortChanged = {mainViewModel.updateSortBy(it)}
             )
 
         }

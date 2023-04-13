@@ -34,7 +34,7 @@ class CheapSharkServiceImpl(private val api:CheapSharkAPI) {
 
     }
 
-    suspend fun getGameById(id: Int): Response<GameDetailDto> {
+    suspend fun getGameById(id: String): Response<GameDetailDto> {
 
         return api.getGameById(id)
     }

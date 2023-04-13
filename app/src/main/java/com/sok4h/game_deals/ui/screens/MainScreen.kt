@@ -2,10 +2,14 @@ package com.sok4h.game_deals.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,9 +18,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.sok4h.game_deals.ui.components.FilterDealsBottomSheet
+import com.sok4h.game_deals.ui.components.DealCard
+import com.sok4h.game_deals.ui.components.FilterDeals
 import com.sok4h.game_deals.ui.components.GameDealCard
 import com.sok4h.game_deals.ui.components.SearchBar
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
@@ -32,6 +38,7 @@ fun MainScreen(
     onGameAddedToWatchList: (game: GameDetailModel) -> Unit,
     onGameRemovedWatchList: (id: String) -> Unit,
     onDealPressed: (link: String) -> Unit,
+    onSortChanged: (String) -> Unit,
 ) {
 
 
@@ -39,17 +46,19 @@ fun MainScreen(
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally
         /* .verticalScroll(state = scrollState)*/
     ) {
+
 
         SearchBar(
             textValue = state.searchQuery,
             onQueryChanged = { onQueryChanged(it) },
             onSearch = { onGameSearch() },
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.95f)
                 .padding(bottom = 16.dp)
+                .clip(shape = RoundedCornerShape(8.dp))
         )
 
 
@@ -102,33 +111,33 @@ fun MainScreen(
             Text(text = state.gameListErrorMessage)
         }
         if (state.dealListState.isNotEmpty()) {
-            /*  LazyVerticalGrid(
-                  modifier = Modifier,
-                  horizontalArrangement = Arrangement.spacedBy(8.dp),
-                  verticalArrangement = Arrangement.spacedBy(8.dp),
-                  columns = GridCells.Fixed(2),
-                  content = {
 
-                      items(items = state.dealListState) {deal->
+            DealScreen(state.sortDealsBy, onSortChanged)
+            LazyVerticalGrid(
+                modifier = Modifier,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                columns = GridCells.Fixed(2),
+                content = {
 
-                          DealCard(deal = deal, onDealPressed = {onDealPressed(it)})
+                    items(items = state.dealListState) { deal ->
 
-                      }
-                  },
+                        DealCard(deal = deal, onDealPressed = { onDealPressed(it) })
 
-                  )*/
+                    }
+                },
+
+                )
 
 
+            /*    LazyColumn(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
-            DealScreen()
+                    items(items = state.dealListState) { deal ->
+                        DealCard(deal = deal, onDealPressed = {})
 
-            /*  LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    }
+                }*/
 
-                  items(items = state.dealListState) { deal ->
-                      DealCard(deal = deal, onDealPressed = onDealPressed)
-
-                  }
-              }*/
 
         }
 
@@ -140,27 +149,42 @@ fun MainScreen(
 
 @ExperimentalMaterial3Api
 @Composable
-fun DealScreen() {
+fun DealScreen(sortBy: String, onSortChanged: (String) -> Unit) {
 
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     val bottomSheetState = rememberModalBottomSheetState(true)
 
-    Column() {
+    Column(Modifier.fillMaxWidth()) {
 
-        IconButton(onClick = { openBottomSheet = !openBottomSheet }, modifier = Modifier.align(Alignment.End) ) {
-            Icon(imageVector = Icons.Default.Tune, contentDescription = "")
+        IconButton(
+            onClick = { openBottomSheet = !openBottomSheet },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Icon(imageVector = Icons.Default.FilterList, contentDescription = "")
         }
 
         if (openBottomSheet) {
 
-            ModalBottomSheet(
-                onDismissRequest = { openBottomSheet = false },
-                sheetState = bottomSheetState,
-                modifier = Modifier.wrapContentHeight()
-            ) {
+            /* ModalBottomSheet(
+                 onDismissRequest = { openBottomSheet = false },
+                 sheetState = bottomSheetState,
+                 modifier = Modifier.wrapContentHeight()
+             ) {
+                 FilterDealsBottomSheet(sortBy, onSortChanged)
+             }*/
 
-                FilterDealsBottomSheet()
+            AlertDialog(onDismissRequest = { openBottomSheet = false }) {
+
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    FilterDeals(sortValue = sortBy, onSortChanged = onSortChanged)
+
+                }
             }
         }
     }

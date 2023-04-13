@@ -145,7 +145,7 @@ class MainViewModel(
                 it.copy(isLoading = false)
             }
 
-            dealsRepository.getListOfDeals().collect { result ->
+            dealsRepository.getListOfDeals(sortBy = state.value.sortDealsBy).collect { result ->
 
                 if (result.isSuccess) {
 
@@ -173,6 +173,18 @@ class MainViewModel(
         _state.update {
             it.copy(searchQuery = query)
         }
+    }
+
+    fun updateSortBy(sort:String){
+
+        _state.update {
+            it.copy(sortDealsBy = sort)
+        }
+
+        Log.e("TAG", sort )
+
+
+        getDeals()
     }
 
 }

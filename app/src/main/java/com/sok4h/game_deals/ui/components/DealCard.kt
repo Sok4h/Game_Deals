@@ -20,55 +20,67 @@ import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 
 @Composable
-fun DealCard(deal: DealDetailModel,onDealPressed:(String)->Unit) {
+fun DealCard(deal: DealDetailModel, onDealPressed: (String) -> Unit) {
 
     Card(
         modifier = Modifier
             .wrapContentWidth()
+            .padding(4.dp)
             .wrapContentHeight()
-            .clickable { onDealPressed(deal.dealID) }
-    ) {
 
-        AsyncImage(
-            model = deal.gameImage,
-            modifier = Modifier
-                .height(70.dp)
-                .fillMaxWidth(),
+            .clickable { onDealPressed(deal.dealID) },
 
-            contentDescription = "",
-            contentScale = ContentScale.Crop
-        )
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxHeight(),
+        ) {
 
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-
-            ) {
             AsyncImage(
-                model = deal.storeLogo,
+                model = deal.gameImage,
+                modifier = Modifier
+                    .height(70.dp)
+                    .fillMaxWidth(),
+
                 contentDescription = "",
-                modifier = Modifier.size(16.dp)
+                contentScale = ContentScale.FillBounds
             )
-            Text(text = deal.title, modifier = Modifier.weight(1f), overflow = TextOverflow.Ellipsis,maxLines = 2)
-            Text(text = "$" + deal.salePrice, modifier = Modifier)
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+
+
+
+            Text(
+                text = deal.title,
+                modifier = Modifier,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AsyncImage(
+                    model = deal.storeLogo,
+                    contentDescription = "",
+                    modifier = Modifier.size(16.dp)
+                )
+                Text(text = "$" + deal.salePrice, modifier = Modifier)
+            }
+
+
         }
-
-
     }
 }
 
 @Preview
 @Composable
 fun megaxd() {
-    LazyColumn(){
-        items(count = 4){
+    LazyColumn() {
+        items(count = 4) {
             DealCardPreview()
         }
     }
 }
+
 @Composable
 fun DealCardPreview() {
 
@@ -80,9 +92,11 @@ fun DealCardPreview() {
 
     ) {
 
-        Image(painter = painterResource(id = R.drawable.ic_launcher_foreground),
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
             modifier = Modifier
-                .height(80.dp).fillMaxWidth(),
+                .height(80.dp)
+                .fillMaxWidth(),
 
             contentDescription = "",
             contentScale = ContentScale.Crop
@@ -100,7 +114,12 @@ fun DealCardPreview() {
                 contentDescription = "",
                 modifier = Modifier.size(16.dp)
             )
-            Text(text = "Borderlands 3", modifier = Modifier.weight(1f), overflow = TextOverflow.Ellipsis,maxLines = 2)
+            Text(
+                text = "Borderlands 3",
+                modifier = Modifier.weight(1f),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
             Text(text = "$" + "350", modifier = Modifier)
         }
 

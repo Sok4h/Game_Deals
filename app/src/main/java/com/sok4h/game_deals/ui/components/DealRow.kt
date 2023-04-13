@@ -17,7 +17,9 @@ import coil.compose.AsyncImage
 import com.sok4h.game_deals.ui.ui_model.DealModel
 
 @Composable
-fun DealRow(deal:DealModel,onDealPressed:(String)->Unit) {
+fun DealRow(deal: DealModel, onDealPressed: (String) -> Unit) {
+
+    // TODO: revisar el caso donde la oferta sea el precio por defecto (no poner las letras rojas) 
     Row(
         Modifier
             .fillMaxWidth()
@@ -35,10 +37,15 @@ fun DealRow(deal:DealModel,onDealPressed:(String)->Unit) {
 
         Text(text = deal.storeName!!, Modifier.weight(1.5f))
 
-        Column(Modifier.weight(1f) ) {
+        Column(Modifier.weight(1f)) {
 
             Text(text = "$" + deal.price, modifier = Modifier.fillMaxWidth())
-            Text(modifier = Modifier.fillMaxWidth(),text = "$" + deal.retailPrice, style = TextStyle(textDecoration = TextDecoration.LineThrough, color = Color.Red), fontSize = 12.sp )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "$" + deal.retailPrice,
+                style = TextStyle(textDecoration = TextDecoration.LineThrough, color = Color.Red),
+                fontSize = 12.sp
+            )
         }
 
         TextButton(onClick = { onDealPressed(deal.dealID) }) {

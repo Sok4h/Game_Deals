@@ -9,5 +9,6 @@ data class MainScreenState(
     val isGameLoading:Boolean=false,
     val gameListErrorMessage:String="",
     val isLoading:Boolean=false,
-    val searchQuery:String=""
+    val searchQuery:String="",
+    val sortDealsBy:String="Recent"
 )

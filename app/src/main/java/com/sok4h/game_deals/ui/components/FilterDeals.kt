@@ -1,28 +1,28 @@
 package com.sok4h.game_deals.ui.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sok4h.game_deals.ui.theme.Game_DealsTheme
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterDealsBottomSheet() {
+fun FilterDeals(sortValue: String, onSortChanged: (String) -> Unit) {
 
+    // TODO: Añadir botón cerrar con su respectivo estado 
     Column(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
-
 
     ) {
 
@@ -33,43 +33,48 @@ fun FilterDealsBottomSheet() {
             style = MaterialTheme.typography.titleLarge
         )
 
-        Text(text = "Sort by", style = MaterialTheme.typography.titleMedium)
+        Text(text = "Search by", style = MaterialTheme.typography.titleMedium)
 
-        androidx.compose.foundation.layout.Column(
-            modifier = Modifier
-                .selectableGroup()
-                .fillMaxWidth()
-        ) {
+        val radioOptions = listOf("Recent", "Savings", "Store", "Price", "Title")
 
+        var expanded by remember {
+            mutableStateOf(false)
+        }
+        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
 
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(selected = false, onClick = { /*TODO*/ })
-                Text(text = "Recent")
-            }
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(), value = sortValue, onValueChange = {}, readOnly = true,
+                trailingIcon = {
+                    Icon(
+                        imageVector = if (!expanded) {
+                            Icons.Default.ArrowDropDown
+                        } else {
 
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(selected = true, onClick = { /*TODO*/ })
-                Text(text = "Savings")
-            }
+                            Icons.Default.ArrowDropUp
+                        },
+                        contentDescription = ""
+                    )
+                }
+            )
 
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(selected = false, onClick = { /*TODO*/ })
-                Text(text = "Store")
+            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                radioOptions.forEach { option ->
+
+                    DropdownMenuItem(text = { Text(text = option) },
+                        onClick = {
+                            onSortChanged(option)
+                            expanded = false
+                        })
+
+                    Divider()
+                }
+
             }
 
         }
 
-
-        Divider(thickness = 1.dp)
 
         // TODO: Preguntar a la nasa como carajos le pongo el label
 /*
@@ -86,13 +91,15 @@ fun FilterDealsBottomSheet() {
                       )*/
 
         Text(text = "Price range", style = MaterialTheme.typography.titleMedium)
+
+
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                ,
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
 
             ) {
+
             OutlinedTextField(modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = "Min") },
@@ -110,17 +117,18 @@ fun FilterDealsBottomSheet() {
                 prefix = { Text(text = "$") })
         }
 
-        Divider(modifier = Modifier.padding(top=5.dp), thickness = 1.dp)
+
 
 
         Row(
             Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
 
             Button(onClick = { /*TODO*/ }) {
-                Text(text = "Save Preferences")
+                Text(text = "Update filters")
             }
             OutlinedButton(onClick = { /*TODO*/ }) {
                 Text(text = "Reset filters")
@@ -128,23 +136,7 @@ fun FilterDealsBottomSheet() {
 
         }
 
-
     }
 
 
-}
-
-@Preview()
-@Composable
-fun Test() {
-
-    Game_DealsTheme {
-
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            FilterDealsBottomSheet()
-        }
-    }
 }

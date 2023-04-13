@@ -24,7 +24,7 @@ class GamesRepository(
 
 
     //maybe no es necesario, todo esto lo trae get gamedeals
-    override suspend fun getGameById(id: Int): Result<GameDetailDto> {
+    override suspend fun getGameById(id: String): Result<GameDetailDto> {
 
         try {
 

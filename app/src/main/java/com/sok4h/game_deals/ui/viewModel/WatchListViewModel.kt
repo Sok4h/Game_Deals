@@ -1,10 +1,8 @@
 package com.sok4h.game_deals.ui.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IGamesRepository
-import com.sok4h.game_deals.events.WatchListScreenEvent
 import com.sok4h.game_deals.ui.ui_model.mappers.toDealModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
 import com.sok4h.game_deals.ui.viewStates.WatchListScreenState
@@ -83,24 +81,7 @@ class WatchListViewModel(var gamesRepository: IGamesRepository) : ViewModel() {
         }
     }
 
-    fun setEvent(event: WatchListScreenEvent) {
 
-        when (event) {
-            WatchListScreenEvent.DealClicked -> {}
-            is WatchListScreenEvent.RemoveFromWatchList -> {
-
-                viewModelScope.launch(Dispatchers.IO) {
-
-                    gamesRepository.removeGamefromWatchlist(event.id)
-
-                    Log.e("TAG", state.value.gameListState.size.toString())
-
-
-                }
-
-            }
-        }
-    }
 
 }
 

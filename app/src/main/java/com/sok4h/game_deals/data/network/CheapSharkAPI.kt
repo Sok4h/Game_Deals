@@ -26,7 +26,7 @@ interface CheapSharkAPI {
     ): Response<List<DealDetailDto>>
 
     @GET("games")
-    suspend fun getGameById(@Query("id") id: Int): Response<GameDetailDto>
+    suspend fun getGameById(@Query("id") id: String): Response<GameDetailDto>
 
     @GET("stores")
     suspend fun getStoreInfo(): Response<List<StoresDto>>
