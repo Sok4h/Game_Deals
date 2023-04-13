@@ -15,9 +15,17 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterDeals(sortValue: String, onSortChanged: (String) -> Unit) {
+fun FilterDeals(
+    sortValue: String,
+    minPrice: String,
+    maxPrice: String,
+    onSortChanged: (String) -> Unit,
+    onMinPriceChanged: (String) -> Unit,
+    onMaxPriceChanged: (String) -> Unit,
+    onFilterChanged:()->Unit
+) {
 
-    // TODO: Añadir botón cerrar con su respectivo estado 
+    // TODO: Añadir botón cerrar con su respectivo estado
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -103,17 +111,24 @@ fun FilterDeals(sortValue: String, onSortChanged: (String) -> Unit) {
             OutlinedTextField(modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = "Min") },
-                value = "",
-                placeholder = { Text(text = "0") },
-                onValueChange = {},
+                value = minPrice,
+                placeholder = { Text(text = "0", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f))},
+
+                onValueChange = {
+                    onMinPriceChanged(it)
+                },
                 prefix = { Text(text = "$") })
 
             OutlinedTextField(modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = "Max") },
-                value = "",
-                placeholder = { Text(text = "50") },
-                onValueChange = {},
+                value = maxPrice,
+                placeholder = { Text(text = "50",color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)) },
+                onValueChange = {
+
+                    onMaxPriceChanged(it)
+
+                },
                 prefix = { Text(text = "$") })
         }
 
@@ -127,12 +142,14 @@ fun FilterDeals(sortValue: String, onSortChanged: (String) -> Unit) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
 
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {onFilterChanged()
+
+            expanded=false}) {
                 Text(text = "Update filters")
             }
-            OutlinedButton(onClick = { /*TODO*/ }) {
+          /*  TextButton(onClick = { *//*TODO*//* }) {
                 Text(text = "Reset filters")
-            }
+            }*/
 
         }
 

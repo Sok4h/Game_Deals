@@ -40,8 +40,10 @@ fun BottomNavGraph(navHostController: NavHostController) {
                 onDealPressed = {
                     uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${it}")
 
-                }
-            , onSortChanged = {mainViewModel.updateSortBy(it)}
+                }, onSortChanged = { mainViewModel.updateSortBy(it) },
+                onMinPriceChanged = { mainViewModel.updateMinPrice(it) },
+                onMaxPriceChanged = { mainViewModel.updateMaxPrice(it) },
+                onFilterChanged = {mainViewModel.updateFilter()}
             )
 
         }

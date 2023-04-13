@@ -108,7 +108,7 @@ class MainViewModel(
         }
     }
 
-    fun removeGameFromWatchlist(id:String){
+    fun removeGameFromWatchlist(id: String) {
 
         viewModelScope.launch(Dispatchers.IO) {
             gamesRepository.removeGamefromWatchlist(id)
@@ -145,7 +145,11 @@ class MainViewModel(
                 it.copy(isLoading = false)
             }
 
-            dealsRepository.getListOfDeals(sortBy = state.value.sortDealsBy).collect { result ->
+            dealsRepository.getListOfDeals(
+                sortBy = state.value.sortDealsBy,
+                lowerPrice = _state.value.minPrice.toIntOrNull(),
+                upperPrice = _state.value.maxPrice.toIntOrNull()
+            ).collect { result ->
 
                 if (result.isSuccess) {
 
@@ -175,15 +179,26 @@ class MainViewModel(
         }
     }
 
-    fun updateSortBy(sort:String){
+    fun updateSortBy(sort: String) {
 
         _state.update {
             it.copy(sortDealsBy = sort)
         }
+    }
 
-        Log.e("TAG", sort )
+    fun updateMinPrice(price: String) {
+        _state.update {
+            it.copy(minPrice = price)
+        }
+    }
 
+    fun updateMaxPrice(price: String) {
+        _state.update {
+            it.copy(maxPrice = price)
+        }
+    }
 
+    fun updateFilter() {
         getDeals()
     }
 

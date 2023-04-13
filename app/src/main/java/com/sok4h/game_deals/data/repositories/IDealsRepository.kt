@@ -7,8 +7,8 @@ interface IDealsRepository {
 
      fun getListOfDeals(
         storeID: String?=null,
-        pageNumber: Int?=5,
-        sortBy: String?="Recent",
+        pageNumber: Int?=null,
+        sortBy: String?=null,
         desc: Boolean=false,
         lowerPrice: Int?=null,
         upperPrice: Int?=null

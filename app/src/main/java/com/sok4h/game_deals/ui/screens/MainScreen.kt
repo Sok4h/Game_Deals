@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.sok4h.game_deals.ui.components.DealCard
 import com.sok4h.game_deals.ui.components.FilterDeals
 import com.sok4h.game_deals.ui.components.GameDealCard
@@ -39,7 +40,11 @@ fun MainScreen(
     onGameRemovedWatchList: (id: String) -> Unit,
     onDealPressed: (link: String) -> Unit,
     onSortChanged: (String) -> Unit,
-) {
+    onMaxPriceChanged: (String) -> Unit,
+    onMinPriceChanged: (String) -> Unit,
+    onFilterChanged: () -> Unit,
+
+    ) {
 
 
     val scrollState = rememberScrollState()
@@ -67,9 +72,7 @@ fun MainScreen(
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
 
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(25.dp),
-                    strokeWidth = 2.dp, color = Color.Red
+                    modifier = Modifier.size(25.dp), strokeWidth = 2.dp, color = Color.Red
                 )
             }
 
@@ -84,21 +87,16 @@ fun MainScreen(
 
                 items(items = state.gameListState) { gameItem ->
 
-                    GameDealCard(
-                        game = gameItem,
-                        onAddToWatchList = {
-                            onGameAddedToWatchList(it)
-                        },
-                        onRemoveFromWatchList = {
-                            onGameRemovedWatchList(
-                                it
-                            )
-                        },
-                        onDealPressed = {
+                    GameDealCard(game = gameItem, onAddToWatchList = {
+                        onGameAddedToWatchList(it)
+                    }, onRemoveFromWatchList = {
+                        onGameRemovedWatchList(
+                            it
+                        )
+                    }, onDealPressed = {
 
-                            onDealPressed(it)
-                        }
-                    )
+                        onDealPressed(it)
+                    })
 
 
                 }
@@ -112,7 +110,15 @@ fun MainScreen(
         }
         if (state.dealListState.isNotEmpty()) {
 
-            DealScreen(state.sortDealsBy, onSortChanged)
+            DealScreen(
+                state.sortDealsBy,
+                onSortChanged = onSortChanged,
+                onMaxPriceChanged = onMaxPriceChanged,
+                onMinPriceChanged = onMinPriceChanged,
+                minPrice = state.minPrice,
+                maxPrice = state.maxPrice,
+                onFilterChanged = onFilterChanged
+            )
             LazyVerticalGrid(
                 modifier = Modifier,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -149,40 +155,53 @@ fun MainScreen(
 
 @ExperimentalMaterial3Api
 @Composable
-fun DealScreen(sortBy: String, onSortChanged: (String) -> Unit) {
+fun DealScreen(
+    sortBy: String,
+    minPrice: String,
+    maxPrice: String,
+    onMinPriceChanged: (String) -> Unit,
+    onMaxPriceChanged: (String) -> Unit,
+    onSortChanged: (String) -> Unit,
+    onFilterChanged: () -> Unit,
+) {
 
-    var openBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-    val bottomSheetState = rememberModalBottomSheetState(true)
+    // TODO: Revisar recomposicion para saber si puedo mandar el estado
+    var openFilterDialog by rememberSaveable { mutableStateOf(false) }
 
     Column(Modifier.fillMaxWidth()) {
 
         IconButton(
-            onClick = { openBottomSheet = !openBottomSheet },
+            onClick = { openFilterDialog = !openFilterDialog },
             modifier = Modifier.align(Alignment.End)
         ) {
             Icon(imageVector = Icons.Default.FilterList, contentDescription = "")
         }
 
-        if (openBottomSheet) {
+        if (openFilterDialog) {
 
-            /* ModalBottomSheet(
-                 onDismissRequest = { openBottomSheet = false },
-                 sheetState = bottomSheetState,
-                 modifier = Modifier.wrapContentHeight()
-             ) {
-                 FilterDealsBottomSheet(sortBy, onSortChanged)
-             }*/
-
-            AlertDialog(onDismissRequest = { openBottomSheet = false }) {
+            AlertDialog(properties = DialogProperties(usePlatformDefaultWidth = false),
+                onDismissRequest = { openFilterDialog = false }) {
 
                 Surface(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .fillMaxWidth(0.85f)
+                        .wrapContentHeight(),
                     shape = MaterialTheme.shapes.medium
                 ) {
-                    FilterDeals(sortValue = sortBy, onSortChanged = onSortChanged)
+                    FilterDeals(
+                        sortValue = sortBy,
+                        onSortChanged = onSortChanged,
+                        minPrice = minPrice,
+                        maxPrice = maxPrice,
+                        onMaxPriceChanged = onMaxPriceChanged,
+                        onMinPriceChanged = onMinPriceChanged,
+                        onFilterChanged = {
+                            onFilterChanged()
+
+                            openFilterDialog = false
+                        },
+                    )
 
                 }
             }

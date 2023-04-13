@@ -39,7 +39,7 @@ fun DealCard(deal: DealDetailModel, onDealPressed: (String) -> Unit) {
                     .fillMaxWidth(),
 
                 contentDescription = "",
-                contentScale = ContentScale.FillBounds
+                contentScale = ContentScale.Fit
             )
         Column(
             modifier = Modifier.padding(8.dp),
