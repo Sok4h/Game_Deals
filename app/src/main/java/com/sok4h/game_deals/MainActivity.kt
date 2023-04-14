@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                                         },
                                         onClick = {
 
-                                            navController.navigate(screen.route) {
+                                            navController.navigate(screen.route,) {
                                                 popUpTo(navController.graph.findStartDestination().id) {
                                                     saveState = true
                                                 }

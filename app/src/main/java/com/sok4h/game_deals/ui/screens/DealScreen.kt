@@ -36,33 +36,37 @@ import com.sok4h.game_deals.ui.viewStates.MainScreenState
 @Composable
 fun DealScreen(
     state: MainScreenState,
-    sortBy: String,
-    minPrice: String,
-    maxPrice: String,
     onMinPriceChanged: (String) -> Unit,
     onMaxPriceChanged: (String) -> Unit,
     onSortChanged: (String) -> Unit,
     onFilterChanged: () -> Unit,
 ) {
 
-    // TODO: Revisar recomposicion para saber si puedo mandar el estado
+    // TODO: Hoistear estado clickear deal
     var openFilterDialog by rememberSaveable { mutableStateOf(false) }
 
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(16.dp)) {
+            .padding(16.dp)
+    ) {
 
 
         if (state.dealListState.isNotEmpty()) {
 
-            Row(modifier=Modifier.fillMaxWidth().padding(bottom = 16.dp),horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
                 Text(text = "Explore Deals", style = MaterialTheme.typography.titleLarge)
                 IconButton(
                     onClick = { openFilterDialog = !openFilterDialog },
 
-                ) {
+                    ) {
                     Icon(imageVector = Icons.Default.FilterList, contentDescription = "")
                 }
             }
@@ -77,7 +81,11 @@ fun DealScreen(
 
                     items(items = state.dealListState) { deal ->
 
-                        DealCard(deal = deal, onDealPressed = { /*onDealPressed(it)*/ }, modifier = Modifier.wrapContentWidth())
+                        DealCard(
+                            deal = deal,
+                            onDealPressed = { /*onDealPressed(it)*/ },
+                            modifier = Modifier.wrapContentWidth()
+                        )
 
                     }
                 },
@@ -95,15 +103,14 @@ fun DealScreen(
                         shape = MaterialTheme.shapes.medium
                     ) {
                         FilterDeals(
-                            sortValue = sortBy,
+                            sortValue = state.sortDealsBy,
                             onSortChanged = onSortChanged,
-                            minPrice = minPrice,
-                            maxPrice = maxPrice,
+                            minPrice = state.minPrice,
+                            maxPrice = state.maxPrice,
                             onMaxPriceChanged = onMaxPriceChanged,
                             onMinPriceChanged = onMinPriceChanged,
                             onFilterChanged = {
                                 onFilterChanged()
-
                                 openFilterDialog = false
                             },
                         )

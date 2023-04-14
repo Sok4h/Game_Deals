@@ -34,7 +34,7 @@ class WatchListViewModel(var gamesRepository: IGamesRepository) : ViewModel() {
                     var ids = ""
                     games.forEachIndexed { index, item ->
 
-                        ids += (if (index == games.size - 1) {
+                        ids += (if (index == games.lastIndex) {
 
                             item.gameId
 

@@ -117,7 +117,7 @@ class GamesRepository(
                     if (gameList.isEmpty()) Result.failure<Exception>(Exception("no se encontró ningun juego"))
 
                     gameList.forEachIndexed { index, game ->
-                        ids += if (index == gameList.size - 1) game.gameID
+                        ids += if (index == gameList.lastIndex) game.gameID
                         else {
 
                             game.gameID + ","

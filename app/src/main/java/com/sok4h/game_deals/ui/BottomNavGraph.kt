@@ -30,10 +30,9 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
     NavHost(navController = navHostController, startDestination = "home") {
 
-        composable(route = BottomBarScreens.Home.route) {
+        composable(route = BottomBarScreens.Home.route,) {
 
-            MainScreen(
-                state = mainViewmodelState,
+            MainScreen(state = mainViewmodelState,
                 onQueryChanged = { mainViewModel.updateQuery(query = it) },
                 onGameSearch = { mainViewModel.searchGame() },
                 onGameAddedToWatchList = { mainViewModel.addGameToWatchList(it) },
@@ -41,18 +40,13 @@ fun BottomNavGraph(navHostController: NavHostController) {
                 onDealPressed = {
                     uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${it}")
 
-                }, onSortChanged = { mainViewModel.updateSortBy(it) },
-                onMinPriceChanged = { mainViewModel.updateMinPrice(it) },
-                onMaxPriceChanged = { mainViewModel.updateMaxPrice(it) },
-                onFilterChanged = { mainViewModel.updateFilter() },
-                onNavToRecentDeal = { navHostController.navigate(route = "DealScreen") }
-            )
+                },
+                onNavToRecentDeal = { navHostController.navigate(route = "DealScreen") })
 
         }
 
         composable(route = BottomBarScreens.WatchList.route) {
-            WatchListScreen(
-                watchListState,
+            WatchListScreen(watchListState,
                 onRemoveFromWatchList = { mainViewModel.removeGameFromWatchlist(it) },
                 onDealPressed = {
                     uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${it}")
@@ -61,16 +55,11 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
         composable(route = "DealScreen") {
 
-            DealScreen(
-                state = mainViewmodelState,
-                sortBy = mainViewmodelState.sortDealsBy,
-                minPrice = mainViewmodelState.minPrice,
-                maxPrice = mainViewmodelState.maxPrice,
+            DealScreen(state = mainViewmodelState,
                 onMinPriceChanged = { mainViewModel.updateMinPrice(price = it) },
                 onMaxPriceChanged = { mainViewModel.updateMaxPrice(price = it) },
                 onSortChanged = { mainViewModel.updateSortBy(it) },
-                onFilterChanged = { mainViewModel.updateFilter() }
-            )
+                onFilterChanged = { mainViewModel.updateFilter() })
         }
     }
 

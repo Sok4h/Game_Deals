@@ -44,13 +44,8 @@ fun MainScreen(
     onGameAddedToWatchList: (game: GameDetailModel) -> Unit,
     onGameRemovedWatchList: (id: String) -> Unit,
     onDealPressed: (link: String) -> Unit,
-    onSortChanged: (String) -> Unit,
-    onMaxPriceChanged: (String) -> Unit,
-    onMinPriceChanged: (String) -> Unit,
-    onFilterChanged: () -> Unit,
     onNavToRecentDeal: () -> Unit,
-
-    ) {
+) {
 
 
     val scrollState = rememberScrollState()
@@ -58,7 +53,7 @@ fun MainScreen(
         Modifier
             .fillMaxWidth()
             .verticalScroll(state = scrollState)
-            .padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
 

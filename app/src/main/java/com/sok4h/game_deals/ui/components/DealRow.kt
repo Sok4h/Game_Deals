@@ -1,7 +1,12 @@
 package com.sok4h.game_deals.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,12 +45,17 @@ fun DealRow(deal: DealModel, onDealPressed: (String) -> Unit) {
         Column(Modifier.weight(1f)) {
 
             Text(text = "$" + deal.price, modifier = Modifier.fillMaxWidth())
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "$" + deal.retailPrice,
-                style = TextStyle(textDecoration = TextDecoration.LineThrough, color = Color.Red),
-                fontSize = 12.sp
-            )
+
+            if(!deal.price.contentEquals(deal.retailPrice)){
+
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "$" + deal.retailPrice,
+                    style = TextStyle(textDecoration = TextDecoration.LineThrough, color = Color.Red),
+                    fontSize = 12.sp
+                )
+
+            }
         }
 
         TextButton(onClick = { onDealPressed(deal.dealID) }) {
