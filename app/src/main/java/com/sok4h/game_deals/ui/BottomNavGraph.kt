@@ -1,13 +1,16 @@
 package com.sok4h.game_deals.ui
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
 import com.sok4h.game_deals.ui.screens.DealScreen
 import com.sok4h.game_deals.ui.screens.MainScreen
 import com.sok4h.game_deals.ui.screens.WatchListScreen
@@ -15,7 +18,7 @@ import com.sok4h.game_deals.ui.viewModel.MainViewModel
 import com.sok4h.game_deals.ui.viewModel.WatchListViewModel
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun BottomNavGraph(navHostController: NavHostController) {
     val uriHandler = LocalUriHandler.current
@@ -28,9 +31,13 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
     val mainViewmodelState by mainViewModel.state.collectAsStateWithLifecycle()
 
-    NavHost(navController = navHostController, startDestination = "home") {
+    AnimatedNavHost(navController = navHostController, startDestination = "home") {
 
-        composable(route = BottomBarScreens.Home.route,) {
+        composable(route = BottomBarScreens.Home.route, exitTransition = {->
+
+            fadeOut(animationSpec = tween(300))
+
+        }) {
 
             MainScreen(state = mainViewmodelState,
                 onQueryChanged = { mainViewModel.updateQuery(query = it) },
