@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.sok4h.game_deals.ui.screens.DealScreen
 import com.sok4h.game_deals.ui.screens.MainScreen
 import com.sok4h.game_deals.ui.screens.WatchListScreen
 import com.sok4h.game_deals.ui.viewModel.MainViewModel
@@ -43,19 +44,33 @@ fun BottomNavGraph(navHostController: NavHostController) {
                 }, onSortChanged = { mainViewModel.updateSortBy(it) },
                 onMinPriceChanged = { mainViewModel.updateMinPrice(it) },
                 onMaxPriceChanged = { mainViewModel.updateMaxPrice(it) },
-                onFilterChanged = {mainViewModel.updateFilter()}
+                onFilterChanged = { mainViewModel.updateFilter() },
+                onNavToRecentDeal = { navHostController.navigate(route = "DealScreen") }
             )
 
         }
 
         composable(route = BottomBarScreens.WatchList.route) {
-
             WatchListScreen(
                 watchListState,
                 onRemoveFromWatchList = { mainViewModel.removeGameFromWatchlist(it) },
                 onDealPressed = {
                     uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${it}")
                 })
+        }
+
+        composable(route = "DealScreen") {
+
+            DealScreen(
+                state = mainViewmodelState,
+                sortBy = mainViewmodelState.sortDealsBy,
+                minPrice = mainViewmodelState.minPrice,
+                maxPrice = mainViewmodelState.maxPrice,
+                onMinPriceChanged = { mainViewModel.updateMinPrice(price = it) },
+                onMaxPriceChanged = { mainViewModel.updateMaxPrice(price = it) },
+                onSortChanged = { mainViewModel.updateSortBy(it) },
+                onFilterChanged = { mainViewModel.updateFilter() }
+            )
         }
     }
 

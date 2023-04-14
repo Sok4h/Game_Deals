@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sok4h.game_deals.ui.BottomBarScreens
@@ -39,8 +40,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Game_DealsTheme {
-
-                val bottomSheetState = rememberBottomSheetScaffoldState()
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -51,7 +50,6 @@ class MainActivity : ComponentActivity() {
 
                     Scaffold(
                         bottomBar = {
-
                             NavigationBar(Modifier.graphicsLayer {
                                 shape = RoundedCornerShape(20.dp)
                                 clip = true
@@ -60,8 +58,10 @@ class MainActivity : ComponentActivity() {
                                 val screens = listOf(
 
                                     BottomBarScreens.Home,
-                                    BottomBarScreens.WatchList
-                                )
+                                    BottomBarScreens.Deals,
+                                    BottomBarScreens.WatchList,
+
+                                    )
 
                                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                                 val currentDestination = navBackStackEntry?.destination
@@ -79,7 +79,13 @@ class MainActivity : ComponentActivity() {
                                         },
                                         onClick = {
 
-                                            navController.navigate(screen.route)
+                                            navController.navigate(screen.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                            }
+
                                         },
                                     )
                                 }
@@ -88,13 +94,29 @@ class MainActivity : ComponentActivity() {
                         },
 
 
-
-                    ) {
-
+                        ) {
 
 
-                        Box(modifier = Modifier.padding(it)) {
+                        Column(modifier = Modifier.padding(it)) {
 
+
+                            /*    com.sok4h.game_deals.ui.components.SearchBar(
+                                    textValue = "",
+                                    onQueryChanged = {*//* onQueryChanged(it)*//* },
+                                onSearch = { *//*onGameSearch()*//* },
+                                modifier = Modifier
+                                    .fillMaxWidth(0.95f)
+                                    .padding(bottom = 16.dp)
+                                    .clip(shape = RoundedCornerShape(8.dp))
+                            )*/
+
+                            /* SearchBar(
+                                 query = "",
+                                 onQueryChange ={} ,
+                                 onSearch = {},
+                                 active = true,
+                                 onActiveChange = {}
+                             ) */
                             BottomNavGraph(navHostController = navController)
 
                         }

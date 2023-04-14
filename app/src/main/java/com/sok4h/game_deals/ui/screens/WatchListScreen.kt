@@ -1,6 +1,12 @@
 package com.sok4h.game_deals.ui.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -9,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sok4h.game_deals.ui.components.GameDealCard
@@ -26,7 +31,7 @@ fun WatchListScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp), verticalArrangement = Arrangement.Center
+            .padding(horizontal = 16.dp, vertical = 16.dp), verticalArrangement = Arrangement.Center
     ) {
 
 
@@ -34,7 +39,7 @@ fun WatchListScreen(
             CircularProgressIndicator(
                 modifier = Modifier
                     .size(25.dp),
-                strokeWidth = 2.dp, color = Color.Red
+                strokeWidth = 2.dp
             )
 
         }
@@ -43,12 +48,12 @@ fun WatchListScreen(
 
             Text(
                 text = "Lista de favoritos",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(8.dp)
+                style = MaterialTheme.typography.titleLarge,
+
             )
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier.padding(top = 16.dp).fillMaxHeight()
             ) {
 
                 items(items = state.gameListState) { game ->

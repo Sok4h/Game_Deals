@@ -2,7 +2,15 @@ package com.sok4h.game_deals.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -20,11 +28,10 @@ import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 
 @Composable
-fun DealCard(deal: DealDetailModel, onDealPressed: (String) -> Unit) {
+fun DealCard(modifier: Modifier, deal: DealDetailModel, onDealPressed: (String) -> Unit) {
 
     Card(
-        modifier = Modifier
-            .wrapContentWidth()
+        modifier = modifier
             .padding(4.dp)
             .wrapContentHeight()
 
@@ -32,20 +39,19 @@ fun DealCard(deal: DealDetailModel, onDealPressed: (String) -> Unit) {
 
         ) {
 
-            AsyncImage(
-                model = deal.gameImage,
-                modifier = Modifier
-                    .height(70.dp)
-                    .fillMaxWidth(),
+        AsyncImage(
+            model = deal.gameImage,
+            modifier = Modifier
+                .height(70.dp)
+                .fillMaxWidth(),
 
-                contentDescription = "",
-                contentScale = ContentScale.Fit
-            )
+            contentDescription = "",
+            contentScale = ContentScale.FillWidth
+        )
         Column(
             modifier = Modifier.padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-
 
 
             Text(

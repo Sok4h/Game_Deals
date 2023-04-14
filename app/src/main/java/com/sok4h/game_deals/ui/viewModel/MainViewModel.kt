@@ -17,11 +17,9 @@ import kotlinx.coroutines.launch
 class MainViewModel(
     private val gamesRepository: IGamesRepository,
     val dealsRepository: IDealsRepository,
-) :
-    ViewModel() {
+) : ViewModel() {
 
-    private var _state =
-        MutableStateFlow(MainScreenState())
+    private var _state = MutableStateFlow(MainScreenState())
     val state get() = _state.asStateFlow()
 
 
@@ -33,7 +31,7 @@ class MainViewModel(
     fun searchGame() {
 
         _state.update {
-            it.copy(isLoading = true)
+            it.copy(isLoading = true, gameListState = emptyList())
         }
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -50,16 +48,14 @@ class MainViewModel(
 
                 val mappedList = gamesFromNetwork.map { networkGame ->
 
-                    val isFavorite =
-                        gamesRepository.checkIfGameIsFavorite(networkGame.info.gameId)
+                    val isFavorite = gamesRepository.checkIfGameIsFavorite(networkGame.info.gameId)
                     networkGame.copy(info = networkGame.info.copy(isFavorite = isFavorite))
                 }
 
                 _state.update {
 
                     it.copy(
-                        gameListState = mappedList,
-                        gameListErrorMessage = ""
+                        gameListState = mappedList, gameListErrorMessage = ""
                     )
 
                 }
@@ -69,8 +65,7 @@ class MainViewModel(
                 _state.update {
                     it.copy(
                         gameListErrorMessage = result.exceptionOrNull()?.message
-                            ?: "No error available",
-                        gameListState = emptyList()
+                            ?: "No error available", gameListState = emptyList()
                     )
                 }
             }
@@ -154,7 +149,10 @@ class MainViewModel(
                 if (result.isSuccess) {
 
                     _state.update {
-                        it.copy(dealListState = result.getOrDefault(mutableListOf()) as MutableList<DealDetailModel>)
+                        it.copy(
+                            dealListState = result.getOrDefault(mutableListOf())
+                                .take(4) as MutableList<DealDetailModel>
+                        )
                     }
                 } else {
 
