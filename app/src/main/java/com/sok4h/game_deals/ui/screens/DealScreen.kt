@@ -1,10 +1,12 @@
 package com.sok4h.game_deals.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -13,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -52,24 +55,25 @@ fun DealScreen(
     ) {
 
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Text(text = "Explore Deals", style = MaterialTheme.typography.titleLarge)
+            IconButton(
+                onClick = { openFilterDialog = !openFilterDialog },
+
+                ) {
+                Icon(imageVector = Icons.Default.FilterList, contentDescription = "")
+            }
+        }
         if (state.dealListState.isNotEmpty()) {
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
 
-                Text(text = "Explore Deals", style = MaterialTheme.typography.titleLarge)
-                IconButton(
-                    onClick = { openFilterDialog = !openFilterDialog },
-
-                    ) {
-                    Icon(imageVector = Icons.Default.FilterList, contentDescription = "")
-                }
-            }
 
 
             LazyVerticalGrid(
@@ -117,6 +121,16 @@ fun DealScreen(
 
                     }
                 }
+            }
+        }
+
+        if (state.isLoading) {
+
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+
+                CircularProgressIndicator(
+                    modifier = Modifier.size(25.dp), strokeWidth = 2.dp,
+                )
             }
         }
     }

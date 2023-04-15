@@ -2,6 +2,7 @@ package com.sok4h.game_deals.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Games
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Sell
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -12,8 +13,8 @@ sealed class BottomBarScreens(
     val icon:ImageVector
 
 ){
-    object Home:BottomBarScreens(route = "home","Home",Icons.Default.Home)
+    object Games:BottomBarScreens(route = "search","Find Games",Icons.Default.Games)
     object WatchList:BottomBarScreens(route = "watchlist","WatchList",Icons.Default.Bookmark)
 
-    object Deals:BottomBarScreens(route = "DealScreen","Deals",Icons.Default.Sell)
+    object Deals:BottomBarScreens(route = "dealScreen","Deals",Icons.Default.Sell)
 }

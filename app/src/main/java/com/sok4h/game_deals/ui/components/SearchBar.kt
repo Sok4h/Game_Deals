@@ -37,7 +37,7 @@ fun SearchBar(
 
                 onSearch = { onSearch() },
 
-            ),
+                ),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search
             )

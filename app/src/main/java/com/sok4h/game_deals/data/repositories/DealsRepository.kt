@@ -17,7 +17,7 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
         desc: Boolean,
         lowerPrice: Int?,
         upperPrice: Int?,
-    ): Flow<Result<List<DealDetailModel>>> {
+    ): Flow<Result<MutableList<DealDetailModel>>> {
 
         return service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
             .map { response ->
@@ -25,7 +25,7 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
 
                     if (response.body() != null) {
 
-                        val deals = response.body()!!.map { it.toDealDetailModel() }
+                        val deals = response.body()!!.map { it.toDealDetailModel() }.toMutableList()
 
                         Result.success(deals)
                     } else {

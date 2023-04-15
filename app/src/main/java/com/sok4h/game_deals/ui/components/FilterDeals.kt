@@ -22,10 +22,9 @@ fun FilterDeals(
     onSortChanged: (String) -> Unit,
     onMinPriceChanged: (String) -> Unit,
     onMaxPriceChanged: (String) -> Unit,
-    onFilterChanged:()->Unit
+    onFilterChanged: () -> Unit
 ) {
 
-    // TODO: Añadir botón cerrar con su respectivo estado
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -50,10 +49,12 @@ fun FilterDeals(
         }
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
 
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(), value = sortValue, onValueChange = {}, readOnly = true,
+            OutlinedTextField(modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(),
+                value = sortValue,
+                onValueChange = {},
+                readOnly = true,
                 trailingIcon = {
                     Icon(
                         imageVector = if (!expanded) {
@@ -61,20 +62,17 @@ fun FilterDeals(
                         } else {
 
                             Icons.Default.ArrowDropUp
-                        },
-                        contentDescription = ""
+                        }, contentDescription = ""
                     )
-                }
-            )
+                })
 
             ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 radioOptions.forEach { option ->
 
-                    DropdownMenuItem(text = { Text(text = option) },
-                        onClick = {
-                            onSortChanged(option)
-                            expanded = false
-                        })
+                    DropdownMenuItem(text = { Text(text = option) }, onClick = {
+                        onSortChanged(option)
+                        expanded = false
+                    })
 
                     Divider()
                 }
@@ -85,25 +83,24 @@ fun FilterDeals(
 
 
         // TODO: Preguntar a la nasa como carajos le pongo el label
-/*
+        /*
 
 
-                    var sliderState by remember { mutableStateOf(0f..50f) }
+                            var sliderState by remember { mutableStateOf(0f..50f) }
 
-                    RangeSlider(
-                        modifier = Modifier,
-                        value = sliderState,
-                        onValueChange = { },
-                        valueRange = 0f..50f,
-                        steps = 0,
-                      )*/
+                            RangeSlider(
+                                modifier = Modifier,
+                                value = sliderState,
+                                onValueChange = { },
+                                valueRange = 0f..50f,
+                                steps = 0,
+                              )*/
 
         Text(text = "Price range", style = MaterialTheme.typography.titleMedium)
 
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
 
             ) {
@@ -112,7 +109,12 @@ fun FilterDeals(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = "Min") },
                 value = minPrice,
-                placeholder = { Text(text = "0", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f))},
+                placeholder = {
+                    Text(
+                        text = "0",
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                    )
+                },
 
                 onValueChange = {
                     onMinPriceChanged(it)
@@ -123,7 +125,12 @@ fun FilterDeals(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 label = { Text(text = "Max") },
                 value = maxPrice,
-                placeholder = { Text(text = "50",color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)) },
+                placeholder = {
+                    Text(
+                        text = "50",
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                    )
+                },
                 onValueChange = {
 
                     onMaxPriceChanged(it)
@@ -142,12 +149,13 @@ fun FilterDeals(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
 
-            Button(onClick = {onFilterChanged()
+            Button(onClick = {
+                onFilterChanged()
 
-            expanded=false}) {
+                expanded = false
+            }) {
                 Text(text = "Update filters")
-            }
-          /*  TextButton(onClick = { *//*TODO*//* }) {
+            }/*  TextButton(onClick = { }) {
                 Text(text = "Reset filters")
             }*/
 

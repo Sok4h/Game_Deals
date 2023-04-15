@@ -1,12 +1,13 @@
 package com.sok4h.game_deals.ui.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IDealsRepository
 import com.sok4h.game_deals.data.repositories.IGamesRepository
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
+import com.sok4h.game_deals.ui.ui_model.mappers.toDealModel
+import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,13 +26,14 @@ class MainViewModel(
 
     init {
         getDeals()
+        getGamesFromDataBase()
     }
 
 
     fun searchGame() {
 
         _state.update {
-            it.copy(isLoading = true, gameListState = emptyList())
+            it.copy(isGameLoading = true, gameListState = emptyList())
         }
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -41,7 +43,7 @@ class MainViewModel(
             // TODO: solucionar esta madre, si lo hago con collect sale una lista fantasma
 
             _state.update {
-                it.copy(isLoading = false)
+                it.copy(isGameLoading = false)
             }
 
             if (result.isSuccess) {
@@ -75,8 +77,6 @@ class MainViewModel(
     }
 
     fun addGameToWatchList(game: GameDetailModel) {
-
-        Log.e("TAG", _state.value.dealListState.size.toString())
         viewModelScope.launch(Dispatchers.IO) {
 
             gamesRepository.addGametoWatchList(game)
@@ -129,15 +129,11 @@ class MainViewModel(
     }
 
 
-    fun getDeals() {
+    private fun getDeals() {
 
-        _state.update {
-            it.copy(isLoading = true)
-        }
         viewModelScope.launch {
-
             _state.update {
-                it.copy(isLoading = false)
+                it.copy(isLoading = true, dealListState = mutableListOf())
             }
 
             dealsRepository.getListOfDeals(
@@ -146,12 +142,14 @@ class MainViewModel(
                 upperPrice = _state.value.maxPrice.toIntOrNull()
             ).collect { result ->
 
+                _state.update {
+                    it.copy(isLoading = false)
+                }
                 if (result.isSuccess) {
 
                     _state.update {
                         it.copy(
-                            dealListState = result.getOrDefault(mutableListOf())
-                                .take(4) as MutableList<DealDetailModel>
+                            dealListState = result.getOrDefault(mutableListOf()) as MutableList<DealDetailModel>
                         )
                     }
                 } else {
@@ -170,10 +168,77 @@ class MainViewModel(
 
     }
 
+
+    private fun getGamesFromDataBase() {
+
+        viewModelScope.launch(Dispatchers.IO) {
+
+            gamesRepository.getGamesfromDatabase().collect { games ->
+
+                if (games.isEmpty()) {
+
+                    _state.update { it.copy(watchListState = emptyList()) }
+                } else {
+                    var ids = ""
+                    games.forEachIndexed { index, item ->
+
+                        ids += (if (index == games.lastIndex) {
+
+                            item.gameId
+
+                        } else "${item.gameId},")
+                    }
+                    val result = gamesRepository.getMultipleGames(ids)
+
+                    if (result.isSuccess) {
+
+                        val data = result.getOrDefault(emptyList())
+
+                        val resultData = data.map { gameNetwork ->
+                            val gameWithId =
+                                games.find { it.name.contentEquals(gameNetwork.info.title) }
+
+
+                            val deals = gameNetwork.deals.map { dealDto ->
+                                val store = gamesRepository.getStorefromDatabase(dealDto.storeID)
+
+                                dealDto.toDealModel(storeName = store.StoreName)
+                            }
+
+                            gameNetwork.toGameDetailModel(
+                                gameWithId!!.gameId, isFavorite = true,
+                                deals
+                            )
+                        }
+
+                        _state.update {
+                            it.copy(watchListState = resultData)
+                        }
+
+                    } else {
+
+                        _state.update {
+                            it.copy(
+                                watchListErrorMessage = result.exceptionOrNull()?.message
+                                    ?: "No error available"
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun updateQuery(query: String) {
 
         _state.update {
             it.copy(searchQuery = query)
+        }
+
+        if (query.isEmpty()) {
+            _state.update {
+                it.copy(gameListState = mutableListOf())
+            }
         }
     }
 

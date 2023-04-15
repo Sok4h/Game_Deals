@@ -12,7 +12,7 @@ interface IDealsRepository {
         desc: Boolean=false,
         lowerPrice: Int?=null,
         upperPrice: Int?=null
-    ): Flow<Result<List<DealDetailModel>>>
+    ): Flow<Result<MutableList<DealDetailModel>>>
 
 
 

@@ -9,7 +9,6 @@ import com.sok4h.game_deals.data.repositories.GamesRepository
 import com.sok4h.game_deals.data.repositories.IDealsRepository
 import com.sok4h.game_deals.data.repositories.IGamesRepository
 import com.sok4h.game_deals.ui.viewModel.MainViewModel
-import com.sok4h.game_deals.ui.viewModel.WatchListViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -59,8 +58,5 @@ val repositoryModules = module {
 
 val viewModelModules = module {
 
-
     viewModel { MainViewModel(get(), get()) }
-
-    viewModel{ WatchListViewModel(get())}
 }

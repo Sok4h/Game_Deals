@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.sok4h.game_deals
 
 import android.annotation.SuppressLint
@@ -27,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.sok4h.game_deals.ui.BottomBarScreens
 import com.sok4h.game_deals.ui.BottomNavGraph
@@ -47,20 +46,20 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberAnimatedNavController()
+                    val navController = rememberNavController()
 
 
                     Scaffold(
                         bottomBar = {
                             NavigationBar(Modifier.graphicsLayer {
-                                shape = RoundedCornerShape(20.dp)
+                                shape = RoundedCornerShape(topStart = 20.dp,topEnd = 20.dp)
                                 clip = true
                             }) {
 
                                 val screens = listOf(
 
-                                    BottomBarScreens.Home,
                                     BottomBarScreens.Deals,
+                                    BottomBarScreens.Games,
                                     BottomBarScreens.WatchList,
 
                                     )
@@ -81,7 +80,7 @@ class MainActivity : ComponentActivity() {
                                         },
                                         onClick = {
 
-                                            navController.navigate(screen.route,) {
+                                            navController.navigate(screen.route) {
                                                 popUpTo(navController.graph.findStartDestination().id) {
                                                     saveState = true
                                                 }
@@ -128,90 +127,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun GameDealCardPreview() {
-
-    var expanded by remember { mutableStateOf(false) }
-    Column(
-        modifier = Modifier
-            .background(Color.Yellow),
-
-        ) {
-
-        Row(
-            Modifier
-                .padding(vertical = 8.dp)
-                .clickable {
-                    expanded = !expanded
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-
-            ) {
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
-                modifier = Modifier.size(80.dp),
-                contentDescription = "",
-                contentScale = ContentScale.Inside,
-            )
-            Column(
-                modifier = Modifier
-                    .background(Color.Red)
-                    .padding(start = 4.dp)
-                    .weight(1f),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.Start
-
-            ) {
-                Box {
-                    Text(
-                        text = "God of War Ragnarók",
-                        style = MaterialTheme.typography.bodyLarge,
-
-                        )
-                }
-
-
-
-                Text(
-                    text = " 4 Deals",
-                    style = MaterialTheme.typography.bodySmall
-                )
-
-
-            }
-
-            Text(text = "14.99", modifier = Modifier.padding(horizontal = 8.dp))
-        }
-
-        if (expanded) {
-            for (i in 1..4) {
-
-                Row(
-                    Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    Icon(imageVector = Icons.Default.AccountBox, contentDescription = "")
-                    Text(text = "Epic Store")
-                    Text(text = "3.55")
-
-                    TextButton(onClick = { /*TODO*/ }) {
-
-                        Text(text = "Comprar")
-                    }
-                }
-            }
-        }
-
-
-    }
-
 }
 
 

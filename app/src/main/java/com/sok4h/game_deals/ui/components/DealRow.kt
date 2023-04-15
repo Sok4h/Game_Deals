@@ -24,7 +24,6 @@ import com.sok4h.game_deals.ui.ui_model.DealModel
 @Composable
 fun DealRow(deal: DealModel, onDealPressed: (String) -> Unit) {
 
-    // TODO: revisar el caso donde la oferta sea el precio por defecto (no poner las letras rojas) 
     Row(
         Modifier
             .fillMaxWidth()
@@ -35,9 +34,7 @@ fun DealRow(deal: DealModel, onDealPressed: (String) -> Unit) {
     ) {
 
         AsyncImage(
-            model = deal.storeImage,
-            contentDescription = "",
-            modifier = Modifier.size(30.dp)
+            model = deal.storeImage, contentDescription = "", modifier = Modifier.size(30.dp)
         )
 
         Text(text = deal.storeName!!, Modifier.weight(1.5f))
@@ -46,12 +43,14 @@ fun DealRow(deal: DealModel, onDealPressed: (String) -> Unit) {
 
             Text(text = "$" + deal.price, modifier = Modifier.fillMaxWidth())
 
-            if(!deal.price.contentEquals(deal.retailPrice)){
+            if (!deal.price.contentEquals(deal.retailPrice)) {
 
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = "$" + deal.retailPrice,
-                    style = TextStyle(textDecoration = TextDecoration.LineThrough, color = Color.Red),
+                    style = TextStyle(
+                        textDecoration = TextDecoration.LineThrough, color = Color.Red
+                    ),
                     fontSize = 12.sp
                 )
 

@@ -18,12 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sok4h.game_deals.ui.components.GameDealCard
-import com.sok4h.game_deals.ui.viewStates.WatchListScreenState
+import com.sok4h.game_deals.ui.viewStates.MainScreenState
 
 
 @Composable
 fun WatchListScreen(
-    state: WatchListScreenState,
+    state: MainScreenState,
     onRemoveFromWatchList: (String) -> Unit,
     onDealPressed: (String) -> Unit,
 ) {
@@ -44,7 +44,7 @@ fun WatchListScreen(
 
         }
 
-        if (state.gameListState.isNotEmpty()) {
+        if (state.watchListState.isNotEmpty()) {
 
             Text(
                 text = "Lista de favoritos",
@@ -56,7 +56,7 @@ fun WatchListScreen(
                 modifier = Modifier.padding(top = 16.dp).fillMaxHeight()
             ) {
 
-                items(items = state.gameListState) { game ->
+                items(items = state.watchListState) { game ->
 
                     GameDealCard(
                         game = game,

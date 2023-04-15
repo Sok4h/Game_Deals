@@ -1,43 +1,35 @@
 package com.sok4h.game_deals.ui
 
+
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.sok4h.game_deals.ui.screens.DealScreen
+import androidx.navigation.compose.navigation
 import com.sok4h.game_deals.ui.screens.MainScreen
 import com.sok4h.game_deals.ui.screens.WatchListScreen
 import com.sok4h.game_deals.ui.viewModel.MainViewModel
-import com.sok4h.game_deals.ui.viewModel.WatchListViewModel
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun BottomNavGraph(navHostController: NavHostController) {
     val uriHandler = LocalUriHandler.current
-
     val mainViewModel = getViewModel<MainViewModel>()
-
-    val watchListViewModel = getViewModel<WatchListViewModel>()
-
-    val watchListState by watchListViewModel.state.collectAsStateWithLifecycle()
-
     val mainViewmodelState by mainViewModel.state.collectAsStateWithLifecycle()
 
-    AnimatedNavHost(navController = navHostController, startDestination = "home") {
+    NavHost(
+        navController = navHostController,
+        startDestination = BottomBarScreens.Deals.route,
+    ) {
 
-        composable(route = BottomBarScreens.Home.route, exitTransition = {->
-
-            fadeOut(animationSpec = tween(300))
-
-        }) {
+        composable(route = BottomBarScreens.Games.route) {
 
             MainScreen(state = mainViewmodelState,
                 onQueryChanged = { mainViewModel.updateQuery(query = it) },
@@ -53,14 +45,14 @@ fun BottomNavGraph(navHostController: NavHostController) {
         }
 
         composable(route = BottomBarScreens.WatchList.route) {
-            WatchListScreen(watchListState,
+            WatchListScreen(mainViewmodelState,
                 onRemoveFromWatchList = { mainViewModel.removeGameFromWatchlist(it) },
                 onDealPressed = {
                     uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${it}")
                 })
         }
 
-        composable(route = "DealScreen") {
+        composable(route = BottomBarScreens.Deals.route) {
 
             DealScreen(state = mainViewmodelState,
                 onMinPriceChanged = { mainViewModel.updateMinPrice(price = it) },

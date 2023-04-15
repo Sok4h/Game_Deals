@@ -5,6 +5,9 @@ import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 
 data class MainScreenState(
     val gameListState: List<GameDetailModel> = emptyList(),
+    val watchListState: List<GameDetailModel> = emptyList(),
+    val watchListErrorMessage:String="",
+    val isWatchlistLoading:Boolean=false,
     val dealListState: MutableList<DealDetailModel> = mutableListOf(),
     val isGameLoading: Boolean = false,
     val gameListErrorMessage: String = "",

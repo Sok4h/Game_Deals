@@ -41,19 +41,15 @@ fun GameDealCard(
 
     // TODO: añadir el precio normal a las ofertas?  
     var expanded by remember { mutableStateOf(false) }
-    Card(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .fillMaxWidth()
-            , onClick = {expanded = !expanded}
+    Card(modifier = Modifier
+        .fillMaxWidth(),
+
+        onClick = { expanded = !expanded }
 
 
     ) {
         Row(
-            Modifier
-               /* .clickable {
-
-                }*/,
+            Modifier,
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,
 
@@ -108,8 +104,7 @@ fun GameDealCard(
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Outlined.Star,
-                        contentDescription = "save to watchlist"
+                        imageVector = Icons.Outlined.Star, contentDescription = "save to watchlist"
                     )
 
                 }
