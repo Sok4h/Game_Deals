@@ -19,7 +19,7 @@ interface CheapSharkAPI {
     suspend fun getListOfDeals(
         @Query("storeID") storeID: String?,
         @Query("pageNumber") pageNumber: Int?,
-        @Query("sortBy") sortBy: String?="Recent",
+        @Query("sortBy") sortBy: String?="Deal Rating",
         @Query("desc") desc: Boolean?,
         @Query("lowerPrice") lowerPrice: Int?,
         @Query("upperPrice") upperPrice: Int?,

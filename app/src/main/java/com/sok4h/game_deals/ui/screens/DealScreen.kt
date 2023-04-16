@@ -72,10 +72,6 @@ fun DealScreen(
             }
         }
         if (state.dealListState.isNotEmpty()) {
-
-
-
-
             LazyVerticalGrid(
                 modifier = Modifier,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),

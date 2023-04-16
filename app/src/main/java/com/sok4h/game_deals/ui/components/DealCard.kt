@@ -14,20 +14,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 
 @Composable
 fun DealCard(modifier: Modifier, deal: DealDetailModel, onDealPressed: (String) -> Unit) {
 
+    val uriHandler = LocalUriHandler.current
+
     Card(
         modifier = modifier
             .padding(4.dp)
             .wrapContentHeight()
-            .clickable { onDealPressed(deal.dealID) },
+            .clickable {
+
+                uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${deal.dealID}")
+            },
 
         ) {
 
@@ -57,6 +67,19 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel, onDealPressed: (String) 
                     model = deal.storeLogo, contentDescription = "", modifier = Modifier.size(16.dp)
                 )
                 Text(text = "$" + deal.salePrice, modifier = Modifier)
+
+                if (!deal.salePrice.contentEquals(deal.normalPrice)) {
+
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "$" + deal.normalPrice,
+                        style = TextStyle(
+                            textDecoration = TextDecoration.LineThrough, color = Color.Red
+                        ),
+                        fontSize = 12.sp
+                    )
+
+                }
             }
 
 

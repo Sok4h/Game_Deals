@@ -1,10 +1,13 @@
 package com.sok4h.game_deals.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sok4h.game_deals.ui.components.GameDealCard
@@ -25,17 +29,16 @@ import com.sok4h.game_deals.ui.viewStates.MainScreenState
 fun WatchListScreen(
     state: MainScreenState,
     onRemoveFromWatchList: (String) -> Unit,
-    onDealPressed: (String) -> Unit,
 ) {
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 16.dp), verticalArrangement = Arrangement.Center
+            .padding(16.dp)
     ) {
 
 
-        if (state.isLoading) {
+        if (state.isWatchlistLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .size(25.dp),
@@ -46,14 +49,23 @@ fun WatchListScreen(
 
         if (state.watchListState.isNotEmpty()) {
 
-            Text(
-                text = "Lista de favoritos",
-                style = MaterialTheme.typography.titleLarge,
-
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier,
+                    text = "Favorite Games",
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(top = 16.dp).fillMaxHeight()
+                modifier = Modifier
+                    .padding(4.dp)
+                    .fillMaxHeight()
             ) {
 
                 items(items = state.watchListState) { game ->
@@ -63,14 +75,15 @@ fun WatchListScreen(
                         onAddToWatchList = {},
                         onRemoveFromWatchList = {
                             onRemoveFromWatchList(it)
-                        },
-                        onDealPressed = { onDealPressed(it)}
+                        }
                     )
                 }
 
             }
 
-        } else {
+        }
+
+        if (state.watchListState.isEmpty()) {
 
             Column(
                 modifier = Modifier
@@ -97,7 +110,7 @@ fun WatchListScreen(
     }
 
 
-    // TODO: add error case
+// TODO: add error case
 
 
 }

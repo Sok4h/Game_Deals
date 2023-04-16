@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
@@ -25,7 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
@@ -36,9 +40,9 @@ fun GameDealCard(
     game: GameDetailModel,
     onAddToWatchList: (GameDetailModel) -> Unit,
     onRemoveFromWatchList: (String) -> Unit,
-    onDealPressed: (String) -> Unit,
 ) {
 
+    val uriHandler = LocalUriHandler.current
     // TODO: añadir el precio normal a las ofertas?  
     var expanded by remember { mutableStateOf(false) }
     Card(modifier = Modifier
@@ -84,7 +88,7 @@ fun GameDealCard(
 
             Text(
                 text = "$ ${game.bestPrice}",
-                modifier = Modifier,
+                modifier = Modifier.padding(4.dp),
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -99,12 +103,13 @@ fun GameDealCard(
 
                 if (game.info.isFavorite) {
                     Icon(
-                        imageVector = Icons.Filled.Clear,
-                        contentDescription = "remove from watchlist"
+                        imageVector = Icons.Filled.Favorite,
+                        tint = Color.Red,
+                        contentDescription = "remove from favorite"
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Outlined.Star, contentDescription = "save to watchlist"
+                        imageVector = Icons.Outlined.Favorite, contentDescription = "save to favorites"
                     )
 
                 }
@@ -116,7 +121,7 @@ fun GameDealCard(
 
                 for ((index, deal) in game.deals.withIndex()) {
 
-                    DealRow(deal = deal, onDealPressed = onDealPressed)
+                    DealRow(deal = deal )
 
                     if (index != game.deals.lastIndex) {
 

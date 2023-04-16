@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -22,8 +23,9 @@ import coil.compose.AsyncImage
 import com.sok4h.game_deals.ui.ui_model.DealModel
 
 @Composable
-fun DealRow(deal: DealModel, onDealPressed: (String) -> Unit) {
+fun DealRow(deal: DealModel) {
 
+    val uriHandler = LocalUriHandler.current
     Row(
         Modifier
             .fillMaxWidth()
@@ -57,7 +59,7 @@ fun DealRow(deal: DealModel, onDealPressed: (String) -> Unit) {
             }
         }
 
-        TextButton(onClick = { onDealPressed(deal.dealID) }) {
+        TextButton(onClick = { uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${deal.dealID}") }) {
 
             Text(text = "Comprar")
         }

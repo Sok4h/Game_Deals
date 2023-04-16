@@ -42,7 +42,7 @@ fun FilterDeals(
 
         Text(text = "Search by", style = MaterialTheme.typography.titleMedium)
 
-        val radioOptions = listOf("Recent", "Savings", "Store", "Price", "Title")
+        val radioOptions = listOf("Deal Rating","Recent", "Savings", "Store", "Price", "Title","Reviews")
 
         var expanded by remember {
             mutableStateOf(false)

@@ -59,7 +59,6 @@ class MainActivity : ComponentActivity() {
                                 val screens = listOf(
 
                                     BottomBarScreens.Deals,
-                                    BottomBarScreens.Games,
                                     BottomBarScreens.WatchList,
 
                                     )
@@ -99,26 +98,8 @@ class MainActivity : ComponentActivity() {
 
 
                         Column(modifier = Modifier.padding(it)) {
-
-
-                            /*    com.sok4h.game_deals.ui.components.SearchBar(
-                                    textValue = "",
-                                    onQueryChanged = {*//* onQueryChanged(it)*//* },
-                                onSearch = { *//*onGameSearch()*//* },
-                                modifier = Modifier
-                                    .fillMaxWidth(0.95f)
-                                    .padding(bottom = 16.dp)
-                                    .clip(shape = RoundedCornerShape(8.dp))
-                            )*/
-
-                            /* SearchBar(
-                                 query = "",
-                                 onQueryChange ={} ,
-                                 onSearch = {},
-                                 active = true,
-                                 onActiveChange = {}
-                             ) */
                             BottomNavGraph(navHostController = navController)
+
 
                         }
                     }
