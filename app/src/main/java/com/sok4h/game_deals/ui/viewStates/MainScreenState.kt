@@ -13,7 +13,7 @@ data class MainScreenState(
     val gameListErrorMessage: String = "",
     val isLoading: Boolean = false,
     val searchQuery: String = "",
-    val sortDealsBy: String = "Reviews",
+    val sortDealsBy: String = "Deal Rating",
     val minPrice:String ="0",
     val maxPrice:String="50",
 )
