@@ -68,7 +68,7 @@ fun DealScreen(
                 onClick = { openFilterDialog = !openFilterDialog },
 
                 ) {
-                Icon(imageVector = Icons.Default.FilterList, contentDescription = "")
+                Icon(imageVector = Icons.Default.FilterList, contentDescription = "filter deals")
             }
         }
         if (state.dealListState.isNotEmpty()) {

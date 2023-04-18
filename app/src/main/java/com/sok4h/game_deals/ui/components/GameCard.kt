@@ -43,7 +43,6 @@ fun GameDealCard(
     var expanded by remember { mutableStateOf(false) }
     Card(modifier = Modifier
         .fillMaxWidth(),
-
         onClick = { expanded = !expanded }
 
 
@@ -101,7 +100,7 @@ fun GameDealCard(
                     Icon(
                         imageVector = Icons.Filled.Favorite,
                         tint = Color.Red,
-                        contentDescription = "remove from favorite"
+                        contentDescription = "remove from favorites"
                     )
                 } else {
                     Icon(
