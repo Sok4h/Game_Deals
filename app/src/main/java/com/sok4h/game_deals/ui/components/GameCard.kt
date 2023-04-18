@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
@@ -39,12 +38,10 @@ fun GameDealCard(
     onRemoveFromWatchList: (String) -> Unit,
 ) {
 
-    val uriHandler = LocalUriHandler.current
     // TODO: añadir el precio normal a las ofertas?  
     var expanded by remember { mutableStateOf(false) }
     Card(modifier = Modifier
         .fillMaxWidth(),
-
         onClick = { expanded = !expanded }
 
 
@@ -102,7 +99,7 @@ fun GameDealCard(
                     Icon(
                         imageVector = Icons.Filled.Favorite,
                         tint = Color.Red,
-                        contentDescription = "remove from favorite"
+                        contentDescription = "remove from favorites"
                     )
                 } else {
                     Icon(

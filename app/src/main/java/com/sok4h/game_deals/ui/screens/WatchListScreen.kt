@@ -1,6 +1,5 @@
 package com.sok4h.game_deals.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sok4h.game_deals.ui.components.GameDealCard
@@ -40,7 +39,7 @@ fun WatchListScreen(
 
         if (state.isWatchlistLoading) {
             CircularProgressIndicator(
-                modifier = Modifier
+                modifier = Modifier.testTag("loading watchlist")
                     .size(25.dp),
                 strokeWidth = 2.dp
             )
@@ -96,7 +95,7 @@ fun WatchListScreen(
                     text = "No tienes juegos en favoritos",
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp).testTag("No games Text")
                 )
                 Text(
                     text = "Añade juegos para recibir notificaciones cada vez que surja una oferta 😁",
