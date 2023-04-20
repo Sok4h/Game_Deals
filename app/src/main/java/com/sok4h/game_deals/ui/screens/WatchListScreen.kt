@@ -82,7 +82,7 @@ fun WatchListScreen(
 
         }
 
-        if (state.watchListState.isEmpty()) {
+        if (state.watchListState.isEmpty() && !state.isWatchlistLoading) {
 
             Column(
                 modifier = Modifier
