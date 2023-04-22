@@ -14,4 +14,4 @@ This is a mobile app that allows users to search for the best video game deals a
 * Retrofit for making API calls to the CheapShark API
 * Room Database for local data persistence
 ## Screenshots
-![picture alt](http://via.placeholder.com/200x150 "Title is optional")
+![picture alt](https://github.com/Sok4h/Game_Deals/blob/master/game%20deals%20mockup.png "Game Deals")
