@@ -3,62 +3,81 @@ package com.sok4h.game_deals.workers
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.SystemClock
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.sok4h.game_deals.MainActivity
 import com.sok4h.game_deals.R
 import com.sok4h.game_deals.data.model.dtos.GameDetailDto
 import com.sok4h.game_deals.data.repositories.IGamesRepository
+import com.sok4h.game_deals.ui.ui_model.mappers.toDealModel
+import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import kotlin.time.Duration
 
-class DealWorker(var ctx: Context, params: WorkerParameters, val gamesRepository: IGamesRepository) :
-    CoroutineWorker(ctx, params) {
 
+class DealWorker(var ctx: Context, params: WorkerParameters) :
+    CoroutineWorker(ctx, params), KoinComponent {
 
+    private val gamesRepository: IGamesRepository by inject()
     override suspend fun doWork(): Result {
 
-        gamesRepository.getGamesfromDatabase().collectLatest { games ->
+        val games = gamesRepository.getListGamesfromDatabase()
+
+        games.forEach { game ->
+
+            val result = gamesRepository.getGameById(game.gameId)
+
+            if (result.isSuccess) {
+
+                val updatedGame = result.getOrNull()
 
 
-            games.forEach { game ->
+                if (updatedGame != null) {
+                    if (game.bestDealId.contentEquals(updatedGame.deals[0].dealID)) {
+                        return@forEach
 
-                val result = gamesRepository.getGameById(game.gameId)
+                    } else {
 
-                if (result.isSuccess) {
-
-                    val updatedGame = result.getOrNull()
-
-
-                    if (updatedGame != null) {
-                        if (game.bestDealId.contentEquals(updatedGame.deals[0].dealID)) {
-
-                            return@forEach
-
-                        } else {
-
-                            makeNotification(context = ctx,updatedGame)
-                        }
-
+                        gamesRepository.addGametoWatchList(
+                            updatedGame.toGameDetailModel(
+                                game.gameId,
+                                true,
+                                updatedGame.deals.map {
+                                    it.toDealModel(
+                                        gamesRepository.getStorefromDatabase(
+                                            it.storeID
+                                        ).StoreName
+                                    )
+                                })
+                        )
+                        makeNotification(context = ctx, updatedGame)
                     }
+
                 }
-
             }
-
 
         }
 
-       return Result.success()
+        return Result.success()
     }
 
 }
 
 
-fun makeNotification(context:Context,game:GameDetailDto){
+fun makeNotification(context: Context, game: GameDetailDto) {
 
     // Make a channel if necessary
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -77,13 +96,21 @@ fun makeNotification(context:Context,game:GameDetailDto){
         notificationManager?.createNotificationChannel(channel)
     }
 
-    // Create the notification
+    val notificationIntent = Intent(context, MainActivity::class.java)
+    notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+    val pendingIntent = PendingIntent.getActivity(
+        context,
+        0,
+        notificationIntent,
+        PendingIntent.FLAG_IMMUTABLE
+    )
     val builder = NotificationCompat.Builder(context, "Deals")
+        .setContentIntent(pendingIntent)
         .setSmallIcon(R.drawable.ic_launcher_foreground)
-        .setContentTitle("New Deal found ")
+        .setContentTitle("New Deal found!")
         .setContentText("your game ${game.info.title} price has drop to ${game.deals[0].price}")
         .setPriority(NotificationCompat.PRIORITY_HIGH)
-        .setVibrate(LongArray(0))
+
 
     // Show the notification
     if (ActivityCompat.checkSelfPermission(
@@ -100,5 +127,6 @@ fun makeNotification(context:Context,game:GameDetailDto){
         // for ActivityCompat#requestPermissions for more details.
         return
     }
-    NotificationManagerCompat.from(context).notify(1, builder.build())
+    val oneTimeID = (SystemClock.uptimeMillis() % 99999999)
+    NotificationManagerCompat.from(context).notify(oneTimeID.toInt(), builder.build())
 }

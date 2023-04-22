@@ -21,6 +21,7 @@ interface IGamesRepository {
     suspend fun getGameDeals (name:String):Result<List<GameDetailModel>>
 
     suspend fun getGamesfromDatabase(): Flow<List<GameEntity>>
+    suspend fun getListGamesfromDatabase(): List<GameEntity>
 
     suspend fun removeGamefromWatchlist(id:String)
 

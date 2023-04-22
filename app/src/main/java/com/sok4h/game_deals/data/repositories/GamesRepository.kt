@@ -172,6 +172,10 @@ class GamesRepository(
         return gameDao.getAllGames()
     }
 
+    override suspend fun getListGamesfromDatabase(): List<GameEntity> {
+        return gameDao.getListGames()
+    }
+
     override suspend fun removeGamefromWatchlist(id: String) {
 
         gameDao.deleteGame(id)

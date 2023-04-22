@@ -9,6 +9,8 @@ interface GameDao {
 
     @Query("Select * from games")
     fun getAllGames(): Flow<List<GameEntity>>
+    @Query("Select * from games")
+    fun getListGames(): List<GameEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGame(gameEntity: GameEntity)
