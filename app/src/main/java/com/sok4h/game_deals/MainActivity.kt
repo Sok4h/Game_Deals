@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -20,11 +19,10 @@ import com.sok4h.game_deals.ui.BottomBarScreens
 import com.sok4h.game_deals.ui.BottomNavGraph
 import com.sok4h.game_deals.ui.theme.Game_DealsTheme
 
-@ExperimentalAnimationApi
+
 class MainActivity : ComponentActivity() {
 
 
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -97,5 +95,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
