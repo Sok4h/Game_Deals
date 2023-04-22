@@ -1,7 +1,6 @@
 package com.sok4h.game_deals.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,10 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -63,7 +60,7 @@ fun GameDealCard(
                 model = game.info.image,
                 contentDescription = "image of ${game.info.title}",
                 modifier = Modifier.size(100.dp),
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.FillWidth
             )
             Column(
                 modifier = Modifier
