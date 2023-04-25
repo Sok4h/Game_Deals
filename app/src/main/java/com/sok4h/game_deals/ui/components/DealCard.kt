@@ -26,7 +26,7 @@ import coil.compose.AsyncImage
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 
 @Composable
-fun DealCard(modifier: Modifier, deal: DealDetailModel, onDealPressed: (String) -> Unit) {
+fun DealCard(modifier: Modifier, deal: DealDetailModel) {
 
     val uriHandler = LocalUriHandler.current
 

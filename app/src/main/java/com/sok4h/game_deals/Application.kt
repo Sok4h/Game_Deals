@@ -1,10 +1,8 @@
 package com.sok4h.game_deals
 
 import android.app.Application
-import androidx.work.Configuration
 import androidx.work.Constraints
 import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.sok4h.game_deals.data.di.appModule
@@ -33,7 +31,7 @@ class Application : Application(), KoinComponent {
 
     private fun setupWorkManagerFactory() {
 
-        val work = PeriodicWorkRequestBuilder<DealWorker>(12,TimeUnit.HOURS).setConstraints(
+        val work = PeriodicWorkRequestBuilder<DealWorker>(12, TimeUnit.HOURS).setConstraints(
             Constraints.Builder(
 
             ).setRequiredNetworkType(NetworkType.CONNECTED).build()

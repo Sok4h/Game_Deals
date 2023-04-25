@@ -45,7 +45,7 @@ fun DealScreen(
     onFilterChanged: () -> Unit,
 ) {
 
-    // TODO: Hoistear estado clickear deal
+
     var openFilterDialog by rememberSaveable { mutableStateOf(false) }
 
     Column(
@@ -83,7 +83,6 @@ fun DealScreen(
 
                         DealCard(
                             deal = deal,
-                            onDealPressed = { /*onDealPressed(it)*/ },
                             modifier = Modifier.wrapContentWidth()
                         )
 
