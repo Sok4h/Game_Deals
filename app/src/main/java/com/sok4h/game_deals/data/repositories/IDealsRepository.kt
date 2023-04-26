@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IDealsRepository {
 
-     fun getListOfDeals(
+      fun getListOfDeals(
         storeID: String?=null,
         pageNumber: Int?=null,
         sortBy: String?=null,

@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.map
 
 class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsRepository {
 
-
     override fun getListOfDeals(
         storeID: String?,
         pageNumber: Int?,
@@ -22,22 +21,19 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
         return service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
             .map { response ->
                 if (response.isSuccessful) {
-
                     if (response.body() != null) {
-
                         val deals = response.body()!!.map { it.toDealDetailModel() }.toMutableList()
-
-                        Result.success(deals)
+                        return@map Result.success(deals)
                     } else {
-
-                        Result.failure(Exception("Cuerpo Vacio"))
+                        return@map Result.failure(Exception("Cuerpo Vacio"))
                     }
                 } else {
-                    Result.failure(Exception(response.raw().code.toString()))
+
+                    return@map  Result.failure(Exception(response.raw().code.toString()))
                 }
 
             }.catch {
-                Result.failure<Exception>(it)
+                 Result.failure<Exception>(it)
             }
 
 

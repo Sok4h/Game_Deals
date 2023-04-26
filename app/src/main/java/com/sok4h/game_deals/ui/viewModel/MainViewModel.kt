@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IDealsRepository
 import com.sok4h.game_deals.data.repositories.IGamesRepository
-import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toDealModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
@@ -12,12 +11,13 @@ import com.sok4h.game_deals.ui.viewStates.MainScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val gamesRepository: IGamesRepository,
-    val dealsRepository: IDealsRepository,
+    private val dealsRepository: IDealsRepository,
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(MainScreenState())
@@ -129,7 +129,7 @@ class MainViewModel(
     }
 
 
-    private fun getDeals() {
+    fun getDeals() {
 
         viewModelScope.launch {
             _state.update {
@@ -140,7 +140,7 @@ class MainViewModel(
                 sortBy = state.value.sortDealsBy,
                 lowerPrice = _state.value.minPrice.toIntOrNull(),
                 upperPrice = _state.value.maxPrice.toIntOrNull()
-            ).collect { result ->
+            ).flowOn(Dispatchers.IO).collect { result ->
 
                 _state.update {
                     it.copy(isLoading = false)
@@ -149,7 +149,7 @@ class MainViewModel(
 
                     _state.update {
                         it.copy(
-                            dealListState = result.getOrDefault(mutableListOf()) as MutableList<DealDetailModel>
+                            dealListState = result.getOrDefault(mutableListOf())
                         )
                     }
                 } else {
@@ -206,8 +206,7 @@ class MainViewModel(
                             }
 
                             gameNetwork.toGameDetailModel(
-                                gameWithId!!.gameId, isFavorite = true,
-                                deals
+                                gameWithId!!.gameId, isFavorite = true, deals
                             )
                         }
 
