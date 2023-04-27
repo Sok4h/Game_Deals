@@ -8,8 +8,8 @@ import com.sok4h.game_deals.data.repositories.IGamesRepository
 import com.sok4h.game_deals.ui.viewModel.MainViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -56,19 +56,9 @@ class MainViewModelTest {
         }
 
         var testlist = mutableListOf(dealTest)
-        //given
 
-/*
-        service.getListOfDeals(null,null,null,null,null,null).collect{
 
-            println(it.body())
-        }*/
-
-dealsRepository.getListOfDeals().collectLatest {
-
-    println(it)
-}
-
+        println(dealsRepository.getListOfDeals().toList())
 
 
     }

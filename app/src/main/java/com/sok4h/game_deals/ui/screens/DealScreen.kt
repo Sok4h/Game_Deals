@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.sok4h.game_deals.ui.components.DealCard
@@ -73,7 +74,7 @@ fun DealScreen(
         }
         if (state.dealListState.isNotEmpty()) {
             LazyVerticalGrid(
-                modifier = Modifier,
+                modifier = Modifier.testTag("lazycolumn"),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 columns = GridCells.Fixed(2),

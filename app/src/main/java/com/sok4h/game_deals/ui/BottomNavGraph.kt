@@ -26,18 +26,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.sok4h.game_deals.ui.screens.DealScreen
 import com.sok4h.game_deals.ui.components.GameDealCard
+import com.sok4h.game_deals.ui.screens.DealScreen
 import com.sok4h.game_deals.ui.screens.WatchListScreen
 import com.sok4h.game_deals.ui.viewModel.MainViewModel
 import org.koin.androidx.compose.getViewModel
 
+@ExperimentalComposeUiApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNavGraph(navHostController: NavHostController) {
@@ -49,6 +53,10 @@ fun BottomNavGraph(navHostController: NavHostController) {
         NavHost(
             navController = navHostController,
             startDestination = BottomBarScreens.Deals.route,
+            modifier = Modifier.
+                    semantics {
+                        testTagsAsResourceId = true
+                    }
         ) {
             composable(route = BottomBarScreens.WatchList.route) {
 
