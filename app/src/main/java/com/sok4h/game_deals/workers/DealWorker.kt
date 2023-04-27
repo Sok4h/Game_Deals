@@ -44,7 +44,8 @@ class DealWorker(var ctx: Context, params: WorkerParameters) :
                 if (updatedGame != null) {
                     if (game.bestDealId.contentEquals(updatedGame.deals[0].dealID)) {
 
-                        return@forEach
+                     /*   return@forEach*/
+                        makeNotification(context = ctx, updatedGame)
 
                     } else {
 
@@ -68,7 +69,7 @@ class DealWorker(var ctx: Context, params: WorkerParameters) :
 
         }
 
-        NotificationManagerCompat.from(ctx).areNotificationsEnabled()
+
         return Result.success()
     }
 
