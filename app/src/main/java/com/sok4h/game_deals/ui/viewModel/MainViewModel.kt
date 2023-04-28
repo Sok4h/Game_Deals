@@ -1,5 +1,6 @@
 package com.sok4h.game_deals.ui.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IDealsRepository
@@ -11,7 +12,7 @@ import com.sok4h.game_deals.ui.viewStates.MainScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -131,7 +132,7 @@ class MainViewModel(
 
     fun getDeals() {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 it.copy(isLoading = true, dealListState = mutableListOf())
             }
@@ -140,7 +141,12 @@ class MainViewModel(
                 sortBy = state.value.sortDealsBy,
                 lowerPrice = _state.value.minPrice.toIntOrNull(),
                 upperPrice = _state.value.maxPrice.toIntOrNull()
-            ).flowOn(Dispatchers.IO).collect { result ->
+            ).catch {
+
+                Log.e("Exception", it.message.toString() )
+                Result.failure<Exception>(it)
+            }.collect { result ->
+
 
                 _state.update {
                     it.copy(isLoading = false)
@@ -156,7 +162,7 @@ class MainViewModel(
 
                     _state.update {
                         it.copy(
-                            gameListErrorMessage = result.exceptionOrNull()?.message
+                            dealListErrorMessage = result.exceptionOrNull()?.message
                                 ?: "No error available"
                         )
                     }

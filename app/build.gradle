@@ -23,8 +23,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -79,7 +79,6 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling"
     debugImplementation "androidx.compose.ui:ui-test-manifest"
 
-    implementation "androidx.compose.material:material:1.4.1"
 
 
     //Retrofit
@@ -138,6 +137,8 @@ dependencies {
     implementation ("org.conscrypt:conscrypt-android:2.2.1")
 
     implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
+
+
 }
 
 kapt {

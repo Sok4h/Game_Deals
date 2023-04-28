@@ -50,13 +50,14 @@ class ExampleStartupBenchmark {
         startupMode = StartupMode.COLD,
 
         ) {
+        pressHome()
         startActivityAndWait()
 
         device.wait(
-            Until.hasObject(By.res("lazycolumn")),
-                    TimeUnit.SECONDS.toMillis(10)
+            Until.hasObject(By.res("lazygrid")),
+                    TimeUnit.SECONDS.toMillis(4)
         )
-        val list = device.findObject(By.res("lazycolumn"))
+        val list = device.findObject(By.res("lazygrid"))
         list.setGestureMargin(device.displayWidth/ 5)
 
         list.fling(Direction.DOWN)

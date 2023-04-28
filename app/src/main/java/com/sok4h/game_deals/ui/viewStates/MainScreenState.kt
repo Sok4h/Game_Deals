@@ -11,6 +11,7 @@ data class MainScreenState(
     val dealListState: MutableList<DealDetailModel> = mutableListOf(),
     val isGameLoading: Boolean = false,
     val gameListErrorMessage: String = "",
+    val dealListErrorMessage:String ="",
     val isLoading: Boolean = false,
     val searchQuery: String = "",
     val sortDealsBy: String = "Deal Rating",

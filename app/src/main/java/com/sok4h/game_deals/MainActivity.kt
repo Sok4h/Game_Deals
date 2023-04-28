@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
 
-
                     Scaffold(
                         bottomBar = {
                             NavigationBar(
@@ -89,7 +88,6 @@ class MainActivity : ComponentActivity() {
 
                         Column(modifier = Modifier.padding(it)) {
                             BottomNavGraph(navHostController = navController)
-
 
                         }
                     }

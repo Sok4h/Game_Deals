@@ -66,7 +66,7 @@ fun DealScreen(
 
             Text(text = "Explore Deals", style = MaterialTheme.typography.titleLarge)
             IconButton(
-                onClick = { openFilterDialog = !openFilterDialog },
+                onClick = {  openFilterDialog = !openFilterDialog },
 
                 ) {
                 Icon(imageVector = Icons.Default.FilterList, contentDescription = "")
@@ -74,13 +74,13 @@ fun DealScreen(
         }
         if (state.dealListState.isNotEmpty()) {
             LazyVerticalGrid(
-                modifier = Modifier.testTag("lazycolumn"),
+                modifier = Modifier.testTag("lazygrid"),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 columns = GridCells.Fixed(2),
                 content = {
 
-                    items(items = state.dealListState) { deal ->
+                    items(items = state.dealListState, key = { it.dealID}) { deal ->
 
                         DealCard(
                             deal = deal,
@@ -129,6 +129,11 @@ fun DealScreen(
                     modifier = Modifier.size(25.dp), strokeWidth = 2.dp,
                 )
             }
+        }
+
+        if(state.dealListErrorMessage.isNotEmpty()){
+
+            Text(text = state.dealListErrorMessage)
         }
     }
 }
