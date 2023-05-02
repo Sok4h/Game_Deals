@@ -39,8 +39,7 @@ fun GameDealCard(
     onRemoveFromWatchList: (String) -> Unit,
 ) {
 
-    val uriHandler = LocalUriHandler.current
-    // TODO: añadir el precio normal a las ofertas?  
+    // TODO: añadir el precio normal a las ofertas?
     var expanded by remember { mutableStateOf(false) }
     Card(modifier = Modifier
         .fillMaxWidth(),
