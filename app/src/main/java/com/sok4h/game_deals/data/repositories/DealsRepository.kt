@@ -13,30 +13,31 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
         storeID: String?,
         pageNumber: Int?,
         sortBy: String?,
-        desc: Boolean,
+        desc: Boolean?,
         lowerPrice: Int?,
         upperPrice: Int?,
-    ): Flow<Result<MutableList<DealDetailModel>>> {
+    ): Flow<Result<MutableList<DealDetailModel>>> =
 
-        return service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
+        service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
+            .catch {
+                Result.failure<Exception>(it)
+            }
             .map { response ->
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         val deals = response.body()!!.map { it.toDealDetailModel() }.toMutableList()
                         return@map Result.success(deals)
                     } else {
+                        // TODO: manejo pro de errores
                         return@map Result.failure(Exception("Cuerpo Vacio"))
                     }
                 } else {
 
-                    return@map  Result.failure(Exception(response.raw().code.toString()))
+                    return@map Result.failure(Exception(response.raw().code.toString()))
                 }
 
-            }.catch {
-                 Result.failure<Exception>(it)
             }
 
 
-    }
-
 }
+

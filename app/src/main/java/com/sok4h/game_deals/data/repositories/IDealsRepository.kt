@@ -9,7 +9,7 @@ interface IDealsRepository {
         storeID: String?=null,
         pageNumber: Int?=null,
         sortBy: String?=null,
-        desc: Boolean=false,
+        desc: Boolean?=null,
         lowerPrice: Int?=null,
         upperPrice: Int?=null
     ): Flow<Result<MutableList<DealDetailModel>>>
