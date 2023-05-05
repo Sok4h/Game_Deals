@@ -48,6 +48,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
     val mainViewModel = getViewModel<MainViewModel>()
     val mainViewmodelState by mainViewModel.state.collectAsStateWithLifecycle()
 
+    var activeBar by remember { mutableStateOf(false) }
     Column {
 
         NavHost(
@@ -60,7 +61,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
         ) {
             composable(route = BottomBarScreens.WatchList.route) {
 
-                var activeBar by remember { mutableStateOf(false) }
+
                 Column {
 
                     Row(
@@ -157,7 +158,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
             composable(route = BottomBarScreens.Deals.route) {
 
-                var activeBar by remember { mutableStateOf(false) }
+        /*        var activeBar by remember { mutableStateOf(false) }*/
                 Column {
 
 

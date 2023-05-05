@@ -1,5 +1,6 @@
 package com.sok4h.benchmark
 
+import androidx.benchmark.macro.CompilationMode
 import androidx.benchmark.macro.FrameTimingMetric
 import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.StartupTimingMetric
@@ -34,8 +35,10 @@ class ExampleStartupBenchmark {
     fun startup() = benchmarkRule.measureRepeated(
         packageName = "com.sok4h.game_deals",
         metrics = listOf(StartupTimingMetric()),
+        compilationMode = CompilationMode.Partial(),
         iterations = 5,
-        startupMode = StartupMode.COLD
+
+        startupMode = StartupMode.HOT
     ) {
         pressHome()
         startActivityAndWait()
@@ -55,12 +58,12 @@ class ExampleStartupBenchmark {
 
         device.wait(
             Until.hasObject(By.res("lazygrid")),
-                    TimeUnit.SECONDS.toMillis(4)
+                    TimeUnit.SECONDS.toMillis(3)
         )
         val list = device.findObject(By.res("lazygrid"))
         list.setGestureMargin(device.displayWidth/ 5)
 
-        list.fling(Direction.DOWN)
+        list.scroll(Direction.DOWN,100f)
 
     }
 }

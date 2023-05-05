@@ -132,10 +132,11 @@ class MainViewModel(
 
     fun getDeals() {
 
+        _state.update {
+            it.copy(isLoading = true, dealListState = mutableListOf())
+        }
+
         viewModelScope.launch(Dispatchers.IO) {
-            _state.update {
-                it.copy(isLoading = true, dealListState = mutableListOf())
-            }
 
             dealsRepository.getListOfDeals(
                 sortBy = state.value.sortDealsBy,
@@ -143,32 +144,32 @@ class MainViewModel(
                 upperPrice = _state.value.maxPrice.toIntOrNull()
             ).catch {
 
-                Log.e("Exception", it.message.toString() )
-                Result.failure<Exception>(it)
-            }.collect { result ->
+                    Log.e("Exception", it.message.toString())
+                    Result.failure<Exception>(it)
+                }.collect { result ->
 
-
-                _state.update {
-                    it.copy(isLoading = false)
-                }
-                if (result.isSuccess) {
 
                     _state.update {
-                        it.copy(
-                            dealListState = result.getOrDefault(mutableListOf())
-                        )
+                        it.copy(isLoading = false)
                     }
-                } else {
+                    if (result.isSuccess) {
 
-                    _state.update {
-                        it.copy(
-                            dealListErrorMessage = result.exceptionOrNull()?.message
-                                ?: "No error available"
-                        )
+                        _state.update {
+                            it.copy(
+                                dealListState = result.getOrDefault(mutableListOf())
+                            )
+                        }
+                    } else {
+
+                        _state.update {
+                            it.copy(
+                                dealListErrorMessage = result.exceptionOrNull()?.message
+                                    ?: "No error available"
+                            )
+                        }
                     }
+
                 }
-
-            }
         }
 
 

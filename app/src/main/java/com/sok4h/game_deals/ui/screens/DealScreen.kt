@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -25,7 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,8 +45,8 @@ fun DealScreen(
     onFilterChanged: () -> Unit,
 ) {
 
-    // TODO: Hoistear estado clickear deal
-    var openFilterDialog by rememberSaveable { mutableStateOf(false) }
+
+    var openFilterDialog by remember { mutableStateOf(false) }
 
     Column(
         Modifier
@@ -85,7 +84,7 @@ fun DealScreen(
                         DealCard(
                             deal = deal,
                             onDealPressed = { /*onDealPressed(it)*/ },
-                            modifier = Modifier.wrapContentWidth()
+                            modifier = Modifier.fillMaxWidth()
                         )
 
                     }
