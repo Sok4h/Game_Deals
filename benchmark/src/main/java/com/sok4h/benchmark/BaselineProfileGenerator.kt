@@ -1,6 +1,8 @@
 package com.sok4h.benchmark
 
 
+import androidx.benchmark.macro.FrameTimingMetric
+import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.junit4.BaselineProfileRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
@@ -28,6 +30,26 @@ class BaselineProfileGenerator {
         ) {
         pressHome()
         startActivityAndWait()
+
+    }
+
+    @Test
+    fun scrollTest() = rule.collectBaselineProfile(
+        packageName =
+        "com.sok4h.game_deals",
+        iterations = 4,
+        ) {
+        pressHome()
+        startActivityAndWait()
+
+        device.wait(
+            Until.hasObject(By.res("lazygrid")),
+            TimeUnit.SECONDS.toMillis(4)
+        )
+        val list = device.findObject(By.res("lazygrid"))
+        list.setGestureMargin(device.displayWidth/ 5)
+
+        list.fling(Direction.DOWN)
 
     }
 }

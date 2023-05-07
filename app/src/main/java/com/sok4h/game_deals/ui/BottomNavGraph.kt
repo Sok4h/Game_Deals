@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.sok4h.game_deals.ui.components.GameDealCard
 import com.sok4h.game_deals.ui.screens.DealScreen
 import com.sok4h.game_deals.ui.screens.WatchListScreen
@@ -42,11 +43,12 @@ import com.sok4h.game_deals.ui.viewModel.MainViewModel
 import org.koin.androidx.compose.getViewModel
 
 @ExperimentalComposeUiApi
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun BottomNavGraph(navHostController: NavHostController) {
     val mainViewModel = getViewModel<MainViewModel>()
-    val mainViewmodelState by mainViewModel.state.collectAsStateWithLifecycle()
+    val mainViewModelState by mainViewModel.state.collectAsStateWithLifecycle()
+    var activeBar by remember { mutableStateOf(false) }
 
     Column {
 
@@ -60,7 +62,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
         ) {
             composable(route = BottomBarScreens.WatchList.route) {
 
-                var activeBar by remember { mutableStateOf(false) }
+
                 Column {
 
                     Row(
@@ -70,7 +72,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
                         SearchBar(
                             modifier = Modifier,
-                            query = mainViewmodelState.searchQuery,
+                            query = mainViewModelState.searchQuery,
                             onQueryChange = { mainViewModel.updateQuery(it) },
                             onSearch = { mainViewModel.searchGame() },
                             active = activeBar,
@@ -86,7 +88,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
                                 }
                             },
                             trailingIcon = {
-                                if (mainViewmodelState.searchQuery.isNotEmpty() && activeBar) {
+                                if (mainViewModelState.searchQuery.isNotEmpty() && activeBar) {
                                     IconButton(onClick = { mainViewModel.searchGame() }) {
                                         Icon(
                                             imageVector = Icons.Default.Search,
@@ -108,14 +110,14 @@ fun BottomNavGraph(navHostController: NavHostController) {
                                 horizontalAlignment = Alignment.CenterHorizontally
 
                             ) {
-                                if (mainViewmodelState.gameListState.isNotEmpty()) {
+                                if (mainViewModelState.gameListState.isNotEmpty()) {
 
                                     LazyColumn(
                                         verticalArrangement = Arrangement.spacedBy(8.dp),
                                         modifier = Modifier.fillMaxHeight()
                                     ) {
 
-                                        items(items = mainViewmodelState.gameListState) { gameItem ->
+                                        items(items = mainViewModelState.gameListState) { gameItem ->
 
                                             GameDealCard(game = gameItem, onAddToWatchList = {
                                                 mainViewModel.addGameToWatchList(it)
@@ -130,7 +132,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
                                 }
 
-                                if (mainViewmodelState.isGameLoading) {
+                                if (mainViewModelState.isGameLoading) {
 
                                     Box(
                                         modifier = Modifier.fillMaxWidth(),
@@ -144,20 +146,19 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
                                 }
 
-                                if (mainViewmodelState.gameListErrorMessage.isNotEmpty()) {
-                                    Text(text = mainViewmodelState.gameListErrorMessage)
+                                if (mainViewModelState.gameListErrorMessage.isNotEmpty()) {
+                                    Text(text = mainViewModelState.gameListErrorMessage)
                                 }
                             }
                         }
                     }
-                    WatchListScreen(mainViewmodelState,
+                    WatchListScreen(mainViewModelState,
                         onRemoveFromWatchList = { mainViewModel.removeGameFromWatchlist(it) })
                 }
             }
 
             composable(route = BottomBarScreens.Deals.route) {
 
-                var activeBar by remember { mutableStateOf(false) }
                 Column {
 
 
@@ -168,7 +169,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
 
                         SearchBar(
-                            query = mainViewmodelState.searchQuery,
+                            query = mainViewModelState.searchQuery,
                             onQueryChange = { mainViewModel.updateQuery(it) },
                             onSearch = { mainViewModel.searchGame() },
                             active = activeBar,
@@ -184,7 +185,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
                                 }
                             },
                             trailingIcon = {
-                                if (mainViewmodelState.searchQuery.isNotEmpty() && activeBar) {
+                                if (mainViewModelState.searchQuery.isNotEmpty() && activeBar) {
                                     IconButton(onClick = { mainViewModel.searchGame() }) {
                                         Icon(
                                             imageVector = Icons.Default.Search,
@@ -205,14 +206,14 @@ fun BottomNavGraph(navHostController: NavHostController) {
                                 horizontalAlignment = Alignment.CenterHorizontally
 
                             ) {
-                                if (mainViewmodelState.gameListState.isNotEmpty()) {
+                                if (mainViewModelState.gameListState.isNotEmpty()) {
 
                                     LazyColumn(
                                         verticalArrangement = Arrangement.spacedBy(8.dp),
                                         modifier = Modifier.fillMaxHeight()
                                     ) {
 
-                                        items(items = mainViewmodelState.gameListState) { gameItem ->
+                                        items(items = mainViewModelState.gameListState) { gameItem ->
 
                                             GameDealCard(game = gameItem, onAddToWatchList = {
                                                 mainViewModel.addGameToWatchList(it)
@@ -227,7 +228,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
                                 }
 
-                                if (mainViewmodelState.isGameLoading) {
+                                if (mainViewModelState.isGameLoading) {
 
                                     Box(
                                         modifier = Modifier.fillMaxWidth(),
@@ -241,13 +242,13 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
                                 }
 
-                                if (mainViewmodelState.gameListErrorMessage.isNotEmpty()) {
-                                    Text(text = mainViewmodelState.gameListErrorMessage)
+                                if (mainViewModelState.gameListErrorMessage.isNotEmpty()) {
+                                    Text(text = mainViewModelState.gameListErrorMessage)
                                 }
                             }
                         }
                     }
-                    DealScreen(state = mainViewmodelState,
+                    DealScreen(state = mainViewModelState,
                         onMinPriceChanged = { mainViewModel.updateMinPrice(price = it) },
                         onMaxPriceChanged = { mainViewModel.updateMaxPrice(price = it) },
                         onSortChanged = { mainViewModel.updateSortBy(it) },

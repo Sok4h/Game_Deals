@@ -23,8 +23,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 
+
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun DealCard(modifier: Modifier, deal: DealDetailModel, onDealPressed: (String) -> Unit) {
 
@@ -41,7 +45,7 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel, onDealPressed: (String) 
 
         ) {
 
-        AsyncImage(
+        GlideImage(
             model = deal.gameImage, modifier = Modifier
                 .height(70.dp)
                 .fillMaxWidth(),

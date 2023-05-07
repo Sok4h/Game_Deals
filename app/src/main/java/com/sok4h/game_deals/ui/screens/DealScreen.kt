@@ -32,10 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.sok4h.game_deals.ui.components.DealCard
 import com.sok4h.game_deals.ui.components.FilterDeals
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 
+@ExperimentalGlideComposeApi
 @ExperimentalMaterial3Api
 @Composable
 fun DealScreen(
@@ -85,7 +87,7 @@ fun DealScreen(
                         DealCard(
                             deal = deal,
                             onDealPressed = { /*onDealPressed(it)*/ },
-                            modifier = Modifier.wrapContentWidth()
+                            modifier = Modifier
                         )
 
                     }
