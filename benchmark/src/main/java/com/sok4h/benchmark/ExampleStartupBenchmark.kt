@@ -5,7 +5,7 @@ import androidx.benchmark.macro.FrameTimingMetric
 import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.StartupTimingMetric
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.Until
@@ -26,31 +26,42 @@ import java.util.concurrent.TimeUnit
  * Run this benchmark from Studio to see startup measurements, and captured system traces
  * for investigating your app's performance.
  */
-@RunWith(AndroidJUnit4::class)
+@RunWith(AndroidJUnit4ClassRunner::class)
 class ExampleStartupBenchmark {
     @get:Rule
     val benchmarkRule = MacrobenchmarkRule()
 
+
     @Test
-    fun startup() = benchmarkRule.measureRepeated(
+    fun startupModeNone() = startup(CompilationMode.None())
+
+    @Test
+    fun startupModePartial() = startup(CompilationMode.Partial())
+
+    fun startup(compilationMode: CompilationMode) = benchmarkRule.measureRepeated(
         packageName = "com.sok4h.game_deals",
         metrics = listOf(StartupTimingMetric()),
-        compilationMode = CompilationMode.Partial(),
         iterations = 5,
-
-        startupMode = StartupMode.HOT
+        compilationMode= compilationMode,
+        startupMode = StartupMode.COLD
     ) {
         pressHome()
         startActivityAndWait()
     }
 
+
     @Test
-    fun scrollTest() = benchmarkRule.measureRepeated(
+    fun scrollPartial() =scrollTest(CompilationMode.Partial())
+
+    @Test
+    fun scrollNone() =scrollTest(CompilationMode.None())
+    fun scrollTest(compilationMode: CompilationMode) = benchmarkRule.measureRepeated(
         packageName =
         "com.sok4h.game_deals",
         metrics = listOf(FrameTimingMetric()),
         iterations = 4,
-        startupMode = StartupMode.COLD,
+        compilationMode=compilationMode,
+        startupMode = StartupMode.WARM,
 
         ) {
         pressHome()
@@ -58,12 +69,12 @@ class ExampleStartupBenchmark {
 
         device.wait(
             Until.hasObject(By.res("lazygrid")),
-                    TimeUnit.SECONDS.toMillis(3)
+                    TimeUnit.SECONDS.toMillis(4)
         )
         val list = device.findObject(By.res("lazygrid"))
         list.setGestureMargin(device.displayWidth/ 5)
 
-        list.scroll(Direction.DOWN,100f)
+        list.fling(Direction.DOWN)
 
     }
 }
