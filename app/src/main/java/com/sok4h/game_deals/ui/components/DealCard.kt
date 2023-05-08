@@ -45,7 +45,7 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel, onDealPressed: (String) 
 
         ) {
 
-        GlideImage(
+            GlideImage(
             model = deal.gameImage, modifier = Modifier
                 .height(70.dp)
                 .fillMaxWidth(),

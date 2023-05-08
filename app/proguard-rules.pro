@@ -10,7 +10,7 @@
 -dontwarn sun.misc.**
 #-keep class com.google.gson.stream.** { *; }
 
-# Application classes that will be serialized/deserialized over Gson
+# Application classes that will be serialized/deserialized over Gsonmmmw
 -keep class com.sok4h.game_deals.data.** { <fields>; }
 
 # Prevent proguard from stripping interface information from TypeAdapter, TypeAdapterFactory,

@@ -1,11 +1,8 @@
+
+
 package com.sok4h.benchmark
-
-
-import androidx.benchmark.macro.FrameTimingMetric
-import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.junit4.BaselineProfileRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.Until
@@ -33,11 +30,11 @@ class BaselineProfileGenerator {
 
     }
 
+
     @Test
     fun scrollTest() = rule.collectBaselineProfile(
         packageName =
         "com.sok4h.game_deals",
-        iterations = 4,
         ) {
         pressHome()
         startActivityAndWait()
@@ -48,7 +45,6 @@ class BaselineProfileGenerator {
         )
         val list = device.findObject(By.res("lazygrid"))
         list.setGestureMargin(device.displayWidth/ 5)
-
         list.fling(Direction.DOWN)
 
     }

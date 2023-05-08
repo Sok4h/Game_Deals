@@ -42,37 +42,40 @@ class ExampleStartupBenchmark {
         packageName = "com.sok4h.game_deals",
         metrics = listOf(StartupTimingMetric()),
         iterations = 5,
-        compilationMode= compilationMode,
-        startupMode = StartupMode.COLD
-    ) {
+        compilationMode = compilationMode,
+        startupMode = StartupMode.COLD,
+
+        ) {
         pressHome()
         startActivityAndWait()
     }
 
 
     @Test
-    fun scrollPartial() =scrollTest(CompilationMode.Partial())
+    fun scrollPartial() = scrollTest(CompilationMode.Partial())
 
     @Test
-    fun scrollNone() =scrollTest(CompilationMode.None())
+    fun scrollNone() = scrollTest(CompilationMode.None())
     fun scrollTest(compilationMode: CompilationMode) = benchmarkRule.measureRepeated(
         packageName =
         "com.sok4h.game_deals",
         metrics = listOf(FrameTimingMetric()),
         iterations = 4,
-        compilationMode=compilationMode,
-        startupMode = StartupMode.WARM,
+        compilationMode = compilationMode,
+        startupMode = StartupMode.COLD,
+        setupBlock = {
+            pressHome()
 
-        ) {
-        pressHome()
+        }
+
+    ) {
         startActivityAndWait()
-
         device.wait(
             Until.hasObject(By.res("lazygrid")),
-                    TimeUnit.SECONDS.toMillis(4)
+            TimeUnit.SECONDS.toMillis(5)
         )
         val list = device.findObject(By.res("lazygrid"))
-        list.setGestureMargin(device.displayWidth/ 5)
+        list.setGestureMargin(device.displayWidth / 5)
 
         list.fling(Direction.DOWN)
 

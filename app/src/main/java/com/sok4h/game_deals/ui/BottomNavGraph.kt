@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.sok4h.game_deals.ui
 
 
@@ -42,7 +44,6 @@ import com.sok4h.game_deals.ui.viewModel.MainViewModel
 import org.koin.androidx.compose.getViewModel
 
 @ExperimentalComposeUiApi
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNavGraph(navHostController: NavHostController) {
     val mainViewModel = getViewModel<MainViewModel>()
