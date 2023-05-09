@@ -9,7 +9,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.SystemClock
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -21,11 +20,8 @@ import com.sok4h.game_deals.data.model.dtos.GameDetailDto
 import com.sok4h.game_deals.data.repositories.IGamesRepository
 import com.sok4h.game_deals.ui.ui_model.mappers.toDealModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import kotlin.time.Duration
 
 
 class DealWorker(var ctx: Context, params: WorkerParameters) :
@@ -43,7 +39,6 @@ class DealWorker(var ctx: Context, params: WorkerParameters) :
             if (result.isSuccess) {
 
                 val updatedGame = result.getOrNull()
-
 
                 if (updatedGame != null) {
                     if (game.bestDealId.contentEquals(updatedGame.deals[0].dealID)) {
