@@ -1,10 +1,9 @@
 package com.sok4h.game_deals
 
 import android.app.Application
-import androidx.work.Configuration
 import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.sok4h.game_deals.data.di.appModule
@@ -29,11 +28,12 @@ class Application : Application(), KoinComponent {
         }
         setupWorkManagerFactory()
 
+
     }
 
     private fun setupWorkManagerFactory() {
 
-        val work = PeriodicWorkRequestBuilder<DealWorker>(1,TimeUnit.DAYS).setConstraints(
+        val work = PeriodicWorkRequestBuilder<DealWorker>(15, TimeUnit.MINUTES).setConstraints(
             Constraints.Builder(
 
             ).setRequiredNetworkType(NetworkType.CONNECTED).build()
@@ -41,6 +41,10 @@ class Application : Application(), KoinComponent {
 
         ).build()
 
-        WorkManager.getInstance(this).enqueue(work)
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork("workDeals", ExistingPeriodicWorkPolicy.KEEP, work)
+
     }
+
+
 }
