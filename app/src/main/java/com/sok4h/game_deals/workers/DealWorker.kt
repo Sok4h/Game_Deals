@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
@@ -102,6 +103,12 @@ fun makeNotification(context: Context, game: GameDetailDto) {
     val builder = NotificationCompat.Builder(context, "Deals")
         .setContentIntent(pendingIntent)
         .setSmallIcon(R.drawable.ic_launcher_foreground)
+        .setLargeIcon(
+            BitmapFactory.decodeResource(
+                context.resources,
+                R.drawable.baseline_trending_down_24
+            )
+        )
         .setContentTitle("New Deal found!")
         .setContentText("your game ${game.info.title} price has drop to ${game.deals[0].price}")
         .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -125,7 +132,6 @@ fun makeNotification(context: Context, game: GameDetailDto) {
     val oneTimeID = (SystemClock.uptimeMillis() % 99999999)
     NotificationManagerCompat.from(context).notify(oneTimeID.toInt(), builder.build())
 }
-
 
 
 fun makeNotificationA(context: Context) {

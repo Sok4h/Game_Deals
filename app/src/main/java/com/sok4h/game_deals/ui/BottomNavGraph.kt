@@ -63,7 +63,6 @@ fun BottomNavGraph(navHostController: NavHostController) {
                 var activeBar by remember { mutableStateOf(false) }
                 Column {
 
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -156,7 +155,7 @@ fun BottomNavGraph(navHostController: NavHostController) {
                         mainViewmodelState,
                         onRemoveFromWatchList = { mainViewModel.removeGameFromWatchlist(it) },
 
-                    )
+                        )
                 }
             }
 

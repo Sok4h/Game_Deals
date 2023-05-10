@@ -2,6 +2,7 @@
 
 package com.sok4h.game_deals.ui.screens
 
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -27,12 +28,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.judemanutd.autostarter.AutoStartPermissionHelper
 import com.sok4h.game_deals.ui.components.GameDealCard
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 
@@ -45,6 +48,7 @@ fun WatchListScreen(
 
     ) {
 
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,65 +56,105 @@ fun WatchListScreen(
     ) {
 
         val openDialog = remember { mutableStateOf(false) }
-        val notificationPermissionState = rememberPermissionState(
-            android.Manifest.permission.POST_NOTIFICATIONS
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val notificationPermissionState = rememberPermissionState(
+                android.Manifest.permission.POST_NOTIFICATIONS
+            )
 
-        if (!notificationPermissionState.status.isGranted) {
-            Column(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            if (!notificationPermissionState.status.isGranted) {
+                Column(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-                Text(text = "Enable notication to never miss a deal!")
+                    Text(text = "Enable notication to never miss a deal!")
+
+                    OutlinedButton(onClick = {
+
+                        if (notificationPermissionState.status.shouldShowRationale) {
+                            openDialog.value = true
+
+                        } else {
+                            notificationPermissionState.launchPermissionRequest()
+                        }
+
+                    }) {
+                        Text(text = "Give permission")
+                    }
+                }
+            }
+
+
+            if (openDialog.value) {
+
+                AlertDialog(onDismissRequest = { openDialog.value = false }) {
+                    Surface(shape = MaterialTheme.shapes.large) {
+                        Column(
+                            Modifier.padding(32.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.NotificationAdd,
+                                contentDescription = "Icon"
+                            )
+                            Text(
+                                text = "Never miss a new deal",
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            Text(text = "We need your permission to notify you every time there´s a new offer for your favorite game")
+                            Text(text = "In some devices you may need to enable autostart, otherwise the notifications won't show")
+                            Button(onClick = {
+                                notificationPermissionState.launchPermissionRequest().also {
+
+                                    val isActive = AutoStartPermissionHelper.getInstance()
+                                        .isAutoStartPermissionAvailable(context)
+
+                                    if (isActive) {
+
+                                        AutoStartPermissionHelper.getInstance()
+                                            .getAutoStartPermission(context, true)
+                                    }
+                                }
+
+                                openDialog.value = false
+                            }) {
+                                Text(text = "Accept permission")
+                            }
+
+                        }
+                    }
+                }
+            }
+        } else {
+
+
+            val isActive = AutoStartPermissionHelper.getInstance()
+                .isAutoStartPermissionAvailable(context)
+
+            if (isActive) {
+
+                Text(text = "In some devices you may need to enable autostart, otherwise the notifications won't show")
 
                 OutlinedButton(onClick = {
-
-                    if (notificationPermissionState.status.shouldShowRationale) {
-                        openDialog.value = true
-
-                    } else {
-                        notificationPermissionState.launchPermissionRequest()
-                    }
+                    AutoStartPermissionHelper.getInstance()
+                        .getAutoStartPermission(context, true)
 
                 }) {
                     Text(text = "Give permission")
                 }
+
             }
+
+
         }
 
 
-        if (openDialog.value) {
 
-            AlertDialog(onDismissRequest = { openDialog.value = false }) {
-                Surface(shape = MaterialTheme.shapes.large) {
-                    Column(
-                        Modifier.padding(32.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.NotificationAdd,
-                            contentDescription = "Icon"
-                        )
-                        Text(
-                            text = "Never miss a new deal",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        Text(text = "We need your permission to notify you every time there´s a new offer for your favorite game")
-                        Button(onClick = {
-                            notificationPermissionState.launchPermissionRequest()
-                            openDialog.value = false
-                        }) {
-                            Text(text = "Accept permission")
-                        }
 
-                    }
-                }
-            }
-        }
+
 
         if (state.isWatchlistLoading) {
             CircularProgressIndicator(
