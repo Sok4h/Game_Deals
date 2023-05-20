@@ -1,3 +1,50 @@
 <resources>
-    <string name="app_name">Game Deals</string>
+    <string name="app_name" translatable="false">Game Deals</string>
+
+    <string name="explore_deals">Explore Deals</string>
+    <string name="enable_notifications">Enable notication to never miss a deal!</string>
+    <string name="give_permission">Give permission</string>
+    <string name="permission_dialog_content">To keep you updated with new game deals, please grant permission to receive notifications.</string>
+    <string name="permission_dialog_title">Allow Notifications</string>
+    <string name="auto_start_description">please enable autostart, otherwise the notifications won\'t show</string>
+
+    <string name="filter_by">Filter by</string>
+    <string name="deals_filters">Filters</string>
+    <string name="deals_filter_price_range">Price Range</string>
+    <string name="update_filters">Update filters</string>
+    <string name="deals_filter_rating">Deal Rating</string>
+    <string name="deals_filter_recent">Recent</string>
+    <string name="deals_filter_saving">Savings</string>
+    <string name="deals_filter_store">Store</string>
+    <string name="deals_filter_price">Price</string>
+    <string name="deals_filter_title">Title</string>
+    <string name="deals_filter_review">Review</string>
+
+    <string name="deals">Deals</string>
+    <string name="deals_quantity">%1$s Deals</string>
+    <string name="deal_notification_description">%1$s price has drop to %2$s</string>
+    <string name="favorites">Favorites</string>
+    <string name="buy">Buy</string>
+    <string name="favorite_games">Favorite Games</string>
+    <string name="search_game">Search Game</string>
+    <string name="no_tienes_juegos_en_favoritos">No favorite games</string>
+    <string name="min_price">Min</string>
+    <string name="max_price">Max</string>
+    <string name="game_title_no_available">No available</string>
+    <string name="deal_channel_name">Deal Updates</string>
+    <string name="deal_notification_channel_description">Keeps you up to date with the latest deals for your favorite games</string>
+    <string name="deal_notification_title">New Deal found!</string>
+
+
+    <string-array name="filter_list">
+
+        <item>@string/deals_filter_rating</item>
+        <item>@string/deals_filter_recent</item>
+        <item>@string/deals_filter_saving</item>
+        <item>@string/deals_filter_store</item>
+        <item>@string/deals_filter_price_range</item>
+        <item>@string/deals_filter_title</item>
+        <item>@string/deals_filter_review</item>
+    </string-array>
+
 </resources>

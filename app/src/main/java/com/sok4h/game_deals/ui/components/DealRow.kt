@@ -15,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.ui_model.DealModel
 
 @Composable
@@ -61,7 +63,7 @@ fun DealRow(deal: DealModel) {
 
         TextButton(onClick = { uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${deal.dealID}") }) {
 
-            Text(text = "Comprar")
+            Text(text = stringResource(id = R.string.buy))
         }
 
     }

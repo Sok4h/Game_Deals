@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -40,6 +41,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.judemanutd.autostarter.AutoStartPermissionHelper
+import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.components.GameDealCard
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 
@@ -56,7 +58,8 @@ fun WatchListScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         val openDialog = remember { mutableStateOf(false) }
@@ -73,7 +76,7 @@ fun WatchListScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    Text(text = "Enable notication to never miss a deal!")
+                    Text(text = stringResource(id = R.string.enable_notifications))
 
                     OutlinedButton(onClick = {
 
@@ -85,7 +88,7 @@ fun WatchListScreen(
                         }
 
                     }) {
-                        Text(text = "Give permission")
+                        Text(text = stringResource(id = R.string.give_permission))
                     }
                 }
             }
@@ -93,7 +96,7 @@ fun WatchListScreen(
 
             if (openDialog.value) {
 
-                AlertDialog(onDismissRequest = { openDialog.value = false },) {
+                AlertDialog(onDismissRequest = { openDialog.value = false }) {
                     Surface(
                         modifier = Modifier
                             .wrapContentWidth()
@@ -111,13 +114,11 @@ fun WatchListScreen(
                                 contentDescription = "Icon"
                             )
                             Text(
-                                text = "Allow Notifications",
+                                text = stringResource(id = R.string.permission_dialog_title),
                                 style = MaterialTheme.typography.titleLarge
                             )
-                            Text(text = "To keep you updated with new game deals, please grant permission to receive notifications.")
-/*
-                            Text(text = "In some devices you may need to enable autostart, otherwise the notifications won't show")
-*/
+                            Text(text = stringResource(id = R.string.permission_dialog_content))
+
                             Button(onClick = {
                                 notificationPermissionState.launchPermissionRequest().also {
 
@@ -133,7 +134,7 @@ fun WatchListScreen(
 
                                 openDialog.value = false
                             }) {
-                                Text(text = "Grant Permission")
+                                Text(text = stringResource(id = R.string.give_permission))
                             }
 
 
@@ -144,19 +145,18 @@ fun WatchListScreen(
         } else {
 
 
-            val isActive = AutoStartPermissionHelper.getInstance()
-                .isAutoStartPermissionAvailable(context)
+            val isActive =
+                AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(context)
 
             if (isActive) {
 
-                Text(text = "In some devices you may need to enable autostart, otherwise the notifications won't show")
+                Text(text = stringResource(id = R.string.auto_start_description))
 
                 OutlinedButton(onClick = {
-                    AutoStartPermissionHelper.getInstance()
-                        .getAutoStartPermission(context, true)
+                    AutoStartPermissionHelper.getInstance().getAutoStartPermission(context, true)
 
                 }) {
-                    Text(text = "Give permission")
+                    Text(text = stringResource(id = R.string.give_permission))
                 }
 
             }
@@ -164,16 +164,9 @@ fun WatchListScreen(
 
         }
 
-
-
-
-
-
         if (state.isWatchlistLoading) {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .size(25.dp),
-                strokeWidth = 2.dp
+                modifier = Modifier.size(25.dp), strokeWidth = 2.dp
             )
 
         }
@@ -184,7 +177,7 @@ fun WatchListScreen(
                 modifier = Modifier
                     .align(Alignment.Start)
                     .padding(8.dp),
-                text = "Favorite Games",
+                text = stringResource(R.string.favorite_games),
                 style = MaterialTheme.typography.titleLarge,
             )
             LazyColumn(
@@ -196,13 +189,9 @@ fun WatchListScreen(
 
                 items(items = state.watchListState) { game ->
 
-                    GameDealCard(
-                        game = game,
-                        onAddToWatchList = {},
-                        onRemoveFromWatchList = {
-                            onRemoveFromWatchList(it)
-                        }
-                    )
+                    GameDealCard(game = game, onAddToWatchList = {}, onRemoveFromWatchList = {
+                        onRemoveFromWatchList(it)
+                    })
                 }
 
             }
@@ -219,7 +208,7 @@ fun WatchListScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "No tienes juegos en favoritos",
+                    text = stringResource(R.string.no_tienes_juegos_en_favoritos),
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -232,7 +221,13 @@ fun WatchListScreen(
     }
 
 
-// TODO: add error case
+    if (state.watchListErrorMessage.isNotEmpty()) {
+
+        Column(modifier = Modifier.fillMaxSize()) {
+
+            Text(text = state.watchListErrorMessage)
+        }
+    }
 
 
 }

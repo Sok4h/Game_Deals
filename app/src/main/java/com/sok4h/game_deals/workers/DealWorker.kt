@@ -44,8 +44,7 @@ class DealWorker(var ctx: Context, params: WorkerParameters) :
                 if (updatedGame != null) {
                     if (game.bestDealId.contentEquals(updatedGame.deals[0].dealID)) {
 
-                     /*   return@forEach*/
-                        makeNotification(context = ctx, updatedGame)
+                        return@forEach
 
                     } else {
 
@@ -78,12 +77,10 @@ class DealWorker(var ctx: Context, params: WorkerParameters) :
 
 fun makeNotification(context: Context, game: GameDetailDto) {
 
-    // Make a channel if necessary
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        val name = "Deal Updates"
-        val description = "Keeps you up to date with the latest deals for your favorite games"
+        val name = context.getString(R.string.deal_channel_name)
+        val description = context.getString(R.string.deal_notification_channel_description)
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel("Deals", name, importance)
         channel.description = description
@@ -103,6 +100,7 @@ fun makeNotification(context: Context, game: GameDetailDto) {
         notificationIntent,
         PendingIntent.FLAG_IMMUTABLE
     )
+    val notificationDescription= context.resources.getString(R.string.deal_notification_description,game.info.title,game.deals[0].price)
     val builder = NotificationCompat.Builder(context, "Deals")
         .setContentIntent(pendingIntent)
         .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -112,8 +110,8 @@ fun makeNotification(context: Context, game: GameDetailDto) {
                 R.drawable.baseline_trending_down_24
             )
         )
-        .setContentTitle("New Deal found!")
-        .setContentText("your game ${game.info.title} price has drop to ${game.deals[0].price}")
+        .setContentTitle(context.getString(R.string.deal_notification_title))
+        .setContentText(notificationDescription)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
 
 
@@ -123,70 +121,10 @@ fun makeNotification(context: Context, game: GameDetailDto) {
             Manifest.permission.POST_NOTIFICATIONS
         ) != PackageManager.PERMISSION_GRANTED
     ) {
-        // TODO: Consider calling
-        //    ActivityCompat#requestPermissions
-        // here to request the missing permissions, and then overriding
-        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-        //                                          int[] grantResults)
-        // to handle the case where the user grants the permission. See the documentation
-        // for ActivityCompat#requestPermissions for more details.
+
         return
     }
     val oneTimeID = (SystemClock.uptimeMillis() % 99999999)
     NotificationManagerCompat.from(context).notify(oneTimeID.toInt(), builder.build())
 }
 
-
-fun makeNotificationA(context: Context) {
-
-    // Make a channel if necessary
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        val name = "Deal Updates"
-        val description = "Keeps you up to date with the latest deals for your favorite games"
-        val importance = NotificationManager.IMPORTANCE_HIGH
-        val channel = NotificationChannel("Deals", name, importance)
-        channel.description = description
-
-        // Add the channel
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
-
-        notificationManager?.createNotificationChannel(channel)
-    }
-
-    val notificationIntent = Intent(context, MainActivity::class.java)
-    notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-    val pendingIntent = PendingIntent.getActivity(
-        context,
-        0,
-        notificationIntent,
-        PendingIntent.FLAG_IMMUTABLE
-    )
-    val builder = NotificationCompat.Builder(context, "Deals")
-        .setContentIntent(pendingIntent)
-        .setSmallIcon(R.drawable.ic_launcher_foreground)
-        .setContentTitle("New Deal found!")
-        .setContentText("your game batmaaan price has drop to $10")
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
-
-
-    // Show the notification
-    if (ActivityCompat.checkSelfPermission(
-            context,
-            Manifest.permission.POST_NOTIFICATIONS
-        ) != PackageManager.PERMISSION_GRANTED
-    ) {
-        // TODO: Consider calling
-        //    ActivityCompat#requestPermissions
-        // here to request the missing permissions, and then overriding
-        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-        //                                          int[] grantResults)
-        // to handle the case where the user grants the permission. See the documentation
-        // for ActivityCompat#requestPermissions for more details.
-        return
-    }
-    val oneTimeID = (SystemClock.uptimeMillis() % 99999999)
-    NotificationManagerCompat.from(context).notify(oneTimeID.toInt(), builder.build())
-}

@@ -1,5 +1,6 @@
 package com.sok4h.game_deals.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -8,23 +9,39 @@ import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.sok4h.game_deals.R
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterDeals(
+    sortvalueId: Int,
     sortValue: String,
     minPrice: String,
     maxPrice: String,
-    onSortChanged: (String) -> Unit,
+    onSortChanged: (sortValue: String, sortID: Int) -> Unit,
     onMinPriceChanged: (String) -> Unit,
     onMaxPriceChanged: (String) -> Unit,
     onFilterChanged: () -> Unit
 ) {
 
+    val currentLocale = Locale.ENGLISH
+    val context = LocalContext.current
+
+    // Get the string resource for a specific language
+    val stringResource = remember(currentLocale) {
+        val configuration = Configuration(context.resources.configuration)
+        configuration.setLocale(currentLocale)
+        val localizedContext = context.createConfigurationContext(configuration)
+        localizedContext.resources.getStringArray(R.array.filter_list)
+    }
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -35,14 +52,18 @@ fun FilterDeals(
 
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Filters",
+            text = stringResource(id = R.string.deals_filters),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge
         )
 
-        Text(text = "Search by", style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = stringResource(id = R.string.filter_by),
+            style = MaterialTheme.typography.titleMedium
+        )
 
-        val radioOptions = listOf("Deal Rating","Recent", "Savings", "Store", "Price", "Title","Reviews")
+        val radioOptions = stringArrayResource(id = R.array.filter_list)
+
 
         var expanded by remember {
             mutableStateOf(false)
@@ -52,7 +73,7 @@ fun FilterDeals(
             OutlinedTextField(modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor(),
-                value = sortValue,
+                value = stringResource(id = sortvalueId),
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = {
@@ -67,11 +88,18 @@ fun FilterDeals(
                 })
 
             ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                radioOptions.forEach { option ->
+                radioOptions.forEachIndexed { index, option ->
 
                     DropdownMenuItem(text = { Text(text = option) }, onClick = {
-                        onSortChanged(option)
+
+                        val arrayval = context.resources.obtainTypedArray(R.array.filter_list)
+                        val stringId = arrayval.getResourceId(index, 0)
+
+                        onSortChanged(stringResource[index], stringId)
+                        arrayval.recycle()
+
                         expanded = false
+
                     })
 
                     Divider()
@@ -81,23 +109,10 @@ fun FilterDeals(
 
         }
 
-
-        // TODO: Preguntar a la nasa como carajos le pongo el label
-        /*
-
-
-                            var sliderState by remember { mutableStateOf(0f..50f) }
-
-                            RangeSlider(
-                                modifier = Modifier,
-                                value = sliderState,
-                                onValueChange = { },
-                                valueRange = 0f..50f,
-                                steps = 0,
-                              )*/
-
-        Text(text = "Price range", style = MaterialTheme.typography.titleMedium)
-
+        Text(
+            text = stringResource(id = R.string.deals_filter_price_range),
+            style = MaterialTheme.typography.titleMedium
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -107,7 +122,7 @@ fun FilterDeals(
 
             OutlinedTextField(modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                label = { Text(text = "Min") },
+                label = { Text(text = stringResource(R.string.min_price)) },
                 value = minPrice,
                 placeholder = {
                     Text(
@@ -123,7 +138,7 @@ fun FilterDeals(
 
             OutlinedTextField(modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                label = { Text(text = "Max") },
+                label = { Text(text = stringResource(R.string.max_price)) },
                 value = maxPrice,
                 placeholder = {
                     Text(
@@ -154,10 +169,8 @@ fun FilterDeals(
 
                 expanded = false
             }) {
-                Text(text = "Update filters")
-            }/*  TextButton(onClick = { }) {
-                Text(text = "Reset filters")
-            }*/
+                Text(text = stringResource(id = R.string.update_filters))
+            }
 
         }
 

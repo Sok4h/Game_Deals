@@ -32,7 +32,7 @@ class Application : Application(), KoinComponent {
 
     private fun setupWorkManagerFactory() {
 
-        val work = PeriodicWorkRequestBuilder<DealWorker>(15, TimeUnit.MINUTES).setConstraints(
+        val work = PeriodicWorkRequestBuilder<DealWorker>(8, TimeUnit.HOURS).setConstraints(
             Constraints.Builder(
 
             ).setRequiredNetworkType(NetworkType.CONNECTED).build()

@@ -22,22 +22,9 @@ class MainViewModel(
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(MainScreenState())
-    val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
-    fun dismissDialog(){
 
-        visiblePermissionDialogQueue.removeLast()
-    }
 
-    fun onPermissionResult(
-        permission:String,
-        isGranted:Boolean
-    ){
-
-        if(!isGranted){
-            visiblePermissionDialogQueue.add(0,permission)
-        }
-    }
     val state get() = _state.asStateFlow()
 
 
@@ -256,10 +243,10 @@ class MainViewModel(
         }
     }
 
-    fun updateSortBy(sort: String) {
+    fun updateSortBy(sort: String,sortId:Int) {
 
         _state.update {
-            it.copy(sortDealsBy = sort)
+            it.copy(sortDealsBy = sort, sortDealsById = sortId)
         }
     }
 

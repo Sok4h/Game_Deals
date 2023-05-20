@@ -29,8 +29,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.components.DealCard
 import com.sok4h.game_deals.ui.components.FilterDeals
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
@@ -41,10 +43,9 @@ fun DealScreen(
     state: MainScreenState,
     onMinPriceChanged: (String) -> Unit,
     onMaxPriceChanged: (String) -> Unit,
-    onSortChanged: (String) -> Unit,
+    onSortChanged: (sort:String,id: Int) -> Unit ,
     onFilterChanged: () -> Unit,
 ) {
-
 
     var openFilterDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -63,7 +64,10 @@ fun DealScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Text(text = "Explore Deals", style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = stringResource(id = R.string.explore_deals),
+                style = MaterialTheme.typography.titleLarge
+            )
             IconButton(
                 onClick = { openFilterDialog = !openFilterDialog },
 
@@ -103,16 +107,17 @@ fun DealScreen(
                     ) {
                         FilterDeals(
                             sortValue = state.sortDealsBy,
-                            onSortChanged = onSortChanged,
+                            sortvalueId = state.sortDealsById,
+                            onSortChanged = onSortChanged
+                            ,
                             minPrice = state.minPrice,
                             maxPrice = state.maxPrice,
                             onMaxPriceChanged = onMaxPriceChanged,
                             onMinPriceChanged = onMinPriceChanged,
-                            onFilterChanged = {
-                                onFilterChanged()
-                                openFilterDialog = false
-                            },
-                        )
+                        ) {
+                            onFilterChanged()
+                            openFilterDialog = false
+                        }
 
                     }
                 }

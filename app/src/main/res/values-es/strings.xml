@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="explore_deals">Explora Ofertas</string>
+    <string name="enable_notifications">¡Activa las notificaciones para no perderte ninguna oferta!</string>
+    <string name="give_permission">Otorgar permiso</string>
+    <string name="permission_dialog_content">Para mantenerte actualizado con las nuevas ofertas de juegos, por favor otorga permiso para recibir notificaciones.</string>
+    <string name="permission_dialog_title">Permitir notificaciones</string>
+    <string name="auto_start_description">Necesitas habilitar el inicio automático, de lo contrario, las notificaciones no se mostrarán.</string>
+    <string name="filter_by">Filtrar por</string>
+    <string name="deals_filters">Filtros</string>
+    <string name="deals_filter_price_range">"Rango de precios "</string>
+    <string name="update_filters">Actualizar filtros</string>
+    <string name="deals_filter_rating">Calificación de oferta</string>
+    <string name="deals_filter_recent">Reciente</string>
+    <string name="deals_filter_saving">Descuento</string>
+    <string name="deals_filter_store">Tienda</string>
+    <string name="deals_filter_price">Precio</string>
+    <string name="deals_filter_title">Titulo</string>
+    <string name="deals_filter_review">Reseñas</string>
+    <string name="deals">Ofertas</string>
+    <string name="favorites">Favoritos</string>
+    <string name="buy">Comprar</string>
+    <string name="favorite_games">Juegos Favoritos</string>
+    <string name="search_game">Buscar Juego</string>
+    <string name="no_tienes_juegos_en_favoritos">Sin juegos en favoritos</string>
+    <string name="min_price">Mínimo</string>
+    <string name="max_price">Maximo</string>
+    <string name="game_title_no_available">No disponible</string>
+    <string name="deals_quantity">%1$s ofertas</string>
+    <string name="deal_channel_name">Deal Updates</string>
+    <string name="deal_notification_channel_description">Keeps you up to date with the latest deals for your favorite games</string>
+    <string name="deal_notification_title">New Deal found!</string>
+    <string name="deal_notification_description">%1$s bajó de precio a  %2$s</string>
+</resources>
