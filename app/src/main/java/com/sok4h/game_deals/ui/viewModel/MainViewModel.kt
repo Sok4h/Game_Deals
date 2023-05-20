@@ -1,5 +1,6 @@
 package com.sok4h.game_deals.ui.viewModel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IDealsRepository
@@ -21,6 +22,22 @@ class MainViewModel(
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(MainScreenState())
+    val visiblePermissionDialogQueue = mutableStateListOf<String>()
+
+    fun dismissDialog(){
+
+        visiblePermissionDialogQueue.removeLast()
+    }
+
+    fun onPermissionResult(
+        permission:String,
+        isGranted:Boolean
+    ){
+
+        if(!isGranted){
+            visiblePermissionDialogQueue.add(0,permission)
+        }
+    }
     val state get() = _state.asStateFlow()
 
 
@@ -39,8 +56,6 @@ class MainViewModel(
 
             val result = gamesRepository.getGameDeals(state.value.searchQuery)
             val gamesFromNetwork = result.getOrDefault(emptyList())
-
-            // TODO: solucionar esta madre, si lo hago con collect sale una lista fantasma
 
             _state.update {
                 it.copy(isGameLoading = false)
@@ -117,7 +132,6 @@ class MainViewModel(
 
                     it.copy(info = it.info.copy(isFavorite = false))
                 } else {
-
                     it
                 }
             }

@@ -1,6 +1,8 @@
 package com.sok4h.game_deals.ui
 
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,8 +35,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.sok4h.game_deals.ui.screens.DealScreen
 import com.sok4h.game_deals.ui.components.GameDealCard
+import com.sok4h.game_deals.ui.screens.DealScreen
 import com.sok4h.game_deals.ui.screens.WatchListScreen
 import com.sok4h.game_deals.ui.viewModel.MainViewModel
 import org.koin.androidx.compose.getViewModel
@@ -54,7 +57,6 @@ fun BottomNavGraph(navHostController: NavHostController) {
 
                 var activeBar by remember { mutableStateOf(false) }
                 Column {
-
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -144,8 +146,11 @@ fun BottomNavGraph(navHostController: NavHostController) {
                             }
                         }
                     }
-                    WatchListScreen(mainViewmodelState,
-                        onRemoveFromWatchList = { mainViewModel.removeGameFromWatchlist(it) })
+                    WatchListScreen(
+                        mainViewmodelState,
+                        onRemoveFromWatchList = { mainViewModel.removeGameFromWatchlist(it) },
+
+                        )
                 }
             }
 

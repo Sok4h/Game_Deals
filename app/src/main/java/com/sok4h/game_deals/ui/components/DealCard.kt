@@ -46,7 +46,7 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
                 .height(70.dp)
                 .fillMaxWidth(),
 
-            contentDescription = "", contentScale = ContentScale.FillWidth
+            contentDescription = "", contentScale = ContentScale.Crop
         )
         Column(
             modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -57,7 +57,7 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
                 text = deal.title,
                 modifier = Modifier,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = 1
+                maxLines = 2
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
