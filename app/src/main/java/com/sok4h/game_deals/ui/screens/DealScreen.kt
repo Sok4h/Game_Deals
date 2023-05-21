@@ -94,32 +94,34 @@ fun DealScreen(
                 },
 
                 )
-            if (openFilterDialog) {
 
-                AlertDialog(properties = DialogProperties(usePlatformDefaultWidth = false),
-                    onDismissRequest = { openFilterDialog = false }) {
+        }
 
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth(0.85f)
-                            .wrapContentHeight(),
-                        shape = MaterialTheme.shapes.medium
+        if (openFilterDialog) {
+
+            AlertDialog(properties = DialogProperties(usePlatformDefaultWidth = false),
+                onDismissRequest = { openFilterDialog = false }) {
+
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth(0.85f)
+                        .wrapContentHeight(),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    FilterDeals(
+                        sortValue = state.sortDealsBy,
+                        sortvalueId = state.sortDealsById,
+                        onSortChanged = onSortChanged
+                        ,
+                        minPrice = state.minPrice,
+                        maxPrice = state.maxPrice,
+                        onMaxPriceChanged = onMaxPriceChanged,
+                        onMinPriceChanged = onMinPriceChanged,
                     ) {
-                        FilterDeals(
-                            sortValue = state.sortDealsBy,
-                            sortvalueId = state.sortDealsById,
-                            onSortChanged = onSortChanged
-                            ,
-                            minPrice = state.minPrice,
-                            maxPrice = state.maxPrice,
-                            onMaxPriceChanged = onMaxPriceChanged,
-                            onMinPriceChanged = onMinPriceChanged,
-                        ) {
-                            onFilterChanged()
-                            openFilterDialog = false
-                        }
-
+                        onFilterChanged()
+                        openFilterDialog = false
                     }
+
                 }
             }
         }

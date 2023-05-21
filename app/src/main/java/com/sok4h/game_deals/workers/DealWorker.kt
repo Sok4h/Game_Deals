@@ -28,7 +28,6 @@ import org.koin.core.component.inject
 class DealWorker(var ctx: Context, params: WorkerParameters) :
     CoroutineWorker(ctx, params), KoinComponent {
 
-
     private val gamesRepository: IGamesRepository by inject()
     override suspend fun doWork(): Result {
         val games = gamesRepository.getListGamesfromDatabase()
@@ -115,7 +114,6 @@ fun makeNotification(context: Context, game: GameDetailDto) {
         .setPriority(NotificationCompat.PRIORITY_HIGH)
 
 
-    // Show the notification
     if (ActivityCompat.checkSelfPermission(
             context,
             Manifest.permission.POST_NOTIFICATIONS

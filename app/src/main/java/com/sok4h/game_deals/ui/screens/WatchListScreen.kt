@@ -35,7 +35,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -148,6 +147,7 @@ fun WatchListScreen(
             val isActive =
                 AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(context)
 
+            // TODO: save in datastore confirmation that the autostart message has been shown
             if (isActive) {
 
                 Text(text = stringResource(id = R.string.auto_start_description))
