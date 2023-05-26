@@ -1,15 +1,14 @@
 package com.sok4h.game_deals.ui.viewModel
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IDealsRepository
 import com.sok4h.game_deals.data.repositories.IGamesRepository
-import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toDealModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
+import com.sok4h.game_deals.util.DEALSPAGESIZE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +21,7 @@ class MainViewModel(
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(MainScreenState())
-
+    private var dealListScrollPosition = 0
 
 
     val state get() = _state.asStateFlow()
@@ -59,7 +58,7 @@ class MainViewModel(
                 _state.update {
 
                     it.copy(
-                        gameListState = mappedList, gameListErrorMessage = ""
+                        gameListState = mappedList, gameListError = ""
                     )
 
                 }
@@ -68,7 +67,7 @@ class MainViewModel(
 
                 _state.update {
                     it.copy(
-                        gameListErrorMessage = result.exceptionOrNull()?.message
+                        gameListError = result.exceptionOrNull()?.message
                             ?: "No error available", gameListState = emptyList()
                     )
                 }
@@ -140,7 +139,8 @@ class MainViewModel(
             dealsRepository.getListOfDeals(
                 sortBy = state.value.sortDealsBy,
                 lowerPrice = _state.value.minPrice.toIntOrNull(),
-                upperPrice = _state.value.maxPrice.toIntOrNull()
+                upperPrice = _state.value.maxPrice.toIntOrNull(),
+                pageNumber = state.value.dealPageNumber
             ).collect { result ->
 
                 _state.update {
@@ -150,14 +150,15 @@ class MainViewModel(
 
                     _state.update {
                         it.copy(
-                            dealListState = result.getOrDefault(mutableListOf()) as MutableList<DealDetailModel>
+                            dealListState = result.getOrDefault(mutableListOf()),
+                            dealListErrorMessage = ""
                         )
                     }
                 } else {
 
                     _state.update {
                         it.copy(
-                            gameListErrorMessage = result.exceptionOrNull()?.message
+                            dealListErrorMessage = result.exceptionOrNull()?.message
                                 ?: "No error available"
                         )
                     }
@@ -168,7 +169,6 @@ class MainViewModel(
 
 
     }
-
 
     private fun getGamesFromDataBase() {
 
@@ -207,8 +207,7 @@ class MainViewModel(
                             }
 
                             gameNetwork.toGameDetailModel(
-                                gameWithId!!.gameId, isFavorite = true,
-                                deals
+                                gameWithId!!.gameId, isFavorite = true, deals
                             )
                         }
 
@@ -243,10 +242,10 @@ class MainViewModel(
         }
     }
 
-    fun updateSortBy(sort: String,sortId:Int) {
+    fun updateSortBy(sort: String, sortIndex: Int) {
 
         _state.update {
-            it.copy(sortDealsBy = sort, sortDealsById = sortId)
+            it.copy(sortDealsBy = sort, sortOptionIndex = sortIndex)
         }
     }
 
@@ -263,8 +262,85 @@ class MainViewModel(
     }
 
     fun updateFilter() {
+        _state.update {
+            it.copy(dealPageNumber = 0)
+        }
         getDeals()
     }
 
+    fun changePage() {
+
+        var page = _state.value.dealPageNumber
+
+        if ((dealListScrollPosition + 1) >= (page + 1 * DEALSPAGESIZE)) {
+
+            if (page + 1 <= 50) {
+
+                _state.update {
+                    it.copy(dealPageNumber = page + 1, isLoading = true)
+                }
+
+                nextPage()
+            }
+
+        }
+
+    }
+
+    fun nextPage() {
+
+        val oldList = _state.value.dealListState
+
+        viewModelScope.launch {
+            _state.update {
+                it.copy(isLoading = true)
+            }
+
+            dealsRepository.getListOfDeals(
+                sortBy = _state.value.sortDealsBy,
+                lowerPrice = _state.value.minPrice.toIntOrNull(),
+                upperPrice = _state.value.maxPrice.toIntOrNull(),
+                pageNumber = _state.value.dealPageNumber,
+            ).collect { result ->
+
+                _state.update {
+                    it.copy(isLoading = false)
+                }
+                if (result.isSuccess) {
+
+                    val data = result.getOrDefault(mutableListOf())
+
+                    if (data.isNotEmpty()) {
+
+                        oldList.addAll(data)
+
+                        _state.update {
+                            it.copy(
+                                dealListState = oldList, dealListErrorMessage = ""
+                            )
+                        }
+                    }
+
+
+                } else {
+
+                    _state.update {
+                        it.copy(
+                            dealListErrorMessage = result.exceptionOrNull()?.message
+                                ?: "No error available"
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+
+    fun onDealScrollChanged(position: Int) {
+
+        dealListScrollPosition = position
+    }
 }
+
+
 

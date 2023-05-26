@@ -96,4 +96,3 @@
  -keepattributes Signature
  -keep class sun.misc.Unsafe { *; }
 
--keep public class androidx.compose.*.**{*;}

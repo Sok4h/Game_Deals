@@ -7,9 +7,9 @@ interface IDealsRepository {
 
      fun getListOfDeals(
         storeID: String?=null,
-        pageNumber: Int?=null,
+        pageNumber: Int?,
         sortBy: String?=null,
-        desc: Boolean=false,
+        desc: Boolean=true,
         lowerPrice: Int?=null,
         upperPrice: Int?=null
     ): Flow<Result<MutableList<DealDetailModel>>>

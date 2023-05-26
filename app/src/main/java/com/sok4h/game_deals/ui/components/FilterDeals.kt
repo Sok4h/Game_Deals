@@ -1,6 +1,5 @@
 package com.sok4h.game_deals.ui.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -16,14 +15,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sok4h.game_deals.R
-import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterDeals(
-    sortvalueId: Int,
-    sortValue: String,
+    sortvalueIndex: Int,
     minPrice: String,
     maxPrice: String,
     onSortChanged: (sortValue: String, sortID: Int) -> Unit,
@@ -32,16 +29,8 @@ fun FilterDeals(
     onFilterChanged: () -> Unit
 ) {
 
-    val currentLocale = Locale.ENGLISH
     val context = LocalContext.current
 
-    // Get the string resource for a specific language
-    val stringResource = remember(currentLocale) {
-        val configuration = Configuration(context.resources.configuration)
-        configuration.setLocale(currentLocale)
-        val localizedContext = context.createConfigurationContext(configuration)
-        localizedContext.resources.getStringArray(R.array.filter_list)
-    }
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -73,7 +62,7 @@ fun FilterDeals(
             OutlinedTextField(modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor(),
-                value = stringResource(id = sortvalueId),
+                value = stringArrayResource(id = R.array.filter_list)[sortvalueIndex],
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = {
@@ -92,11 +81,15 @@ fun FilterDeals(
 
                     DropdownMenuItem(text = { Text(text = option) }, onClick = {
 
-                        val arrayval = context.resources.obtainTypedArray(R.array.filter_list)
-                        val stringId = arrayval.getResourceId(index, 0)
 
-                        onSortChanged(stringResource[index], stringId)
-                        arrayval.recycle()
+
+
+
+                        onSortChanged(
+                            context.resources.getStringArray(R.array.filter_list_eng)[index],
+                            index
+                        )
+
 
                         expanded = false
 
@@ -130,6 +123,7 @@ fun FilterDeals(
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
                     )
                 },
+
 
                 onValueChange = {
                     onMinPriceChanged(it)

@@ -22,7 +22,7 @@
 
     <string name="deals">Deals</string>
     <string name="deals_quantity">%1$s Deals</string>
-    <string name="deal_notification_description">%1$s price has drop to %2$s</string>
+    <string name="deal_notification_description">%1$s price has drop to $ %2$s</string>
     <string name="favorites">Favorites</string>
     <string name="buy">Buy</string>
     <string name="favorite_games">Favorite Games</string>
@@ -42,9 +42,28 @@
         <item>@string/deals_filter_recent</item>
         <item>@string/deals_filter_saving</item>
         <item>@string/deals_filter_store</item>
-        <item>@string/deals_filter_price_range</item>
+        <item>@string/deals_filter_price</item>
         <item>@string/deals_filter_title</item>
         <item>@string/deals_filter_review</item>
     </string-array>
+
+
+    <string-array name="filter_list_eng">
+
+        <item>Deal Rating</item>
+        <item>Recent</item>
+        <item>Savings</item>
+        <item>Store</item>
+        <item>Price</item>
+        <item>Title</item>
+        <item>Review</item>
+    </string-array>
+
+    <string name="error_400">Bad request. Please check your input.</string>
+    <string name="error_404">Data not found. The requested resource could not be found.</string>
+    <string name="error_500">Internal server error. Please try again later.</string>
+    <string name="error_429">Too many requests. Please try again later.</string>
+    <string name="generic_error">An error occurred. Please try again later.</string>
+    <string name="try_again">Try Again</string>
 
 </resources>
