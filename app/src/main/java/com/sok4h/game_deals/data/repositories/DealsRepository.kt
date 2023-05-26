@@ -1,5 +1,6 @@
 package com.sok4h.game_deals.data.repositories
 
+import android.util.Log
 import com.sok4h.game_deals.data.network.CheapSharkServiceImpl
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toDealDetailModel
@@ -32,7 +33,9 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
 
                         Result.failure(Exception("Cuerpo Vacio"))
                     }
+
                 } else {
+
                     Result.failure(Exception(response.raw().code.toString()))
                 }
 

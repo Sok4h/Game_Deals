@@ -8,8 +8,7 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 
 
-class CheapSharkServiceImpl(private val api:CheapSharkAPI) {
-
+class CheapSharkServiceImpl(private val api: CheapSharkAPI) {
 
 
     suspend fun searchGame(title: String): Response<List<GameDto>> {
@@ -27,10 +26,9 @@ class CheapSharkServiceImpl(private val api:CheapSharkAPI) {
         upperPrice: Int?,
     ) = flow {
 
-
         val result = api.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
         emit(result)
-        Log.e("Deals", result.toString() )
+        Log.e("Deals", result.toString())
 
     }
 

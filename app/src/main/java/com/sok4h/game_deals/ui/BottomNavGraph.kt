@@ -75,7 +75,9 @@ fun BottomNavGraph(
 
                         mainViewModel.updateSortBy(sort, id)
                     },
-                    onFilterChanged = { mainViewModel.updateFilter() })
+                    onFilterChanged = { mainViewModel.updateFilter() },
+                    onScrollChanged = { mainViewModel.onDealScrollChanged(it) },
+                    onChangePage = { mainViewModel.changePage() })
             }
         }
     }

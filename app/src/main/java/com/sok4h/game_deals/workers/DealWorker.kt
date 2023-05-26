@@ -103,12 +103,6 @@ fun makeNotification(context: Context, game: GameDetailDto) {
     val builder = NotificationCompat.Builder(context, "Deals")
         .setContentIntent(pendingIntent)
         .setSmallIcon(R.drawable.ic_launcher_foreground)
-        .setLargeIcon(
-            BitmapFactory.decodeResource(
-                context.resources,
-                R.drawable.baseline_trending_down_24
-            )
-        )
         .setContentTitle(context.getString(R.string.deal_notification_title))
         .setContentText(notificationDescription)
         .setPriority(NotificationCompat.PRIORITY_HIGH)

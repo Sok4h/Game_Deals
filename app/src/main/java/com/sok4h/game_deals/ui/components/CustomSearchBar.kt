@@ -129,8 +129,8 @@ fun CustomSearchBar(
 
                     }
 
-                    if (mainViewmodelState.gameListErrorMessage.isNotEmpty()) {
-                        Text(text = mainViewmodelState.gameListErrorMessage)
+                    if (mainViewmodelState.gameListError.isNotEmpty()) {
+                        Text(text = mainViewmodelState.gameListError)
                     }
                 }
             }

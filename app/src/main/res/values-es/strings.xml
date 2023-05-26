@@ -30,5 +30,11 @@
     <string name="deal_channel_name">Deal Updates</string>
     <string name="deal_notification_channel_description">Keeps you up to date with the latest deals for your favorite games</string>
     <string name="deal_notification_title">New Deal found!</string>
-    <string name="deal_notification_description">%1$s bajó de precio a  %2$s</string>
+    <string name="deal_notification_description">%1$s bajó de precio a $ %2$s</string>
+    <string name="error_400">Solicitud incorrecta. Por favor, verifica tus datos de entrada.</string>
+    <string name="error_404">Información no encontrada. No se pudo encontrar el recurso solicitado.</string>
+    <string name="error_500">Error interno del servidor. Por favor, inténtalo nuevamente más tarde.</string>
+    <string name="error_429">Demasiadas solicitudes. Por favor, inténtalo nuevamente más tarde.</string>
+    <string name="generic_error">Se produjo un error. Por favor, inténtalo nuevamente más tarde</string>
+    <string name="try_again">Intentar nuevamente</string>
 </resources>
