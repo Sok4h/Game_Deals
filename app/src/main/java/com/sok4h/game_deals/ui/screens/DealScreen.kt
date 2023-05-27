@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.components.DealCard
@@ -125,7 +125,7 @@ fun DealScreen(
 
         if (openFilterDialog) {
 
-            Dialog(properties = DialogProperties(usePlatformDefaultWidth = false),
+            AlertDialog(properties = DialogProperties(usePlatformDefaultWidth = false),
                 onDismissRequest = { openFilterDialog = false }) {
                 Surface(
                     modifier = Modifier
