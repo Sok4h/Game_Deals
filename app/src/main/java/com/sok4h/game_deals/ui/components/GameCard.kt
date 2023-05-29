@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
@@ -39,7 +38,7 @@ fun GameDealCard(
     onRemoveFromWatchList: (String) -> Unit,
 ) {
 
-    // TODO: añadir el precio normal a las ofertas?
+    // TODO: añadir el precio normal a las ofertas?  
     var expanded by remember { mutableStateOf(false) }
     Card(modifier = Modifier
         .fillMaxWidth(),
