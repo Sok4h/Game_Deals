@@ -31,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -50,8 +51,7 @@ import com.sok4h.game_deals.ui.viewStates.MainScreenState
 fun WatchListScreen(
     state: MainScreenState,
     onRemoveFromWatchList: (String) -> Unit,
-
-    ) {
+) {
 
     val context = LocalContext.current
     Column(
@@ -166,7 +166,9 @@ fun WatchListScreen(
 
         if (state.isWatchlistLoading) {
             CircularProgressIndicator(
-                modifier = Modifier.size(25.dp), strokeWidth = 2.dp
+                modifier = Modifier.size(25.dp)
+                    .size(25.dp)
+                    .testTag("loading watchlist"), strokeWidth = 2.dp
             )
 
         }
@@ -211,7 +213,7 @@ fun WatchListScreen(
                     text = stringResource(R.string.no_tienes_juegos_en_favoritos),
                     style = MaterialTheme.typography.headlineMedium,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp).testTag("No games Text")
                 )
 
             }

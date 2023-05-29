@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ fun FilterDeals(
     Column(
         modifier = Modifier
             .padding(8.dp)
+            .testTag("filter dialog")
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
 
@@ -59,7 +61,7 @@ fun FilterDeals(
         }
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
 
-            OutlinedTextField(modifier = Modifier
+            OutlinedTextField(modifier = Modifier.testTag("dropdown")
                 .fillMaxWidth()
                 .menuAnchor(),
                 value = stringArrayResource(id = R.array.filter_list)[sortvalueIndex],
@@ -92,7 +94,6 @@ fun FilterDeals(
 
 
                         expanded = false
-
                     })
 
                     Divider()
@@ -124,7 +125,6 @@ fun FilterDeals(
                     )
                 },
 
-
                 onValueChange = {
                     onMinPriceChanged(it)
                 },
@@ -147,9 +147,6 @@ fun FilterDeals(
                 },
                 prefix = { Text(text = "$") })
         }
-
-
-
 
         Row(
             Modifier
