@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.FilterList
@@ -27,11 +25,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -50,7 +51,7 @@ fun DealScreen(
     onSortChanged: (sort: String, id: Int) -> Unit,
     onFilterChanged: () -> Unit,
     onScrollChanged: (Int) -> Unit,
-    onChangePage: () -> Unit
+    onChangePage: () -> Unit,
 ) {
 
     var openFilterDialog by rememberSaveable { mutableStateOf(false) }
@@ -152,15 +153,17 @@ fun DealScreen(
 
         if (state.isLoading && state.dealListState.isEmpty()) {
 
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(25.dp), strokeWidth = 2.dp,
                 )
             }
         }
 
-        if (state.dealListErrorMessage.isNotEmpty()) {
+        if (state.dealListErrorMessage.isNotEmpty() && !state.isLoading) {
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -186,6 +189,7 @@ fun DealScreen(
                 )
                 Text(
                     text = error,
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.error
                 )

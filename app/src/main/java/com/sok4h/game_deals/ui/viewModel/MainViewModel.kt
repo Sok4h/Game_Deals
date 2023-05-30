@@ -12,6 +12,7 @@ import com.sok4h.game_deals.util.DEALSPAGESIZE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -141,7 +142,18 @@ class MainViewModel(
                 lowerPrice = _state.value.minPrice.toIntOrNull(),
                 upperPrice = _state.value.maxPrice.toIntOrNull(),
                 pageNumber = state.value.dealPageNumber
-            ).collect { result ->
+            ).catch {error->
+
+                _state.update {
+                    it.copy(
+                        dealListErrorMessage = error.message
+                            ?: "No error available",
+                        isLoading = false
+                    )
+                }
+            }
+
+                .collect { result ->
 
                 _state.update {
                     it.copy(isLoading = false)
@@ -170,10 +182,13 @@ class MainViewModel(
 
     }
 
-    private fun getGamesFromDataBase() {
+     fun getGamesFromDataBase() {
 
         viewModelScope.launch(Dispatchers.IO) {
 
+            _state.update {
+                it.copy(isWatchlistLoading = true)
+            }
             gamesRepository.getGamesfromDatabase().collect { games ->
 
                 if (games.isEmpty()) {
@@ -212,7 +227,7 @@ class MainViewModel(
                         }
 
                         _state.update {
-                            it.copy(watchListState = resultData)
+                            it.copy(watchListState = resultData, isWatchlistLoading = false, watchListErrorMessage = "")
                         }
 
                     } else {
@@ -220,7 +235,8 @@ class MainViewModel(
                         _state.update {
                             it.copy(
                                 watchListErrorMessage = result.exceptionOrNull()?.message
-                                    ?: "No error available"
+                                    ?: "No error available",
+                                isWatchlistLoading = false
                             )
                         }
                     }
@@ -270,7 +286,7 @@ class MainViewModel(
 
     fun changePage() {
 
-        var page = _state.value.dealPageNumber
+        val page = _state.value.dealPageNumber
 
         if ((dealListScrollPosition + 1) >= (page + 1 * DEALSPAGESIZE)) {
 

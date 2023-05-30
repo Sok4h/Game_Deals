@@ -4,7 +4,6 @@ import com.sok4h.game_deals.data.network.CheapSharkServiceImpl
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toDealDetailModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsRepository {
@@ -20,7 +19,7 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
     ): Flow<Result<MutableList<DealDetailModel>>> {
 
         return service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
-            .map { response ->
+           .map { response ->
                 if (response.isSuccessful) {
 
                     if (response.body() != null) {
@@ -30,7 +29,7 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
                         Result.success(deals)
                     } else {
 
-                        Result.failure(Exception("Cuerpo Vacio"))
+                        Result.failure(Exception(response.message()))
                     }
 
                 } else {
@@ -38,10 +37,7 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
                     Result.failure(Exception(response.raw().code.toString()))
                 }
 
-            }.catch {
-                Result.failure<Exception>(it)
             }
-
 
     }
 
