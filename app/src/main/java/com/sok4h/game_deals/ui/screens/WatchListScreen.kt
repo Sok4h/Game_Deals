@@ -10,25 +10,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.NotificationAdd
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -42,6 +35,7 @@ import com.google.accompanist.permissions.shouldShowRationale
 import com.judemanutd.autostarter.AutoStartPermissionHelper
 import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.components.GameDealCard
+import com.sok4h.game_deals.ui.components.NotificationDialog
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 
 
@@ -50,9 +44,9 @@ import com.sok4h.game_deals.ui.viewStates.MainScreenState
 fun WatchListScreen(
     state: MainScreenState,
     onRemoveFromWatchList: (String) -> Unit,
+    onAutoStartShown: () -> Unit
 
-    ) {
-
+) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -60,13 +54,11 @@ fun WatchListScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        val openDialog = remember { mutableStateOf(false) }
+        var openDialog by remember { mutableStateOf(false) }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val notificationPermissionState = rememberPermissionState(
                 android.Manifest.permission.POST_NOTIFICATIONS
             )
-
             if (!notificationPermissionState.status.isGranted) {
                 Column(
                     modifier = Modifier
@@ -80,7 +72,7 @@ fun WatchListScreen(
                     OutlinedButton(onClick = {
 
                         if (notificationPermissionState.status.shouldShowRationale) {
-                            openDialog.value = true
+                            openDialog = true
 
                         } else {
                             notificationPermissionState.launchPermissionRequest()
@@ -92,85 +84,44 @@ fun WatchListScreen(
                 }
             }
 
-
-            if (openDialog.value) {
-
-                AlertDialog(onDismissRequest = { openDialog.value = false }) {
-                    Surface(
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .wrapContentHeight(),
-                        shape = MaterialTheme.shapes.large,
-                        tonalElevation = AlertDialogDefaults.TonalElevation
-                    ) {
-                        Column(
-                            Modifier.padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.NotificationAdd,
-                                contentDescription = "Icon"
-                            )
-                            Text(
-                                text = stringResource(id = R.string.permission_dialog_title),
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                            Text(text = stringResource(id = R.string.permission_dialog_content))
-
-                            Button(onClick = {
-                                notificationPermissionState.launchPermissionRequest().also {
-
-                                    val isActive = AutoStartPermissionHelper.getInstance()
-                                        .isAutoStartPermissionAvailable(context)
-
-                                    if (isActive) {
-
-                                        AutoStartPermissionHelper.getInstance()
-                                            .getAutoStartPermission(context, true)
-                                    }
-                                }
-
-                                openDialog.value = false
-                            }) {
-                                Text(text = stringResource(id = R.string.give_permission))
+            if (openDialog) {
+                NotificationDialog(
+                    onDismiss = { openDialog = false },
+                    onAccept = {
+                        notificationPermissionState.launchPermissionRequest().also {
+                            val isActive = AutoStartPermissionHelper.getInstance()
+                                .isAutoStartPermissionAvailable(context)
+                            if (isActive) {
+                                AutoStartPermissionHelper.getInstance()
+                                    .getAutoStartPermission(context, true)
                             }
-
-
                         }
-                    }
-                }
+                        openDialog = false
+                    })
             }
         } else {
-
 
             val isActive =
                 AutoStartPermissionHelper.getInstance().isAutoStartPermissionAvailable(context)
 
-            // TODO: save in datastore confirmation that the autostart message has been shown
-            if (isActive) {
-
+            if (isActive && !state.autoStartHasBeenShown) {
                 Text(text = stringResource(id = R.string.auto_start_description))
-
                 OutlinedButton(onClick = {
-                    AutoStartPermissionHelper.getInstance().getAutoStartPermission(context, true)
+                    AutoStartPermissionHelper.getInstance()
+                        .getAutoStartPermission(context, true)
+                    onAutoStartShown()
 
                 }) {
                     Text(text = stringResource(id = R.string.give_permission))
                 }
-
             }
-
-
         }
 
         if (state.isWatchlistLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.size(25.dp), strokeWidth = 2.dp
             )
-
         }
-
         if (state.watchListState.isNotEmpty()) {
 
             Text(
@@ -186,20 +137,16 @@ fun WatchListScreen(
                     .padding(4.dp)
                     .fillMaxHeight()
             ) {
-
                 items(items = state.watchListState) { game ->
 
                     GameDealCard(game = game, onAddToWatchList = {}, onRemoveFromWatchList = {
                         onRemoveFromWatchList(it)
                     })
                 }
-
             }
-
         }
 
         if (state.watchListState.isEmpty()) {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -213,21 +160,15 @@ fun WatchListScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-
             }
-
         }
-
     }
 
 
-    if (state.watchListErrorMessage.isNotEmpty()) {
+    if (state.gameListError.isNotEmpty()) {
 
         Column(modifier = Modifier.fillMaxSize()) {
-
-            Text(text = state.watchListErrorMessage)
+            Text(text = state.gameListError)
         }
     }
-
-
 }

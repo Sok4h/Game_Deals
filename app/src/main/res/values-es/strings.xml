@@ -24,7 +24,7 @@
     <string name="search_game">Buscar Juego</string>
     <string name="no_tienes_juegos_en_favoritos">Sin juegos en favoritos</string>
     <string name="min_price">Mínimo</string>
-    <string name="max_price">Maximo</string>
+    <string name="max_price">Máximo</string>
     <string name="game_title_no_available">No disponible</string>
     <string name="deals_quantity">%1$s ofertas</string>
     <string name="deal_channel_name">Deal Updates</string>
@@ -36,5 +36,6 @@
     <string name="error_500">Error interno del servidor. Por favor, inténtalo nuevamente más tarde.</string>
     <string name="error_429">Demasiadas solicitudes. Por favor, inténtalo nuevamente más tarde.</string>
     <string name="generic_error">Se produjo un error. Por favor, inténtalo nuevamente más tarde</string>
+    <string name="no_internet_error">Sin conexión a internet. Por favor, verifica tus ajustes de red e intenta nuevamente.</string>
     <string name="try_again">Intentar nuevamente</string>
 </resources>

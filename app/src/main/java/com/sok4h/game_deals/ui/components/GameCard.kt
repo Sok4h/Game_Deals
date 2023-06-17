@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -44,23 +43,18 @@ fun GameDealCard(
     var expanded by remember { mutableStateOf(false) }
     Card(modifier = Modifier
         .fillMaxWidth(),
-
         onClick = { expanded = !expanded }
-
-
     ) {
         Row(
             Modifier,
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,
-
             ) {
-
             AsyncImage(
                 model = game.info.image,
                 contentDescription = "image of ${game.info.title}",
                 modifier = Modifier.size(100.dp),
-                contentScale = ContentScale.FillWidth
+                contentScale = ContentScale.Fit
             )
             Column(
                 modifier = Modifier
@@ -70,34 +64,27 @@ fun GameDealCard(
                 horizontalAlignment = Alignment.Start
 
             ) {
-
-
                 Text(
                     text = game.info.title ?: stringResource(R.string.game_title_no_available),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = stringResource(id = R.string.deals_quantity,game.deals.size),
+                    text = stringResource(id = R.string.deals_quantity, game.deals.size),
                     style = MaterialTheme.typography.bodySmall
                 )
-
             }
-
             Text(
                 text = "$ ${game.bestPrice}",
                 modifier = Modifier.padding(4.dp),
                 style = MaterialTheme.typography.titleMedium
             )
-
             IconButton(onClick = {
                 if (game.info.isFavorite) {
                     onRemoveFromWatchList(game.info.gameId)
                 } else {
-
                     onAddToWatchList(game)
                 }
             }) {
-
                 if (game.info.isFavorite) {
                     Icon(
                         imageVector = Icons.Filled.Favorite,
@@ -106,7 +93,8 @@ fun GameDealCard(
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Outlined.Favorite, contentDescription = "save to favorites"
+                        imageVector = Icons.Outlined.Favorite,
+                        contentDescription = "save to favorites"
                     )
 
                 }
@@ -115,10 +103,9 @@ fun GameDealCard(
 
         AnimatedVisibility(visible = expanded) {
             Column {
-
                 for ((index, deal) in game.deals.withIndex()) {
 
-                    DealRow(deal = deal )
+                    DealRow(deal = deal)
 
                     if (index != game.deals.lastIndex) {
 
@@ -126,7 +113,6 @@ fun GameDealCard(
                     }
                 }
             }
-
         }
     }
 }

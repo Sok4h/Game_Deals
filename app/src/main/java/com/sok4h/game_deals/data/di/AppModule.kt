@@ -1,10 +1,10 @@
 package com.sok4h.game_deals.data.di
 
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
 import com.sok4h.game_deals.data.database.GameDealsDatabase
 import com.sok4h.game_deals.data.network.CheapSharkAPI
 import com.sok4h.game_deals.data.network.CheapSharkServiceImpl
@@ -12,6 +12,7 @@ import com.sok4h.game_deals.data.repositories.DealsRepository
 import com.sok4h.game_deals.data.repositories.GamesRepository
 import com.sok4h.game_deals.data.repositories.IDealsRepository
 import com.sok4h.game_deals.data.repositories.IGamesRepository
+import com.sok4h.game_deals.data.repositories.PreferencesRepository
 import com.sok4h.game_deals.ui.viewModel.MainViewModel
 import com.sok4h.game_deals.workers.DealWorker
 import org.koin.android.ext.koin.androidContext
@@ -20,7 +21,6 @@ import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.UUID
 
 val appModule = module {
 
@@ -53,21 +53,29 @@ val appModule = module {
     single {
         CheapSharkServiceImpl(get())
     }
-    worker { DealWorker(get(),get()) }
+    worker { DealWorker(get(), get()) }
 
+    single {
+        PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { emptyPreferences() }
+            ),
+            produceFile = {
+                androidContext().preferencesDataStoreFile("myPreferences")
+            }
+        )
+    }
 }
 
 
 val repositoryModules = module {
 
     single<IGamesRepository> { GamesRepository(get(), get(), get()) }
-
     single<IDealsRepository> { DealsRepository(get()) }
-
-
+    single { PreferencesRepository(get()) }
 }
 
 val viewModelModules = module {
 
-    viewModel { MainViewModel(get(), get()) }
+    viewModel { MainViewModel(get(), get(),get()) }
 }

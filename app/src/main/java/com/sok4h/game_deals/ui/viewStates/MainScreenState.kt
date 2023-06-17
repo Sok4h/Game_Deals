@@ -1,6 +1,5 @@
 package com.sok4h.game_deals.ui.viewStates
 
-import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.ui_model.DealDetailModel
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 
@@ -20,4 +19,5 @@ data class MainScreenState(
     val dealPageNumber:Int=0,
     val minPrice:String ="0",
     val maxPrice:String="50",
+    val autoStartHasBeenShown:Boolean = false
 )

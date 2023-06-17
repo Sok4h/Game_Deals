@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.FilterList
@@ -28,19 +26,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.components.DealCard
 import com.sok4h.game_deals.ui.components.FilterDeals
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 import com.sok4h.game_deals.util.DEALSPAGESIZE
 
+@OptIn(ExperimentalPermissionsApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun DealScreen(
@@ -61,7 +65,6 @@ fun DealScreen(
             .padding(16.dp)
     ) {
 
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,7 +84,7 @@ fun DealScreen(
                 Icon(imageVector = Icons.Default.FilterList, contentDescription = "")
             }
         }
-        if (state.dealListState.isNotEmpty()) {
+        if (state.dealListState.isNotEmpty() && state.dealListErrorMessage.isEmpty()) {
 
             Box(modifier = Modifier.fillMaxSize()) {
 
@@ -94,15 +97,17 @@ fun DealScreen(
 
                         itemsIndexed(items = state.dealListState) { index, deal ->
 
-                            onScrollChanged(index)
+                            key(deal.dealID) {
+                                onScrollChanged(index)
 
-                            if (index + 1 >= (state.dealPageNumber + 1) * DEALSPAGESIZE && !state.isLoading) {
-                                onChangePage()
+                                if (index + 1 >= (state.dealPageNumber + 1) * DEALSPAGESIZE && !state.isLoading) {
+                                    onChangePage()
+                                }
+                                DealCard(
+                                    deal = deal,
+                                    modifier = Modifier.wrapContentWidth()
+                                )
                             }
-                            DealCard(
-                                deal = deal,
-                                modifier = Modifier.wrapContentWidth()
-                            )
 
                         }
                     },
@@ -152,7 +157,7 @@ fun DealScreen(
 
         if (state.isLoading && state.dealListState.isEmpty()) {
 
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
                 CircularProgressIndicator(
                     modifier = Modifier.size(25.dp), strokeWidth = 2.dp,
@@ -160,7 +165,7 @@ fun DealScreen(
             }
         }
 
-        if (state.dealListErrorMessage.isNotEmpty()) {
+        if (state.dealListErrorMessage.isNotEmpty() && !state.isLoading) {
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -174,6 +179,7 @@ fun DealScreen(
                     "404" -> stringResource(id = R.string.error_404)
                     "500" -> stringResource(id = R.string.error_500)
                     "429" -> stringResource(id = R.string.error_429)
+                    "no_internet_error" -> stringResource(id = R.string.no_internet_error)
                     else -> {
                         stringResource(id = R.string.generic_error)
                     }
@@ -185,6 +191,7 @@ fun DealScreen(
                     tint = MaterialTheme.colorScheme.error
                 )
                 Text(
+                    textAlign = TextAlign.Center,
                     text = error,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.error

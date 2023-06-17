@@ -4,34 +4,54 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sok4h.game_deals.data.repositories.IDealsRepository
 import com.sok4h.game_deals.data.repositories.IGamesRepository
+import com.sok4h.game_deals.data.repositories.PreferencesRepository
 import com.sok4h.game_deals.ui.ui_model.GameDetailModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toDealModel
 import com.sok4h.game_deals.ui.ui_model.mappers.toGameDetailModel
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 import com.sok4h.game_deals.util.DEALSPAGESIZE
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 
 class MainViewModel(
     private val gamesRepository: IGamesRepository,
-    val dealsRepository: IDealsRepository,
+    private val dealsRepository: IDealsRepository,
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(MainScreenState())
     private var dealListScrollPosition = 0
 
-
     val state get() = _state.asStateFlow()
-
 
     init {
         getDeals()
         getGamesFromDataBase()
+        getPreference()
     }
 
+    private fun getPreference() {
+
+        viewModelScope.launch {
+            preferencesRepository.getPreference().collect { hasBeenShown ->
+                _state.update {
+                    it.copy(autoStartHasBeenShown = hasBeenShown)
+                }
+            }
+        }
+    }
+
+    fun updatePreference(){
+        viewModelScope.launch {
+            preferencesRepository.savePreference(true)
+        }
+    }
 
     fun searchGame() {
 
@@ -54,15 +74,9 @@ class MainViewModel(
                     val isFavorite = gamesRepository.checkIfGameIsFavorite(networkGame.info.gameId)
                     networkGame.copy(info = networkGame.info.copy(isFavorite = isFavorite))
                 }
-
                 _state.update {
-
-                    it.copy(
-                        gameListState = mappedList, gameListError = ""
-                    )
-
+                    it.copy(gameListState = mappedList, gameListError = "")
                 }
-
             } else {
 
                 _state.update {
@@ -74,16 +88,12 @@ class MainViewModel(
             }
 
         }
-
     }
 
     fun addGameToWatchList(game: GameDetailModel) {
         viewModelScope.launch(Dispatchers.IO) {
-
             gamesRepository.addGametoWatchList(game)
-
         }.invokeOnCompletion {
-
             val oldState = _state.value.gameListState
 
             val newList = oldState.map {
@@ -135,39 +145,53 @@ class MainViewModel(
             _state.update {
                 it.copy(isLoading = true, dealListState = mutableListOf())
             }
-
             dealsRepository.getListOfDeals(
                 sortBy = state.value.sortDealsBy,
                 lowerPrice = _state.value.minPrice.toIntOrNull(),
                 upperPrice = _state.value.maxPrice.toIntOrNull(),
                 pageNumber = state.value.dealPageNumber
-            ).collect { result ->
+            )
+                .catch { exception ->
 
-                _state.update {
-                    it.copy(isLoading = false)
-                }
-                if (result.isSuccess) {
+                    if (exception is UnknownHostException) {
+                        _state.update {
+                            it.copy(
+                                dealListErrorMessage = "no_internet_error"
 
-                    _state.update {
-                        it.copy(
-                            dealListState = result.getOrDefault(mutableListOf()),
-                            dealListErrorMessage = ""
-                        )
+                            )
+                        }
+
+                    } else {
+                        _state.update {
+                            it.copy(
+                                dealListErrorMessage = exception.message
+                                    ?: "No error available"
+                            )
+                        }
                     }
-                } else {
-
-                    _state.update {
-                        it.copy(
-                            dealListErrorMessage = result.exceptionOrNull()?.message
-                                ?: "No error available"
-                        )
+                }.collect { result ->
+                    if (result.isSuccess) {
+                        _state.update {
+                            it.copy(
+                                dealListState = result.getOrDefault(mutableListOf()),
+                                dealListErrorMessage = ""
+                            )
+                        }
+                    } else {
+                        _state.update {
+                            it.copy(
+                                dealListErrorMessage = result.exceptionOrNull()?.message
+                                    ?: "No error available"
+                            )
+                        }
                     }
-                }
 
+                }
+            _state.update {
+                it.copy(isLoading = false)
             }
+
         }
-
-
     }
 
     private fun getGamesFromDataBase() {
@@ -177,28 +201,21 @@ class MainViewModel(
             gamesRepository.getGamesfromDatabase().collect { games ->
 
                 if (games.isEmpty()) {
-
                     _state.update { it.copy(watchListState = emptyList()) }
                 } else {
                     var ids = ""
                     games.forEachIndexed { index, item ->
-
                         ids += (if (index == games.lastIndex) {
-
                             item.gameId
-
                         } else "${item.gameId},")
                     }
                     val result = gamesRepository.getMultipleGames(ids)
 
                     if (result.isSuccess) {
-
                         val data = result.getOrDefault(emptyList())
-
                         val resultData = data.map { gameNetwork ->
                             val gameWithId =
                                 games.find { it.name.contentEquals(gameNetwork.info.title) }
-
 
                             val deals = gameNetwork.deals.map { dealDto ->
                                 val store = gamesRepository.getStorefromDatabase(dealDto.storeID)
@@ -216,7 +233,6 @@ class MainViewModel(
                         }
 
                     } else {
-
                         _state.update {
                             it.copy(
                                 watchListErrorMessage = result.exceptionOrNull()?.message
@@ -270,7 +286,7 @@ class MainViewModel(
 
     fun changePage() {
 
-        var page = _state.value.dealPageNumber
+        val page = _state.value.dealPageNumber
 
         if ((dealListScrollPosition + 1) >= (page + 1 * DEALSPAGESIZE)) {
 
@@ -291,6 +307,8 @@ class MainViewModel(
 
         val oldList = _state.value.dealListState
 
+        val page = _state.value.dealPageNumber
+
         viewModelScope.launch {
             _state.update {
                 it.copy(isLoading = true)
@@ -301,7 +319,37 @@ class MainViewModel(
                 lowerPrice = _state.value.minPrice.toIntOrNull(),
                 upperPrice = _state.value.maxPrice.toIntOrNull(),
                 pageNumber = _state.value.dealPageNumber,
-            ).collect { result ->
+            ).catch { exception ->
+
+                if (exception is UnknownHostException) {
+
+                    _state.update {
+                        it.copy(isLoading = false, dealPageNumber = page - 1)
+                    }
+
+
+                    _state.update {
+                        it.copy(
+                            dealListErrorMessage = "no_internet_error"
+                        )
+                    }
+
+                } else {
+
+
+                    _state.update {
+                        it.copy(
+                            dealListErrorMessage = exception.message
+                                ?: "No error available"
+                        )
+                    }
+
+                }
+
+                delay(1000)
+
+
+            }.collect { result ->
 
                 _state.update {
                     it.copy(isLoading = false)
@@ -327,12 +375,15 @@ class MainViewModel(
                     _state.update {
                         it.copy(
                             dealListErrorMessage = result.exceptionOrNull()?.message
-                                ?: "No error available"
+                                ?: "No error available",
+                            dealPageNumber = page - 1
                         )
                     }
                 }
 
             }
+
+
         }
     }
 

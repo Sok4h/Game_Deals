@@ -35,12 +35,9 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
             .padding(4.dp)
             .wrapContentHeight()
             .clickable {
-
                 uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${deal.dealID}")
             },
-
         ) {
-
         AsyncImage(
             model = deal.gameImage, modifier = Modifier
                 .height(70.dp)
@@ -51,8 +48,6 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
         Column(
             modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-
-
             Text(
                 text = deal.title,
                 modifier = Modifier,
@@ -69,7 +64,6 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
                 Text(text = "$" + deal.salePrice, modifier = Modifier)
 
                 if (!deal.salePrice.contentEquals(deal.normalPrice)) {
-
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "$" + deal.normalPrice,
@@ -78,11 +72,8 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
                         ),
                         fontSize = 12.sp
                     )
-
                 }
             }
-
-
         }
     }
 }

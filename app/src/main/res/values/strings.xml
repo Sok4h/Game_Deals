@@ -64,6 +64,8 @@
     <string name="error_500">Internal server error. Please try again later.</string>
     <string name="error_429">Too many requests. Please try again later.</string>
     <string name="generic_error">An error occurred. Please try again later.</string>
+    <string name="no_internet_error">No internet connection. Please check your network settings and try again.</string>
+
     <string name="try_again">Try Again</string>
 
 </resources>
