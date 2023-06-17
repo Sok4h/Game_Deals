@@ -94,7 +94,7 @@ class GamesRepository(
 
             } else {
 
-                Result.failure(Exception("Something went Wrong ${response.raw().code}"))
+                Result.failure(Exception(response.raw().code.toString()))
             }
         } catch (e: Exception) {
 

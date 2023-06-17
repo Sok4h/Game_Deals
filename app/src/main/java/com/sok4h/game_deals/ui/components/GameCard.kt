@@ -89,7 +89,7 @@ fun GameDealCard(
                     Icon(
                         imageVector = Icons.Filled.Favorite,
                         tint = Color.Red,
-                        contentDescription = "remove from favorite"
+                        contentDescription = "remove from favorites"
                     )
                 } else {
                     Icon(

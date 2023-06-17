@@ -13,13 +13,13 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
         storeID: String?,
         pageNumber: Int?,
         sortBy: String?,
-        desc: Boolean,
+        desc: Boolean?,
         lowerPrice: Int?,
         upperPrice: Int?,
     ): Flow<Result<MutableList<DealDetailModel>>> {
 
         return service.getListOfDeals(storeID, pageNumber, sortBy, desc, lowerPrice, upperPrice)
-            .map { response ->
+           .map { response ->
                 if (response.isSuccessful) {
 
                     if (response.body() != null) {
@@ -29,7 +29,7 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
                         Result.success(deals)
                     } else {
 
-                        Result.failure(Exception("Cuerpo Vacio"))
+                        Result.failure(Exception(response.message()))
                     }
 
                 } else {
@@ -38,7 +38,6 @@ class DealsRepository(private val service: CheapSharkServiceImpl) : IDealsReposi
                 }
 
             }
-
 
     }
 

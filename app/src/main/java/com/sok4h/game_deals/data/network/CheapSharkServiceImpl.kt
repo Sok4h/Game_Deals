@@ -19,9 +19,9 @@ class CheapSharkServiceImpl(private val api: CheapSharkAPI) {
 
     fun getListOfDeals(
         storeID: String?,
-        pageNumber: Int?,
+        pageNumber: Int?=0,
         sortBy: String?,
-        desc: Boolean?,
+        desc: Boolean?=false,
         lowerPrice: Int?,
         upperPrice: Int?,
     ) = flow {
