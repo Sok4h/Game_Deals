@@ -6,17 +6,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -103,7 +103,10 @@ fun DealScreen(
                                 }
                                 DealCard(
                                     deal = deal,
-                                    modifier = Modifier.wrapContentWidth()
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+
                                 )
                             }
 
@@ -128,8 +131,10 @@ fun DealScreen(
 
         if (openFilterDialog) {
 
-            AlertDialog(properties = DialogProperties(usePlatformDefaultWidth = false),
-                onDismissRequest = { openFilterDialog = false }) {
+            BasicAlertDialog(
+                onDismissRequest = { openFilterDialog = false },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
+            ) {
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth(0.85f)

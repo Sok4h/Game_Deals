@@ -4,11 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,21 +34,24 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
     Card(
         modifier = modifier
             .padding(4.dp)
-            .wrapContentHeight()
             .clickable {
                 uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${deal.dealID}")
             },
     ) {
+
         AsyncImage(
             model = deal.gameImage, modifier = Modifier
-                .height(70.dp)
-                .fillMaxWidth(),
+                .fillMaxHeight(0.4f),
 
-            contentDescription = "", contentScale = ContentScale.Crop
+            contentDescription = "", contentScale = ContentScale.FillWidth
         )
         Column(
-            modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.SpaceAround
         ) {
+
             Text(
                 text = deal.title,
                 modifier = Modifier,
@@ -84,7 +87,7 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
 fun DealCardPreview() {
 
     DealCard(
-        modifier = Modifier, deal = DealDetailModel(
+        modifier = Modifier.height(200.dp), deal = DealDetailModel(
             dealID = "Kathrina",
             dealRating = "Rayan",
             gameID = "Malina",
@@ -98,7 +101,7 @@ fun DealCardPreview() {
             steamRatingText = null,
             storeID = "Timohty",
             gameImage = "Jacquelynne",
-            title = "Rosalia",
+            title = "Rosalia texto de dos lineas seguramente",
             storeLogo = "Shanna"
         )
     )
