@@ -27,9 +27,9 @@
     <string name="max_price">Máximo</string>
     <string name="game_title_no_available">No disponible</string>
     <string name="deals_quantity">%1$s ofertas</string>
-    <string name="deal_channel_name">Deal Updates</string>
-    <string name="deal_notification_channel_description">Keeps you up to date with the latest deals for your favorite games</string>
-    <string name="deal_notification_title">New Deal found!</string>
+    <string name="deal_channel_name">Actualizaciones de ofertas</string>
+    <string name="deal_notification_channel_description">Te mantiene al día con las últimas ofertas para tus juegos favoritos</string>
+    <string name="deal_notification_title">Nueva Oferta Encontrada</string>
     <string name="deal_notification_description">%1$s bajó de precio a $ %2$s</string>
     <string name="error_400">Solicitud incorrecta. Por favor, verifica tus datos de entrada.</string>
     <string name="error_404">Información no encontrada. No se pudo encontrar el recurso solicitado.</string>

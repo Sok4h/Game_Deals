@@ -37,14 +37,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.sok4h.game_deals.R
 import com.sok4h.game_deals.ui.components.DealCard
 import com.sok4h.game_deals.ui.components.FilterDeals
 import com.sok4h.game_deals.ui.viewStates.MainScreenState
 import com.sok4h.game_deals.util.DEALSPAGESIZE
 
-@OptIn(ExperimentalPermissionsApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun DealScreen(
@@ -62,13 +60,13 @@ fun DealScreen(
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(8.dp)
     ) {
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

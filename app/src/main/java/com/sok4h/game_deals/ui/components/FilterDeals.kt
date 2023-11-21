@@ -82,11 +82,6 @@ fun FilterDeals(
                 radioOptions.forEachIndexed { index, option ->
 
                     DropdownMenuItem(text = { Text(text = option) }, onClick = {
-
-
-
-
-
                         onSortChanged(
                             context.resources.getStringArray(R.array.filter_list_eng)[index],
                             index

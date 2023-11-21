@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
@@ -63,6 +62,8 @@ class DealWorker(var ctx: Context, params: WorkerParameters) :
                     }
 
                 }
+            } else {
+                return Result.failure()
             }
 
         }
@@ -99,7 +100,11 @@ fun makeNotification(context: Context, game: GameDetailDto) {
         notificationIntent,
         PendingIntent.FLAG_IMMUTABLE
     )
-    val notificationDescription= context.resources.getString(R.string.deal_notification_description,game.info.title,game.deals[0].price)
+    val notificationDescription = context.resources.getString(
+        R.string.deal_notification_description,
+        game.info.title,
+        game.deals[0].price
+    )
     val builder = NotificationCompat.Builder(context, "Deals")
         .setContentIntent(pendingIntent)
         .setSmallIcon(R.drawable.ic_launcher_foreground)

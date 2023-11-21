@@ -20,10 +20,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,10 +35,10 @@ fun CustomSearchBar(
     onSearch: () -> Unit,
     onQueryUpdate: (String) -> Unit,
     onAddGameToWatchlist: (GameDetailModel) -> Unit,
-    onRemoveFromWatchlist: (String) -> Unit
+    onRemoveFromWatchlist: (String) -> Unit,
+    isActive: Boolean,
+    onActiveChange: (Boolean) -> Unit
 ) {
-
-    var activeBar by remember { mutableStateOf(false) }
     Column {
 
         Row(
@@ -54,11 +50,11 @@ fun CustomSearchBar(
                 query = mainViewmodelState.searchQuery,
                 onQueryChange = { onQueryUpdate(it) },
                 onSearch = { onSearch() },
-                active = activeBar,
+                active = isActive,
                 placeholder = { Text(text = stringResource(R.string.search_game)) },
                 leadingIcon = {
-                    if (activeBar) {
-                        IconButton(onClick = { activeBar = false }) {
+                    if (isActive) {
+                        IconButton(onClick = { onActiveChange(false) }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack, contentDescription = ""
                             )
@@ -69,13 +65,12 @@ fun CustomSearchBar(
 
                     IconButton(onClick = {
 
-                        if (mainViewmodelState.searchQuery.isNotEmpty() && activeBar) {
+                        if (mainViewmodelState.searchQuery.isNotEmpty() && isActive) {
 
                             onSearch()
                         } else {
-                            if (!activeBar) {
-
-                                activeBar = true
+                            if (!isActive) {
+                                onActiveChange(true)
                             }
                         }
 
@@ -87,7 +82,7 @@ fun CustomSearchBar(
                         )
                     }
                 },
-                onActiveChange = { activeBar = !activeBar }) {
+                onActiveChange = { onActiveChange(it)}) {
 
                 Column(
                     Modifier.padding(

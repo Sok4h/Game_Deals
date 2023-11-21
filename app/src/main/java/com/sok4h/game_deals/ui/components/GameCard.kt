@@ -67,6 +67,7 @@ fun GameDealCard(
                 Text(
                     text = game.info.title ?: stringResource(R.string.game_title_no_available),
                     style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2,
                 )
                 Text(
                     text = stringResource(id = R.string.deals_quantity, game.deals.size),

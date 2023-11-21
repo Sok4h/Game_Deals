@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -37,7 +38,7 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
             .clickable {
                 uriHandler.openUri("https://www.cheapshark.com/redirect?dealID=${deal.dealID}")
             },
-        ) {
+    ) {
         AsyncImage(
             model = deal.gameImage, modifier = Modifier
                 .height(70.dp)
@@ -76,4 +77,29 @@ fun DealCard(modifier: Modifier, deal: DealDetailModel) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun DealCardPreview() {
+
+    DealCard(
+        modifier = Modifier, deal = DealDetailModel(
+            dealID = "Kathrina",
+            dealRating = "Rayan",
+            gameID = "Malina",
+            isOnSale = "Dejuan",
+            lastChange = 8300,
+            normalPrice = "Ciara",
+            salePrice = "Sharyn",
+            savings = "Christipher",
+            numberReviews = "Vu",
+            steamRatingPercent = null,
+            steamRatingText = null,
+            storeID = "Timohty",
+            gameImage = "Jacquelynne",
+            title = "Rosalia",
+            storeLogo = "Shanna"
+        )
+    )
 }
